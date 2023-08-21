@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">HealthGuard</string>
+    <string name="app_introduction_01">Manage You Health.</string>
+    <string name="app_introduction_02">Anytime</string>
+    <string name="log_in">Log In</string>
+    <string name="sign_in">Sign In</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
