@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 全屏的Dialog的样式 -->
+    <style name="FullScreenDialogStyleAndAnimation">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
+    </style>
+
+    <!-- Dialog的出现动画 -->
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <!--  注册页面的fragment的回退按钮  -->
+    <style name="sign_page_button_back" parent="TextAppearance.AppCompat">
+        <item name="android:src">@drawable/return_button</item>
+        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="android:contentDescription">@string/button_back</item>
+    </style>
+
+    <!-- 注册页面上部的create your account 字体样式 -->
+    <style name="sign_page_string_text1" parent="TextAppearance.AppCompat">
+        <item name="android:text">@string/create_your_account</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/black</item> <!-- 黑色字体 -->
+    </style>
+
+    <!-- 注册页面上部的continue 字体样式 -->
+    <style name="sign_page_string_text2" parent="TextAppearance.AppCompat">
+        <item name="android:text">@string/button_continue</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/gray</item> <!-- 黑色字体 -->
+    </style>
+
+    <!-- 注册页面中部的邮箱输入框样式  -->
+    <style name="sign_page_string_text_input1" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="android:textColor">@color/black</item> <!-- 用于输入框字体的颜色 -->
+        <item name="boxStrokeColor">@color/black</item> <!-- 用于边框的颜色 -->
+        <item name="android:textColorHint">@color/black</item> <!-- 用于自动显示默认字的颜色 -->
+        <item name="hintTextColor">@color/black</item> <!-- 用于点击之后浮动到左上角的label的颜色 -->
+        <item name="android:hint">@string/Email</item>
+        <!-- 光标竖杠的颜色设置在了theme里面 -->
+    </style>
+
+    <!-- 注册页面中部的名字输入框样式  -->
+    <style name="sign_page_string_text_input2" parent="sign_page_string_text_input1">
+        <item name="android:hint">@string/name</item>
+        <!-- 光标竖杠的颜色设置在了theme里面 -->
+    </style>
+
+    <!-- 注册页面中部的密码输入框样式  -->
+    <style name="sign_page_string_text_input3" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="android:textColor">@color/black</item> <!-- 用于输入框字体的颜色 -->
+        <item name="boxStrokeColor">@color/black</item> <!-- 用于边框的颜色 -->
+        <item name="android:textColorHint">@color/black</item> <!-- 用于自动显示默认字的颜色 -->
+        <item name="hintTextColor">@color/black</item> <!-- 用于点击之后浮动到左上角的label的颜色 -->
+        <item name="endIconMode">password_toggle</item><!-- 用于显示密码可见性的icon -->
+        <item name="endIconDrawable">@drawable/custom_password_icon</item>
+        <item name="android:hint">@string/password</item>
+        <item name="errorTextAppearance">@style/sign_page_string_text_input3.error_text_style</item>
+        <item name="boxStrokeErrorColor">@color/red</item>
+        <item name="errorTextColor">@color/red</item>
+        <item name="errorIconDrawable">@null</item>
+
+    </style>
+
+    <!-- 注册页面中部的第二个密码输入框样式  -->
+    <style name="sign_page_string_text_input4" parent="sign_page_string_text_input3">
+        <item name="android:hint">@string/password_conform</item>
+    </style>
+
+    <!-- 注册页面中部的性别下拉框输入样式 -->
+    <style name="sign_page_string_text_input5" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="android:textColor">@color/black</item> <!-- 用于输入框字体的颜色 -->
+        <item name="boxStrokeColor">@color/black</item> <!-- 用于边框的颜色 -->
+        <item name="android:textColorHint">@color/black</item> <!-- 用于自动显示默认字的颜色 -->
+        <item name="boxBackgroundColor">@color/white</item> <!--  下拉框的背景颜色 -->
+        <item name="hintTextColor">@color/black</item> <!-- 用于点击之后浮动到左上角的label的颜色 -->
+        <item name="android:hint">@string/gender</item>
+    </style>
+
+    <!--  注册页面中部的错误提醒  -->
+    <style name="sign_page_string_text3" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/red</item> <!-- 红色字体 -->
+    </style>
+
+    <!--  注册页面的fragment的继续按钮  -->
+    <style name="sign_page_button_continue" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/black</item> <!-- 设置字体颜色为黑色 -->
+        <item name="shapeAppearance">@style/RoundedShapeAppearance</item>
+        <item name="android:text">@string/button_continue</item>
+        <item name="backgroundTint">@color/gray</item>
+    </style>
+
+    <!--  注册页面的继续按钮的弧度 -->
+    <style name="RoundedShapeAppearance" parent="ShapeAppearance.MaterialComponents">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    
+    <!-- 密码错误提示的字符高度 -->
+    <style name="sign_page_string_text_input3.error_text_style">
+        <item name="android:textSize">12sp</item>
+    </style>
+
+</resources>

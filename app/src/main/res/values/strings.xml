@@ -4,6 +4,21 @@
     <string name="app_introduction_02">Anytime</string>
     <string name="log_in">Log In</string>
     <string name="sign_in">Sign In</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="button_back">Button Back</string>
+    <string name="button_continue">Continue</string>
+    <string name="create_your_account">Create Your Account</string>
+    <string name="Email">Email</string>
+    <string name="error_invalid_email">Please enter a valid email address, eg.oliver.mn@email.com</string>
+    <string name="error_exist_email">You have already registered.</string>
+    <string name="error_network">Network problem, retry.</string>
+    <string name="error_unsend_email">Fail to send email.</string>
+    <string name="password">Password</string>
+    <string name="name">Name</string>
+    <string name="password_conform">Conform Password</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="error_illegal_password">Your password must contain at least one uppercase letter, one lowercase letter, and one number. It should be 6 characters or longer.</string>
+    <string name="error_invalid_password">Weak Password</string>
 </resources>

@@ -20,43 +20,43 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/login_page_string_text1" />
+            style="@style/enter_page_string_text1" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/login_page_logo" />
+            style="@style/enter_page_logo" />
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/login_page_string_text2"
+        style="@style/enter_page_string_text2"
         />
 
     <TextView
         android:layout_marginTop="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        style="@style/login_page_string_text3"/>
+        style="@style/enter_page_string_text3"/>
 
     <!--按钮底色设置为白色底色时，只能使用tint，但是弧度可以通过-->
     <Button
-        android:id="@+id/buttonLogin"
+        android:id="@+id/button_login"
         android:layout_marginTop="25dp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/login_page_button_login"
+        style="@style/enter_page_button_login"
         />
 
     <Button
-        android:id="@+id/buttonSignUp"
+        android:id="@+id/button_sign"
         android:layout_marginTop="10dp"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        style="@style/login_page_button_sign_in"
+        style="@style/enter_page_button_sign_in"
         />
 
 </LinearLayout>

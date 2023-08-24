@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!--  登录页面app名字样式  -->
-    <style name="login_page_string_text1" parent="TextAppearance.AppCompat">
+    <!--  进入页面app名字样式  -->
+    <style name="enter_page_string_text1" parent="TextAppearance.AppCompat">
         <item name="android:textSize">40sp</item>
         <item name="android:text">@string/app_name</item>
     </style>
 
-    <!--  登录页面logo样式  -->
-    <style name="login_page_logo" parent="TextAppearance.AppCompat">
+    <!--  进入页面logo样式  -->
+    <style name="enter_page_logo" parent="TextAppearance.AppCompat">
             <item name="android:src">@drawable/logo</item>
     </style>
 
-    <!-- 登录页面介绍的上半段样式 01 -->
-    <style name="login_page_string_text2" parent="TextAppearance.AppCompat">
+    <!-- 进入页面介绍的上半段样式 01 -->
+    <style name="enter_page_string_text2" parent="TextAppearance.AppCompat">
         <item name="android:textSize">15sp</item>
         <item name="android:text">@string/app_introduction_01</item>
         <item name="android:textColor">@color/gray</item> <!-- 设置字体颜色为灰色 -->
     </style>
 
-    <!-- 登录页面介绍的上半段样式 02 -->
-    <style name="login_page_string_text3" parent="TextAppearance.AppCompat">
+    <!-- 进入页面介绍的上半段样式 02 -->
+    <style name="enter_page_string_text3" parent="TextAppearance.AppCompat">
         <item name="android:textSize">15sp</item>
         <item name="android:text">@string/app_introduction_02</item>
         <item name="android:textColor">@color/gray</item> <!-- 设置字体颜色为灰色 -->
     </style>
 
-    <!-- 登录页面登录按钮 -->
-    <style name="login_page_button_login" parent="TextAppearance.AppCompat">
+    <!-- 进入页面登录按钮 -->
+    <style name="enter_page_button_login" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>
         <item name="backgroundTint">@color/medium_gray_blue</item>
         <item name="android:text">@string/log_in</item>
         <item name="android:textColor">@color/white</item> <!-- 设置字体颜色为白色 -->
     </style>
 
-    <!-- 登录页面注册按钮 -->
-    <style name="login_page_button_sign_in" parent="TextAppearance.AppCompat">
+    <!-- 进入页面注册按钮 -->
+    <style name="enter_page_button_sign_in" parent="TextAppearance.AppCompat">
         <item name="android:textSize">12sp</item>
         <item name="android:text">@string/sign_in</item>
         <item name="backgroundTint">@color/dark_gray</item>
