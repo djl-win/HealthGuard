@@ -1,7 +1,5 @@
 package com.comp5216.healthguard.fragment.enter;
 
-import static androidx.appcompat.content.res.AppCompatResources.getColorStateList;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
@@ -11,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,22 +18,33 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
+import com.comp5216.healthguard.viewmodel.UserViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * 注册界面的fragment
@@ -69,6 +77,8 @@ public class SignFragment extends DialogFragment {
     String[] items = {"Male", "Female", "Other"};
     // 下拉框
     AutoCompleteTextView editTextGender;
+    // 邮箱框的layout
+    TextInputLayout textInputEmail;
     // 密码框的layout
     TextInputLayout textInputPassword1;
     // 确认密码框的layout
@@ -77,12 +87,12 @@ public class SignFragment extends DialogFragment {
     TextView textViewError;
     // firebase的认证实例
     FirebaseAuth auth;
-    // 当前用户
-    FirebaseUser user;
     // 要注册的user
     User userNew;
     // 输入框内容监听器
     TextWatcher generalTextWatcher;
+    // 用户类视图模型view model
+    UserViewModel userViewModel;
 
     @NonNull
     @Override
@@ -141,8 +151,6 @@ public class SignFragment extends DialogFragment {
     private void init(View view) {
         // 获取firebase认证的实例
         auth = FirebaseAuth.getInstance();
-        // 获取firebase当前用户
-        user = auth.getCurrentUser();
         // 绑定要加入数据库的user数据
         userNew = new User();
         // 绑定回退按钮
@@ -160,12 +168,16 @@ public class SignFragment extends DialogFragment {
         // 绑定性别选择框
         editTextGender = view.findViewById(R.id.text_edit_gender);
         editTextGender.setAdapter(adapter);
+        // 绑定邮箱框的layout
+        textInputEmail = view.findViewById(R.id.text_input_email);
         // 绑定密码框的layout
         textInputPassword1 = view.findViewById(R.id.text_input_password1);
         // 绑定确认密码框的layout
         textInputPassword2 = view.findViewById(R.id.text_input_password2);
         // 绑定错误提醒
         textViewError = view.findViewById(R.id.text_view_error);
+        // 初始化用户视图模型
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
     }
 
     /**
@@ -225,33 +237,59 @@ public class SignFragment extends DialogFragment {
      * 检查所以输入框是否都有内容
      */
     private void checkAllEditTexts() {
-        // 检查每个输入框的内容
+        // 1.检查所有输入框是否有内容，如果有的输入框没有内容，则禁用登录按钮
+        // 2.检查用户邮箱输入格式是否正确，如果不正确，则禁用按钮
+        // 3.检查用户输入的密码是否符合格式，如果不符合则禁用按钮
+        // 4.检查用户输入的两次密码是否一致，如果不一致则禁用按钮
         if(checkEditTexts(editTextEmail.getText())
                 && checkEditTexts(editTextName.getText())
                 && checkEditTexts(editTextPassword1.getText())
                 && checkEditTexts(editTextPassword2.getText())
                 && checkEditTexts(editTextGender.getText())
-        ){
-            // 当EditText有内容时，恢复ImageButton原色
+                && isValidEmail(editTextEmail.getText().toString().trim())
+                && isValidPassword(editTextPassword1.getText().toString().trim())
+                && isConsistentPassword(editTextPassword2.getText().toString().trim())
+                ){
+            // 恢复按钮
             recoverButtons();
+        }else {
+            // 禁用按钮
+            unableButtons();
         }
-        // 密码输入不符合格式时进行检测
-        else if (!isValidPassword(editTextPassword1.getText().toString().trim())){
+
+        // 检查用户邮箱输入格式是否正确，如果不正确，给出提示
+        if(!isValidEmail(editTextEmail.getText().toString().trim())){
+            // 修改密码框的样式，重点提醒
+            textInputEmail.setErrorEnabled(true);
+            textInputEmail.setError(getString(R.string.error_illegal_email));
+        }
+        else if(isValidEmail(editTextEmail.getText().toString().trim())){
+            // 修改邮箱框的样式，取消提醒
+            textInputEmail.setError(null);
+            textInputEmail.setErrorEnabled(false);
+        }
+
+        // 检查用户输入的密码是否符合格式，如果不符合，给出提示
+        if (!isValidPassword(editTextPassword1.getText().toString().trim())){
             // 修改密码框的样式，重点提醒
             textInputPassword1.setErrorEnabled(true);
-            textInputPassword1.setError(getString(R.string.error_invalid_password));
-            // 显示错误信息
-            showError(getString(R.string.error_illegal_password));
-            unableButtons();
+            textInputPassword1.setError(getString(R.string.error_illegal_password1));
         }else if (isValidPassword(editTextPassword1.getText().toString().trim())){
             // 修改密码框的样式，取消提醒
             textInputPassword1.setError(null);
             textInputPassword1.setErrorEnabled(false);
-            hideError();
-        } else {
-            // 当EditText没有内容时，设置SVG的颜色为灰色
-            unableButtons();
-            }
+        }
+
+        // 检查用户输入的两次密码是否一致，如果不一致，给出提示
+        if(!isConsistentPassword(editTextPassword2.getText().toString().trim())){
+            // 修改密码框的样式，重点提醒
+            textInputPassword2.setErrorEnabled(true);
+            textInputPassword2.setError(getString(R.string.error_illegal_password2));
+        }else if (isConsistentPassword(editTextPassword2.getText().toString().trim())){
+            // 修改密码框的样式，取消提醒
+            textInputPassword2.setError(null);
+            textInputPassword2.setErrorEnabled(false);
+        }
     }
 
     /**
@@ -315,49 +353,31 @@ public class SignFragment extends DialogFragment {
             // 开始按钮动画,这里使用自定义按钮动画
             CustomAnimationUtil.ButtonsAnimation(getActivity(), buttonContinue);
 
-            // 获取邮箱,不会有空指针，之前设置了没有字，继续按钮不可用
+            // 获取用户信息,不会有空指针
             String email = editTextEmail.getText().toString().trim();
-
-            // 检查邮箱格式是否正确
-            if (!isValidEmail(email)) {
-                // 邮箱格式不正确，显示错误提示
-                showError(getString(R.string.error_invalid_email));
-                // 验证失败,清空输入框内容
-                emptyInput();
-                return;
-            }
+            String name = editTextName.getText().toString().trim();
+            String password = editTextPassword1.getText().toString().trim();
+            String gender = editTextGender.getText().toString().trim();
+            userNew.setUserEmail(email);
+            userNew.setUserName(name);
+            userNew.setUserPassword(password);
+            userNew.setUserGender(gender);
 
             // 验证邮箱是否存在，之后验证连接发送，打开新的dialog，进行密码等操作的设置
-            if(!isVerifyEmail(email)){
-                // 邮箱已经存在，显示错误提示
-                showError(getString(R.string.error_exist_email));
-                // 验证失败,清空输入框内容
-                emptyInput();
-                return;
-            }
-
-            // 用户姓名无需验证
-
-            // 验证用户密码，是否符合格式
-
-            // 验证用户再次输入的密码是否和之前一直
-
-            // 下拉框选取性别
-
-
-            createAccount(userNew);
+            isVerifyEmail(email, exists -> {
+                if (exists) {
+                    // 处理邮箱不存在的情况
+                    createAccount(userNew);
+                } else {
+                    // 邮箱已经存在，显示错误提示
+                    showError(getString(R.string.error_exist_email));
+                    // 验证失败,清空输入框内容
+                    emptyInput();
+                }
+            });
         });
     }
 
-    /**
-     * 检查邮箱格式是否正确
-     *
-     * @param email 用户输入的邮箱
-     * @return 正确与否
-     */
-    private boolean isValidEmail(String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
-    }
 
     /**
      * 显示错误提醒
@@ -443,32 +463,43 @@ public class SignFragment extends DialogFragment {
      * 验证邮箱是否已经存在，存在则显示错误信息，不存在则进行下一步操作
      *
      * @param email 用户邮箱
-     * @return 邮箱存在返回false，邮箱不存在返回true
+     * @param callback 结果回调，邮箱存在返回false，邮箱不存在返回true
      */
-    private boolean isVerifyEmail(String email) {
-        AtomicBoolean flag = new AtomicBoolean(false);
-        // 添加监听器，异步操作
+    private void isVerifyEmail(String email, Consumer<Boolean> callback) {
         auth.fetchSignInMethodsForEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         SignInMethodQueryResult result = task.getResult();
                         if (result != null && result.getSignInMethods() != null) {
-                            if (result.getSignInMethods().size() > 0) {
-                                // 验证失败,邮箱已存在，返回false
-                                flag.set(false);
-                            } else {
-                                // 验证成功，邮箱不存在，返回true
-                                flag.set(false);
-                            }
+                            callback.accept(result.getSignInMethods().size() == 0);
                         } else {
-                            // 出现网络错误
                             showError(getString(R.string.error_network));
-                            // 验证失败,清空输入框内容
                             emptyInput();
                         }
+                    } else {
+                        // Handle the error
+                        showError("An error occurred.");
+                        emptyInput();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    // Handle the failure
+                    showError(e.getMessage());
+                    emptyInput();
                 });
-        return flag.get();
+    }
+
+    /**
+     * 检查邮箱格式是否正确
+     *
+     * @param email 用户输入的邮箱
+     * @return 正确与否
+     */
+    private boolean isValidEmail(String email) {
+        if(Objects.equals(email, "")){
+            return true;
+        }
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     /**
@@ -486,12 +517,68 @@ public class SignFragment extends DialogFragment {
     }
 
     /**
+     * 判断用户输入的第二次密码是否与第一次一致
+     * @param conformPassword 用户输入的确认密码
+     * @return 符合与否
+     */
+    public boolean isConsistentPassword(String conformPassword) {
+        if(Objects.equals(conformPassword, "")){
+            return true;
+        }
+        return conformPassword.equals(editTextPassword1.getText().toString().trim());
+    }
+
+    /**
      * 验证用户的邮箱
      *
      * @param userNew 新添加的user到fireStore
      */
     private void createAccount(User userNew) {
-        dismiss();
+        auth.createUserWithEmailAndPassword(userNew.getUserEmail(), userNew.getUserPassword())
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // 注册成功，将用户的数据加密之后存储到数据库,将firebase的auth中的uid设置为User表中的userId
+                        FirebaseUser firebaseUser = auth.getCurrentUser();
+                        if (firebaseUser != null) {
+                            String uid = firebaseUser.getUid();
+                            userNew.setUserId(uid);
+                        }
+                        storeUser(userNew);
+
+                        // 注册成功,当前dialog关闭
+                        dismiss();
+                        // 提醒用户
+                        Toast.makeText(getActivity(), "Congratulations！", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // 处理未知错误
+                        showError(getString(R.string.error_network));
+                        // 验证失败,清空输入框内容
+                        emptyInput();
+                    }
+                });
+    }
+
+    /**
+     * 加密之后，存储用户信息到数据库
+     * @param userNew 用户的数据
+     */
+    private void storeUser(User userNew) {
+        UserViewModel viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        // 加密数据
+        viewModel.storeUser(userNew,
+                new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Handle success
+                    }
+                },
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle error
+                    }
+                }
+        );
     }
 
     /**
@@ -519,34 +606,5 @@ public class SignFragment extends DialogFragment {
             getActivity().findViewById(R.id.button_login).setEnabled(true);
             getActivity().findViewById(R.id.button_sign).setEnabled(true);
         }
-    }
-
-    public void waste(String email) {
-        auth.createUserWithEmailAndPassword(email, "temporary_password")
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        if (user != null) {
-                            user.sendEmailVerification()
-                                    .addOnCompleteListener(verificationTask -> {
-                                        if (verificationTask.isSuccessful()) {
-                                            // 邮件发送成功，打开新的dialog，设置用户的基本信息
-                                            showError(getString(R.string.log_in));
-
-                                        } else {
-                                            // 邮件发送失败处理失败信息
-                                            showError(getString(R.string.error_unsend_email));
-                                            // 验证失败,清空输入框内容
-                                            emptyInput();
-
-                                        }
-                                    });
-                        }
-                    } else {
-                        // 处理未知错误
-                        showError(getString(R.string.error_network));
-                        // 验证失败,清空输入框内容
-                        emptyInput();
-                    }
-                });
     }
 }

@@ -46,6 +46,10 @@
         <item name="android:textColorHint">@color/black</item> <!-- 用于自动显示默认字的颜色 -->
         <item name="hintTextColor">@color/black</item> <!-- 用于点击之后浮动到左上角的label的颜色 -->
         <item name="android:hint">@string/Email</item>
+        <item name="errorTextAppearance">@style/sign_page_string_text_input3.error_text_style</item>
+        <item name="boxStrokeErrorColor">@color/red</item>
+        <item name="errorTextColor">@color/red</item>
+        <item name="errorIconDrawable">@null</item>
         <!-- 光标竖杠的颜色设置在了theme里面 -->
     </style>
 

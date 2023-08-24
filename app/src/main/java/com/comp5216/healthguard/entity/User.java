@@ -1,5 +1,15 @@
 package com.comp5216.healthguard.entity;
 
+/**
+ * 用户实体类
+ * <p>
+ * 存储用户基本信息
+ * </p>
+ *
+ * @author Jiale Dong
+ * @version 1.0
+ * @since 2023-08-23
+ */
 public class User {
     private String userId;
     private String userEmail;

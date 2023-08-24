@@ -22,7 +22,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
         style="@style/sign_page_string_text2"/>
 
     <!--  email的输入框  -->

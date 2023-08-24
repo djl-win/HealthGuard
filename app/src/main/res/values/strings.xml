@@ -8,7 +8,9 @@
     <string name="button_continue">Continue</string>
     <string name="create_your_account">Create Your Account</string>
     <string name="Email">Email</string>
-    <string name="error_invalid_email">Please enter a valid email address, eg.oliver.mn@email.com</string>
+    <string name="error_illegal_email">Email: eg.oliver.mn@email.com.</string>
+    <string name="error_illegal_password1">Password: ≥6 chars, 1+ uppercase, 1+ lowercase, 1+ number.</string>
+    <string name="error_illegal_password2">Password inconsistency</string>
     <string name="error_exist_email">You have already registered.</string>
     <string name="error_network">Network problem, retry.</string>
     <string name="error_unsend_email">Fail to send email.</string>
@@ -19,6 +21,4 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="other">Other</string>
-    <string name="error_illegal_password">Your password must contain at least one uppercase letter, one lowercase letter, and one number. It should be 6 characters or longer.</string>
-    <string name="error_invalid_password">Weak Password</string>
 </resources>
