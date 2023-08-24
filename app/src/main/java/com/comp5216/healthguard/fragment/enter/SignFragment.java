@@ -63,7 +63,7 @@ public class SignFragment extends DialogFragment {
     TextInputEditText editTextPassword1;
     // 确认密码输入框
     TextInputEditText editTextPassword2;
-    //下拉框的适配器
+    // 下拉框的适配器
     ArrayAdapter<String> adapter;
     // 下拉框中的数据
     String[] items = {"Male", "Female", "Other"};
@@ -230,10 +230,10 @@ public class SignFragment extends DialogFragment {
                 && checkEditTexts(editTextName.getText())
                 && checkEditTexts(editTextPassword1.getText())
                 && checkEditTexts(editTextPassword2.getText())
-                && checkEditTexts(editTextGender.getText())){
+                && checkEditTexts(editTextGender.getText())
+        ){
             // 当EditText有内容时，恢复ImageButton原色
-            buttonContinue.setEnabled(true);
-            buttonContinue.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.medium_gray_blue)));
+            recoverButtons();
         }
         // 密码输入不符合格式时进行检测
         else if (!isValidPassword(editTextPassword1.getText().toString().trim())){
@@ -242,6 +242,7 @@ public class SignFragment extends DialogFragment {
             textInputPassword1.setError(getString(R.string.error_invalid_password));
             // 显示错误信息
             showError(getString(R.string.error_illegal_password));
+            unableButtons();
         }else if (isValidPassword(editTextPassword1.getText().toString().trim())){
             // 修改密码框的样式，取消提醒
             textInputPassword1.setError(null);
@@ -249,9 +250,24 @@ public class SignFragment extends DialogFragment {
             hideError();
         } else {
             // 当EditText没有内容时，设置SVG的颜色为灰色
-            buttonContinue.setEnabled(false);
-            buttonContinue.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.gray)));
-        }
+            unableButtons();
+            }
+    }
+
+    /**
+     * 禁用按钮
+     */
+    private void unableButtons(){
+        buttonContinue.setEnabled(false);
+        buttonContinue.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.gray)));
+    }
+
+    /**
+     * 回复按钮
+     */
+    private void recoverButtons(){
+        buttonContinue.setEnabled(true);
+        buttonContinue.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.medium_gray_blue)));
     }
 
     /**
