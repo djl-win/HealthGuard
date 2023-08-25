@@ -32,7 +32,7 @@ public class CustomEncryptUtil {
     private static final String ALGORITHM = "AES";
     // 使用AES算法，ECB模式，PKCS5Padding填充
     private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
-    // 加密密钥
+    // 加密密钥,都用这个128位的，进行解密，不要修改
     private static final String AES_KEY = "fe578c3eaf1e96220e911ef17bab2570";
 
     /**

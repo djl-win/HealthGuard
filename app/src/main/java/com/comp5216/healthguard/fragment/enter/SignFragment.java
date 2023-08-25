@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
+import com.comp5216.healthguard.viewmodel.AttributeViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -93,12 +94,14 @@ public class SignFragment extends DialogFragment {
     User userNew;
     // 输入框内容监听器
     TextWatcher generalTextWatcher;
-    // 用户类视图模型view model
-    UserViewModel userViewModel;
     // 整个页面的layout
     LinearLayout linearLayoutMain;
     // 注册进度条
     LinearLayout linearLayoutProgressIndicator;
+    // 用户的viewModel
+    UserViewModel userViewModel;
+    // 用户预警信息的viewModel
+    AttributeViewModel attributeViewModel;
 
 
     @NonNull
@@ -189,6 +192,10 @@ public class SignFragment extends DialogFragment {
         linearLayoutMain = view.findViewById(R.id.linear_layout_main);
         // 绑定注册进度条页面的layout
         linearLayoutProgressIndicator = view.findViewById(R.id.linear_layout_progress_indicator);
+        // 绑定用户的view model
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        // 绑定用户预警信息的view model
+        attributeViewModel = new ViewModelProvider(this).get(AttributeViewModel.class);
     }
 
     /**
@@ -573,9 +580,11 @@ public class SignFragment extends DialogFragment {
      * @param userNew 用户的数据
      */
     private void storeUser(User userNew) {
-        UserViewModel viewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        // 加密数据
-        viewModel.storeUser(userNew,
+
+        // 将用户预警信息存到数据库
+        attributeViewModel.storeAttribute(userNew);
+        // 加密数据,并将用户信息存到数据库
+        userViewModel.storeUser(userNew,
                 aVoid -> {
                     // 注册成功,当前dialog关闭
                     dismiss();

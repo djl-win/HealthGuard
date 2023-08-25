@@ -47,11 +47,12 @@ public class UserRepository {
      * @param failureListener 失败监听器
      */
     public void storeUser(User user, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-        // SHA256加密用户密码
-        user.setUserPassword(CustomEncryptUtil.encryptBySHA256(user.getUserPassword()));
-        // AES128加密邮箱，名字和性别
+
+        // SHA256加密用户密码,AES128加密邮箱、名字和性别
         try {
-            // 加密过程
+            // SHA256加密用户密码
+            user.setUserPassword(CustomEncryptUtil.encryptBySHA256(user.getUserPassword()));
+            // AES128加密邮箱，名字和性别
             user.setUserEmail(CustomEncryptUtil.encryptByAES(user.getUserEmail()));
             user.setUserName(CustomEncryptUtil.encryptByAES(user.getUserName()));
             user.setUserGender(CustomEncryptUtil.encryptByAES(user.getUserGender()));
@@ -65,6 +66,7 @@ public class UserRepository {
             // 抛出自定义异常
             throw new EncryptionException(e);
         }
+
         DocumentReference userRef = db.collection("users").document(user.getUserId());
         userRef.set(user)
                 .addOnSuccessListener(successListener)
