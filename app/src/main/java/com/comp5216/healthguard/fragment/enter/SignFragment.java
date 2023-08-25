@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ import com.comp5216.healthguard.util.CustomAnimationUtil;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -93,6 +95,11 @@ public class SignFragment extends DialogFragment {
     TextWatcher generalTextWatcher;
     // 用户类视图模型view model
     UserViewModel userViewModel;
+    // 整个页面的layout
+    LinearLayout linearLayoutMain;
+    // 注册进度条
+    LinearLayout linearLayoutProgressIndicator;
+
 
     @NonNull
     @Override
@@ -178,6 +185,10 @@ public class SignFragment extends DialogFragment {
         textViewError = view.findViewById(R.id.text_view_error);
         // 初始化用户视图模型
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        // 绑定整个页面的layout
+        linearLayoutMain = view.findViewById(R.id.linear_layout_main);
+        // 绑定注册进度条页面的layout
+        linearLayoutProgressIndicator = view.findViewById(R.id.linear_layout_progress_indicator);
     }
 
     /**
@@ -534,6 +545,10 @@ public class SignFragment extends DialogFragment {
      * @param userNew 新添加的user到fireStore
      */
     private void createAccount(User userNew) {
+        // 加载进度条
+        linearLayoutMain.setVisibility(View.GONE);
+        linearLayoutProgressIndicator.setVisibility(View.VISIBLE);
+        // 创建新用户到fire auth
         auth.createUserWithEmailAndPassword(userNew.getUserEmail(), userNew.getUserPassword())
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -544,11 +559,6 @@ public class SignFragment extends DialogFragment {
                             userNew.setUserId(uid);
                         }
                         storeUser(userNew);
-
-                        // 注册成功,当前dialog关闭
-                        dismiss();
-                        // 提醒用户
-                        Toast.makeText(getActivity(), "Congratulations！", Toast.LENGTH_SHORT).show();
                     } else {
                         // 处理未知错误
                         showError(getString(R.string.error_network));
@@ -566,17 +576,20 @@ public class SignFragment extends DialogFragment {
         UserViewModel viewModel = new ViewModelProvider(this).get(UserViewModel.class);
         // 加密数据
         viewModel.storeUser(userNew,
-                new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Handle success
-                    }
+                aVoid -> {
+                    // 注册成功,当前dialog关闭
+                    dismiss();
+                    // 提醒用户
+                    Toast.makeText(getActivity(), "Congratulations！", Toast.LENGTH_SHORT).show();
                 },
-                new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle error
-                    }
+                e -> {
+                    // 取消进度条
+                    linearLayoutMain.setVisibility(View.VISIBLE);
+                    linearLayoutProgressIndicator.setVisibility(View.GONE);
+                    // 处理错误
+                    showError(getString(R.string.error_network));
+                    // 清空输入框内容
+                    emptyInput();
                 }
         );
     }

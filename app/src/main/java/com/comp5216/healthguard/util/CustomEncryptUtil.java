@@ -1,7 +1,5 @@
 package com.comp5216.healthguard.util;
 
-import android.os.Build;
-
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

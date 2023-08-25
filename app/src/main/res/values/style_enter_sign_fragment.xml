@@ -118,7 +118,7 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">12dp</item>
     </style>
-    
+
     <!-- 密码错误提示的字符高度 -->
     <style name="sign_page_string_text_input3.error_text_style">
         <item name="android:textSize">12sp</item>
