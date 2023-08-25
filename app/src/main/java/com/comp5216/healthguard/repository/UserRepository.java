@@ -2,7 +2,7 @@ package com.comp5216.healthguard.repository;
 
 import android.util.Log;
 
-import com.comp5216.healthguard.Exception.EncryptionException;
+import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.google.android.gms.tasks.OnFailureListener;

@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.Exception;
+package com.comp5216.healthguard.exception;
 
 
 /**
