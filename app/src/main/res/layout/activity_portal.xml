@@ -13,7 +13,7 @@
 
         <FrameLayout
             android:id="@+id/fl_index"
-            android:name="comp5216.sydney.edu.au.a5216_v_00"
+            android:name="com.comp5216.healthguard.activity"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
