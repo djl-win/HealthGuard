@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.entity;
+package com.comp5216.healthguard.obj.entity;
 
 /**
  * 用户属性

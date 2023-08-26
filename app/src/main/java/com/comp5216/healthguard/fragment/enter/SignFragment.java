@@ -28,26 +28,17 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.obj.entity.User;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
 import com.comp5216.healthguard.viewmodel.AttributeViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 
 /**
  * 注册界面的fragment

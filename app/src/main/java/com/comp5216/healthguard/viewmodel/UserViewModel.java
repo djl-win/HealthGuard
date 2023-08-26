@@ -2,7 +2,7 @@ package com.comp5216.healthguard.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.obj.entity.User;
 import com.comp5216.healthguard.repository.UserRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
