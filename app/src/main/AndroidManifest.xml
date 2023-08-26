@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <!-- 主页activity -->
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.PortalActivity">
         </activity>
     </application>
 

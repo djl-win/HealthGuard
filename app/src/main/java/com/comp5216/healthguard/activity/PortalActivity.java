@@ -15,13 +15,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class MainActivity extends AppCompatActivity {
+public class PortalActivity extends AppCompatActivity {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FirebaseAuth auth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_portal);
         Button button = findViewById(R.id.button_logout);
         button.setOnClickListener( view ->{
 
@@ -45,9 +45,8 @@ public class MainActivity extends AppCompatActivity {
             auth.signOut();
 
             // 跳转回登录页面
-            startActivity(new Intent(MainActivity.this, EnterActivity.class));
+            startActivity(new Intent(PortalActivity.this, EnterActivity.class));
             finish();
-
         });
     }
 }

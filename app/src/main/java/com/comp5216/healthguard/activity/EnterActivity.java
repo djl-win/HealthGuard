@@ -52,7 +52,7 @@ public class EnterActivity extends AppCompatActivity {
         // 判断用户是否已经登录，如果未登录，则进入登录页面，如果已经登录，进入主页面
         FirebaseUser currentUser = auth.getCurrentUser();
         if(currentUser != null){
-            Intent intent = new Intent(EnterActivity.this, MainActivity.class);
+            Intent intent = new Intent(EnterActivity.this, PortalActivity.class);
             startActivity(intent);
             finish();
         }

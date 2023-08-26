@@ -50,6 +50,13 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-firestore")
 
+    // RxJava
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    // Utils
+    implementation 'com.blankj:utilcodex:1.30.6'
+
     implementation 'com.google.android.material:material:1.9.0'
     
     implementation 'androidx.appcompat:appcompat:1.6.1'
