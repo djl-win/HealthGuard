@@ -21,4 +21,8 @@
     <string name="male">Male</string>
     <string name="female">Female</string>
     <string name="other">Other</string>
+    <string name="login_to_continue">Login to continue</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="error_no_exist_email">Please register first</string>
+    <string name="error_incorrect_password">Incorrect password, please retry.</string>
 </resources>

@@ -7,14 +7,14 @@
     android:paddingEnd="15dp">
 
     <LinearLayout
-        android:id="@+id/linear_layout_main"
+        android:id="@+id/linear_layout_main_sign"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:visibility="visible">
 
         <ImageButton
-            android:id="@+id/button_back"
+            android:id="@+id/button_back_sign"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="-10dp"
@@ -32,14 +32,14 @@
 
         <!--  email的输入框  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_email"
+            android:id="@+id/text_input_email_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/sign_page_string_text_input1"
             android:layout_marginTop="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_edit_email"
+                android:id="@+id/text_edit_email_sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
@@ -48,14 +48,14 @@
 
         <!--  name的输入框  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_name"
+            android:id="@+id/text_input_name_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/sign_page_string_text_input2"
             android:layout_marginTop="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_edit_name"
+                android:id="@+id/text_edit_name_sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true" />
@@ -63,7 +63,7 @@
 
         <!--  密码的第一个输入框  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_password1"
+            android:id="@+id/text_input_password1_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password"
@@ -71,7 +71,7 @@
             android:layout_marginTop="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_edit_password1"
+                android:id="@+id/text_edit_password1_sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -81,14 +81,14 @@
 
         <!--  密码的第二个输入框  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_password2"
+            android:id="@+id/text_input_password2_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/sign_page_string_text_input4"
             android:layout_marginTop="10dp">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/text_edit_password2"
+                android:id="@+id/text_edit_password2_sign"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
@@ -98,14 +98,14 @@
 
         <!--  性别下拉框  -->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/text_input_gender"
+            android:id="@+id/text_input_gender_sign"
             style="@style/sign_page_string_text_input5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp">
             <!-- android:popupElevation="0dp" android:popupBackground="@android:color/white" 设置取消下拉框的阴影和高亮！！ -->
             <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                android:id="@+id/text_edit_gender"
+                android:id="@+id/text_edit_gender_sign"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:popupElevation="0dp"
@@ -118,7 +118,7 @@
 
         <!-- 输入的错误提醒-->
         <TextView
-            android:id="@+id/text_view_error"
+            android:id="@+id/text_view_error_sign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -132,7 +132,7 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/button_continue"
+            android:id="@+id/button_continue_sign"
             android:layout_width="match_parent"
             android:layout_height="62dp"
             style="@style/sign_page_button_continue"
@@ -141,7 +141,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linear_layout_progress_indicator"
+        android:id="@+id/linear_layout_progress_indicator_sign"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -150,7 +150,7 @@
 
     <!-- Logo图像 -->
     <ImageView
-        android:id="@+id/logo_image_view"
+        android:id="@+id/logo_image_view_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"

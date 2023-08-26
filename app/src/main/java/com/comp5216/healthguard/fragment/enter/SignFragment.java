@@ -164,34 +164,34 @@ public class SignFragment extends DialogFragment {
         // 绑定要加入数据库的user数据
         userNew = new User();
         // 绑定回退按钮
-        buttonBack = view.findViewById(R.id.button_back);
+        buttonBack = view.findViewById(R.id.button_back_sign);
         // 绑定继续按钮
-        buttonContinue = view.findViewById(R.id.button_continue);
+        buttonContinue = view.findViewById(R.id.button_continue_sign);
         // 绑定邮箱输入框
-        editTextEmail = view.findViewById(R.id.text_edit_email);
+        editTextEmail = view.findViewById(R.id.text_edit_email_sign);
         // 绑定姓名输入框
-        editTextName = view.findViewById(R.id.text_edit_name);
+        editTextName = view.findViewById(R.id.text_edit_name_sign);
         // 绑定密码输入框
-        editTextPassword1 = view.findViewById(R.id.text_edit_password1);
+        editTextPassword1 = view.findViewById(R.id.text_edit_password1_sign);
         // 绑定确认密码输入框
-        editTextPassword2 = view.findViewById(R.id.text_edit_password2);
+        editTextPassword2 = view.findViewById(R.id.text_edit_password2_sign);
         // 绑定性别选择框
-        editTextGender = view.findViewById(R.id.text_edit_gender);
+        editTextGender = view.findViewById(R.id.text_edit_gender_sign);
         editTextGender.setAdapter(adapter);
         // 绑定邮箱框的layout
-        textInputEmail = view.findViewById(R.id.text_input_email);
+        textInputEmail = view.findViewById(R.id.text_input_email_sign);
         // 绑定密码框的layout
-        textInputPassword1 = view.findViewById(R.id.text_input_password1);
+        textInputPassword1 = view.findViewById(R.id.text_input_password1_sign);
         // 绑定确认密码框的layout
-        textInputPassword2 = view.findViewById(R.id.text_input_password2);
+        textInputPassword2 = view.findViewById(R.id.text_input_password2_sign);
         // 绑定错误提醒
-        textViewError = view.findViewById(R.id.text_view_error);
+        textViewError = view.findViewById(R.id.text_view_error_sign);
         // 初始化用户视图模型
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         // 绑定整个页面的layout
-        linearLayoutMain = view.findViewById(R.id.linear_layout_main);
+        linearLayoutMain = view.findViewById(R.id.linear_layout_main_sign);
         // 绑定注册进度条页面的layout
-        linearLayoutProgressIndicator = view.findViewById(R.id.linear_layout_progress_indicator);
+        linearLayoutProgressIndicator = view.findViewById(R.id.linear_layout_progress_indicator_sign);
         // 绑定用户的view model
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         // 绑定用户预警信息的view model

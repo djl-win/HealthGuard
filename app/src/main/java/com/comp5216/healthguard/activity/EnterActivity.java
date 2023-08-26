@@ -1,5 +1,6 @@
 package com.comp5216.healthguard.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 
@@ -9,6 +10,8 @@ import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.fragment.enter.LoginFragment;
 import com.comp5216.healthguard.fragment.enter.SignFragment;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * 进入页面的Activity
@@ -30,6 +33,8 @@ public class EnterActivity extends AppCompatActivity {
     SignFragment signFragment;
     // 登录的fragment
     LoginFragment loginFragment;
+    // firebase的认证实例
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +44,18 @@ public class EnterActivity extends AppCompatActivity {
         init();
         // 给页面组件设置监听器
         setListeners();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // 判断用户是否已经登录，如果未登录，则进入登录页面，如果已经登录，进入主页面
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if(currentUser != null){
+            Intent intent = new Intent(EnterActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     /**
@@ -53,6 +70,8 @@ public class EnterActivity extends AppCompatActivity {
         buttonSign = findViewById(R.id.button_sign);
         // 绑定登录按钮
         buttonLogin = findViewById(R.id.button_login);
+        // 获取firebase认证的实例
+        auth = FirebaseAuth.getInstance();
     }
 
     /**
@@ -94,7 +113,7 @@ public class EnterActivity extends AppCompatActivity {
             // 开始按钮动画,这里使用自定义按钮动画
             CustomAnimationUtil.ButtonsAnimation(EnterActivity.this,buttonLogin);
             // 加载登录的fragment
-//            loginFragment.show(getSupportFragmentManager(),"LoginFragment");
+            loginFragment.show(getSupportFragmentManager(),"LoginFragment");
         });
     }
 
