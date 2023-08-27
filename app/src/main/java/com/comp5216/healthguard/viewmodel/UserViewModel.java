@@ -1,5 +1,7 @@
 package com.comp5216.healthguard.viewmodel;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.User;
@@ -37,6 +39,16 @@ public class UserViewModel extends ViewModel {
      */
     public void storeUser(User user, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
         repository.storeUser(user, successListener, failureListener);
+    }
+
+    /**
+     * 通过用户UID获取用户的所有信息
+     * @param userId 用户UID
+     * @return 用户信息的Live Data
+     */
+    public LiveData<User> getUser(String userId) {
+        // 返回LiveData对象
+        return repository.getUser(userId);
     }
 
 }

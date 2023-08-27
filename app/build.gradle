@@ -51,7 +51,12 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore")
 
     implementation 'com.google.android.material:material:1.9.0'
-    
+
+    // avatar library
+    implementation 'com.github.bumptech.glide:glide:4.16.0' // 可能的版本号可能已经变化
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

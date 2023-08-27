@@ -2,6 +2,7 @@
     <string name="app_name">HealthGuard</string>
     <string name="app_introduction_01">Manage You Health.</string>
     <string name="app_introduction_02">Anytime</string>
+    <string name="image">image</string>
     <string name="log_in">Log In</string>
     <string name="sign_in">Sign In</string>
     <string name="button_back">Button Back</string>
@@ -25,4 +26,5 @@
     <string name="welcome_back">Welcome Back</string>
     <string name="error_no_exist_email">Please register first</string>
     <string name="error_incorrect_password">Incorrect password, please retry.</string>
+    <string name="loading">loading...</string>
 </resources>

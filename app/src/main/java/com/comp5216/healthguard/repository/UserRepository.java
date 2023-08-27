@@ -2,6 +2,9 @@ package com.comp5216.healthguard.repository;
 
 import android.util.Log;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
@@ -73,5 +76,48 @@ public class UserRepository {
                 .addOnFailureListener(failureListener);
     }
 
+    /**
+     * 通过用户的ID获取用户的信息
+     * @param userId user的UID
+     * @return 解密之后的用户信息
+     */
+    public LiveData<User> getUser(String userId) {
+        // 使用LiveData观察数据变化
+        MutableLiveData<User> userLiveData = new MutableLiveData<>();
+        // 创建文档引用
+        DocumentReference userRef = db.collection("users").document(userId);
+        // 获取文档
+        userRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // 将文档转换为User对象
+                        User user = documentSnapshot.toObject(User.class);
+                        // 通过AES解密用户信息
+                        try {
+                            assert user != null;
+                            user.setUserId(userId);
+                            user.setUserEmail(CustomEncryptUtil.decryptByAES(user.getUserEmail()));
+                            user.setUserName(CustomEncryptUtil.decryptByAES(user.getUserName()));
+                            user.setUserGender(CustomEncryptUtil.decryptByAES(user.getUserGender()));
+                        }catch (NoSuchPaddingException | IllegalBlockSizeException |
+                                NoSuchAlgorithmException | BadPaddingException |
+                                InvalidKeyException e) {
+                            // 抛出自定义异常
+                            throw new EncryptionException(e);
+                        }
+
+                        // 更新LiveData的值
+                        userLiveData.setValue(user);
+                    } else {
+                        userLiveData.setValue(null);  // 如果没有该文档，设置LiveData为null
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    // 发生错误时，设置LiveData为null
+                    userLiveData.setValue(null);
+                });
+        // 返回LiveData对象
+        return userLiveData;
+    }
 }
 
