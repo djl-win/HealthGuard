@@ -1,10 +1,19 @@
 package com.comp5216.healthguard.obj.portal;
 
-public class Notification {
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+public class Notification implements Comparable<Notification>{
     private String notification_id;
     private String user_id;
     private String notification_note;
     private String notification_date;
+    // Notification Type
+    // 0 - Time to eat
+    // 1 - Did not eat
+    // 2 - File upload
+    // 3 - Healthy abnormal
+    // 4 - 0 time
     private String notification_type;
     private String notification_read_status;
     private String notification_delete_status;
@@ -73,5 +82,17 @@ public class Notification {
 
     public String getNotification_delete_status() {
         return this.notification_delete_status;
+    }
+
+    @Override
+    public int compareTo(Notification notification) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        int date = 0;
+        try {
+            date = (int) (dateFormat.parse(this.notification_date).getTime() - dateFormat.parse(notification.getNotification_date()).getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
     }
 }

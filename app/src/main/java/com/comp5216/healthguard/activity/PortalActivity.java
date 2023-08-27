@@ -8,11 +8,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 
 import com.comp5216.healthguard.R;
@@ -21,11 +19,8 @@ import com.comp5216.healthguard.fragment.portal.IndexFragment;
 import com.comp5216.healthguard.fragment.portal.NotifyFragment;
 import com.comp5216.healthguard.fragment.portal.SearchFragment;
 import com.comp5216.healthguard.fragment.portal.SettingFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.comp5216.healthguard.service.NotifyService;
+
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
 //    FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -74,6 +69,7 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         super.onResume();
         initView();
     }
+
 
     private void initView() {
         iv_indexIcon = findViewById(R.id.iv_indexIcon);
@@ -130,8 +126,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_notifyIcon.startAnimation(animation);
         replaceFragment(new NotifyFragment());
         //TODO TEST SERVICE
-//        Intent intent_notify_service = new Intent(this,NotifyService.class);
-//        startService(intent_notify_service);
+        Intent intent_notify_service = new Intent(this, NotifyService.class);
+        startService(intent_notify_service);
     }
 
     private void showChat() {
@@ -142,8 +138,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_chatIcon.startAnimation(animation);
         replaceFragment(new ChatFragment());
         //TODO TEST SERVICE
-//        Intent intent_notify_service = new Intent(this,NotifyService.class);
-//        stopService(intent_notify_service);
+        Intent intent_notify_service = new Intent(this,NotifyService.class);
+        stopService(intent_notify_service);
     }
 
     private void showSetting() {
@@ -161,4 +157,5 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         fragmentTransaction.replace(R.id.fl_index,fragment)
                 .commit();
     }
+
 }

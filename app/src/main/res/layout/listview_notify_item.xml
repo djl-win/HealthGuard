@@ -20,7 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:paddingTop="5dp"
+            android:paddingTop="0dp"
             android:paddingBottom="10dp"
             android:src="@drawable/ic_notify_title"/>
 
@@ -43,7 +43,7 @@
             android:layout_weight="1"
             android:paddingStart="-5dp"
             android:gravity="center"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
 
 
         <TextView
