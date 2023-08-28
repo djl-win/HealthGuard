@@ -33,6 +33,18 @@
             android:text="@string/loading"
             style="@style/chat_page_string_text1"
             />
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+        <ImageButton
+            android:id="@+id/button_add_friend_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="30dp"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/add_friends_icon"
+            />
     </LinearLayout>
 
 </LinearLayout>
