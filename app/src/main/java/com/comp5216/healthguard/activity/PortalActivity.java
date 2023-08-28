@@ -36,6 +36,10 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_portal);
+        //TEST SERVICE
+//        Intent intent_notify_service = new Intent(this, NotifyService.class);
+//        startService(intent_notify_service);
+
 //        Button button = findViewById(R.id.button_logout);
 //        button.setOnClickListener( view ->{
 //
@@ -125,9 +129,6 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_settingIcon.clearAnimation();
         iv_notifyIcon.startAnimation(animation);
         replaceFragment(new NotifyFragment());
-        //TODO TEST SERVICE
-        Intent intent_notify_service = new Intent(this, NotifyService.class);
-        startService(intent_notify_service);
     }
 
     private void showChat() {
@@ -137,9 +138,6 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_settingIcon.clearAnimation();
         iv_chatIcon.startAnimation(animation);
         replaceFragment(new ChatFragment());
-        //TODO TEST SERVICE
-        Intent intent_notify_service = new Intent(this,NotifyService.class);
-        stopService(intent_notify_service);
     }
 
     private void showSetting() {
@@ -158,4 +156,11 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
                 .commit();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // TEST SERVICE
+//        Intent intent_notify_service = new Intent(this,NotifyService.class);
+//        stopService(intent_notify_service);
+    }
 }

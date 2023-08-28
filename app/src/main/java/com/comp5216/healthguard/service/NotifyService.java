@@ -125,7 +125,7 @@ public class NotifyService extends Service {
                                             Collections.sort(notification_type_0_list);
                                             LogUtils.e(notification_type_0_list.size());
                                             if (task.getResult().size() > SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE)){
-                                                // TODO Refresh
+                                                // Refresh
                                                 SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
                                                 EventBus.getDefault().postSticky(notification_refresh_event);
                                             }
@@ -136,7 +136,7 @@ public class NotifyService extends Service {
                         for (int i = 0;i<notification_type_0_list.size();i++){
                             LogUtils.e(notification_type_0_list.get(i).getNotification_date());
                         }
-                        // TODO 判断15分钟未吃
+                        // 判断15分钟未吃
                         // TODO Document name
                         if (!notification_type_0_list.isEmpty()){
                             if (DifferentTime(currentDate,notification_type_0_list.get(0).getNotification_date(),dateFormat) == 0){

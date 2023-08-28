@@ -109,7 +109,7 @@ public class NotifyFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                //TODO ADD LIST
+                                // ADD LIST
                                 if (!documentSnapshot.get("notification_type").toString().equals("4")){
                                     Map<String, Object> data = documentSnapshot.getData();
                                     notificationList.add(new Notification(
