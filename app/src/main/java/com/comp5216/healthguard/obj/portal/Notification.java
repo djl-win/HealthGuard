@@ -19,6 +19,7 @@ public class Notification implements Comparable<Notification>{
     private String notification_delete_status;
 
     public Notification(String notification_id, String user_id, String notification_note, String notification_date, String notification_type, String notification_read_status, String notification_delete_status){
+        String doc_id;
         this.notification_id = notification_id;
         this.user_id = user_id;
         this.notification_note = notification_note;

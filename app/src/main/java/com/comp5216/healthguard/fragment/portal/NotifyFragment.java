@@ -32,6 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -96,11 +97,11 @@ public class NotifyFragment extends Fragment {
     }
 
     private void initView() {
-        CollectionReference usersRef = db.collection("notification");
+        CollectionReference notifyRef = db.collection("notification");
         if (!notificationList.isEmpty()){
             notificationList.clear();
         }
-        usersRef.whereEqualTo("user_id",user_id)
+        notifyRef.whereEqualTo("user_id",user_id)
                 .whereEqualTo("notification_read_status","0")
                 .whereEqualTo("notification_delete_status","0")
                 .get()
@@ -153,8 +154,12 @@ public class NotifyFragment extends Fragment {
     public void onMessageEvent(SendNotificationRefreshEvent sendNotificationRefreshEvent){
         if (sendNotificationRefreshEvent.getType().equals("send_notification_refresh")){
             if (sendNotificationRefreshEvent.getOrder().equals("notification_refresh")){
-                this.onResume();
-                LogUtils.e("DO REFRESH SUCCESSFULLY");
+                if (isVisible()){
+                    this.onResume();
+                    LogUtils.e("DO REFRESH SUCCESSFULLY");
+                }else {
+                    LogUtils.e("FRAGMENT NOT CREATE");
+                }
             }
         }
     }
