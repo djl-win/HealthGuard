@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".fragment.chat.ChatFragment">
 
     <LinearLayout
@@ -38,13 +39,22 @@
             android:layout_height="1dp"
             android:layout_weight="1" />
         <ImageButton
-            android:id="@+id/button_add_friend_chat"
+            android:id="@+id/button_add_friends_chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="15dp"
             android:background="?android:attr/selectableItemBackgroundBorderless"
             android:src="@drawable/add_friends_icon"
             />
     </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_friends_chat"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="never"
+        android:scrollbars="vertical" />
+
 
 </LinearLayout>

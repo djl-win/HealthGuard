@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_main_add_friends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/button_back_add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-10dp"
+            style="@style/sign_page_button_back" />
+
+        <TextView
+            android:id="@+id/text_view_title_add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_a_new_friends"
+            style="@style/sign_page_string_text1" />
+
+        <!--  email的输入框  -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_email_add_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/friend_s_email"
+            style="@style/sign_page_string_text_input1"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_edit_email_add_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!--  验证码的输入框  -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_verification_add_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/verification_code"
+            style="@style/sign_page_string_text_input2"
+            android:visibility="gone"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/text_edit_verification_add_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- 输入的错误提醒-->
+        <TextView
+            android:id="@+id/text_view_error_add_friends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            style="@style/sign_page_string_text3" />
+
+        <!--使得button位于底部，和gravity配合使用-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/button_continue_add_friends"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            style="@style/sign_page_button_continue"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_progress_indicator_add_friends"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <!-- Logo图像 -->
+        <ImageView
+            android:id="@+id/logo_image_view_add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/logo" />
+        />
+
+        <!-- 进度指示器 -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </LinearLayout>
+</FrameLayout>

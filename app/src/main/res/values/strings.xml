@@ -27,4 +27,12 @@
     <string name="error_no_exist_email">Please register first</string>
     <string name="error_incorrect_password">Incorrect password, please retry.</string>
     <string name="loading">loading...</string>
+    <string name="add_a_new_friends">Add a new friends</string>
+    <string name="friend_s_email">Friend\'s email</string>
+    <string name="verification_code">Verification code</string>
+    <string name="error_no_find_user">No such user</string>
+    <string name="enter_your_verification_code">Enter your verification code</string>
+    <string name="error_wrong_verification">Wrong verification code, please retry</string>
+    <string name="error_wrong_add_self">You can not add yourself</string>
+    <string name="error_already_added">You aleady added this user</string>
 </resources>

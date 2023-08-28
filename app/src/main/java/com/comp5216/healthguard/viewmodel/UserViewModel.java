@@ -1,13 +1,17 @@
 package com.comp5216.healthguard.viewmodel;
 
+import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.repository.UserRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 /**
  * 用户视图模型类，处理用户信息，返回到view层
@@ -46,9 +50,19 @@ public class UserViewModel extends ViewModel {
      * @param userId 用户UID
      * @return 用户信息的Live Data
      */
-    public LiveData<User> getUser(String userId) {
+    public LiveData<User> getUserByUserId(String userId) {
         // 返回LiveData对象
-        return repository.getUser(userId);
+        return repository.getUserByUserId(userId);
+    }
+
+    /**
+     * 通过用户输入的验证码（需要添加的用户id），来判断用户输入的id是否与此邮箱对应的id一致
+     * @param email 用户加密前的id
+     * @param verification 用户输入的验证码（id）
+     * @param callback 正确与否
+     */
+    public void verifyUserByEmail(String email,String verification, Consumer<Boolean> callback) {
+        repository.verifyUserByEmail(email, verification,callback);
     }
 
 }

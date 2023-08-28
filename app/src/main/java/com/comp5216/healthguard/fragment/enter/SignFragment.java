@@ -186,8 +186,6 @@ public class SignFragment extends DialogFragment {
         textInputPassword2 = view.findViewById(R.id.text_input_password2_sign);
         // 绑定错误提醒
         textViewError = view.findViewById(R.id.text_view_error_sign);
-        // 初始化用户视图模型
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         // 绑定整个页面的layout
         linearLayoutMain = view.findViewById(R.id.linear_layout_main_sign);
         // 绑定注册进度条页面的layout

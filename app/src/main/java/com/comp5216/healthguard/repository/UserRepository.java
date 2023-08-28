@@ -2,16 +2,20 @@ package com.comp5216.healthguard.repository;
 
 import android.util.Log;
 
+import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -81,7 +85,7 @@ public class UserRepository {
      * @param userId user的UID
      * @return 解密之后的用户信息
      */
-    public LiveData<User> getUser(String userId) {
+    public LiveData<User> getUserByUserId(String userId) {
         // 使用LiveData观察数据变化
         MutableLiveData<User> userLiveData = new MutableLiveData<>();
         // 创建文档引用
@@ -119,5 +123,41 @@ public class UserRepository {
         // 返回LiveData对象
         return userLiveData;
     }
+
+    /**
+     * 通过邮箱获取用户信息，并判断用户输入的验证码（id），与这个查询出的id一不一致
+     * @param email 用户加密前的email
+     * @param verification 用户输入的验证码（id）
+     * @param callback 正确与否
+     */
+    public void verifyUserByEmail(String email,String verification, Consumer<Boolean> callback) {
+        CollectionReference usersRef = db.collection("users");
+        // 将用户的邮箱进行加密之后去数据库比对
+        try {
+            email = CustomEncryptUtil.encryptByAES(email);
+        } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                 NoSuchAlgorithmException | BadPaddingException |
+                 InvalidKeyException e) {
+            // 抛出自定义异常
+            throw new EncryptionException(e);
+        }
+
+        usersRef.whereEqualTo("userEmail", email).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    String userId = document.getId();
+                    if (userId.equals(verification)) {
+                        callback.accept(true);
+                        return;
+                    }
+                }
+                callback.accept(false);
+            } else {
+                callback.accept(false);
+            }
+        });
+    }
+
+
 }
 
