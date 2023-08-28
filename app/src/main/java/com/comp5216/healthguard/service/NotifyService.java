@@ -1,17 +1,23 @@
 package com.comp5216.healthguard.service;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.media.metrics.Event;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.activity.PortalActivity;
 import com.comp5216.healthguard.fragment.portal.NotifyFragment;
 import com.comp5216.healthguard.obj.SPConstants;
 import com.comp5216.healthguard.obj.portal.Notification;
@@ -73,11 +79,13 @@ public class NotifyService extends Service {
     private Disposable subscription;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
-    private List<Notification> notification_type_0_list = new ArrayList<>();
+    private List<Notification> notification_type_4_list = new ArrayList<>();
+    private Date currentDate = new Date();
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private String formattedDate = dateFormat.format(currentDate);
+
     public NotifyService() {
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        String formattedDate = dateFormat.format(currentDate);
+
         // Rxjava 轮询 5s
         subscription = Observable.interval(1000*5,1000*5, TimeUnit.MILLISECONDS)
                 .map(new Function<Long, Long>() {
@@ -102,8 +110,8 @@ public class NotifyService extends Service {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                         if (task.isSuccessful()){
-                                            if (!notification_type_0_list.isEmpty()){
-                                                notification_type_0_list.clear();
+                                            if (!notification_type_4_list.isEmpty()){
+                                                notification_type_4_list.clear();
                                             }
                                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                                 Map<String, Object> data = documentSnapshot.getData();
@@ -111,7 +119,7 @@ public class NotifyService extends Service {
                                                 // current_date > item_date  === item is early 8:25 - 8.20 > 0
                                                 if (documentSnapshot.get("notification_type").toString().equals("4")
                                                 && DifferentTime(currentDate,str_item_date,dateFormat) >= 0){
-                                                    notification_type_0_list.add(new Notification(
+                                                    notification_type_4_list.add(new Notification(
                                                             data.get("notification_id").toString(),
                                                             data.get("user_id").toString(),
                                                             data.get("notification_note").toString(),
@@ -122,24 +130,39 @@ public class NotifyService extends Service {
                                                     ));
                                                 }
                                             }
-                                            Collections.sort(notification_type_0_list);
-                                            LogUtils.e(notification_type_0_list.size());
+                                            Collections.sort(notification_type_4_list);
+                                            LogUtils.e(notification_type_4_list.size());
                                             if (task.getResult().size() > SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE)){
+                                                // NotificationManager
+                                                int new_notice = task.getResult().size() - SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);
+                                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                                if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+                                                    NotificationChannel channel=new NotificationChannel("Notification","Notification",
+                                                            NotificationManager.IMPORTANCE_HIGH);
+                                                    manager.createNotificationChannel(channel);
+                                                }
+                                                android.app.Notification note = new NotificationCompat.Builder(getBaseContext(),"Notification")
+                                                        .setContentTitle("New Notice")
+                                                        .setContentText("You have " + new_notice + " new notice !!!")
+                                                        .setSmallIcon(R.drawable.ic_notify)
+                                                        .build();
+                                                manager.notify(1,note);
                                                 // Refresh
                                                 SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
                                                 EventBus.getDefault().postSticky(notification_refresh_event);
                                             }
+                                            doAddTest();
                                         }
                                     }
                                 });
 
-                        for (int i = 0;i<notification_type_0_list.size();i++){
-                            LogUtils.e(notification_type_0_list.get(i).getNotification_date());
+                        for (int i = 0;i<notification_type_4_list.size();i++){
+                            LogUtils.e(notification_type_4_list.get(i).getNotification_date());
                         }
                         // 判断15分钟未吃
                         // TODO Document name
-                        if (!notification_type_0_list.isEmpty()){
-                            if (DifferentTime(currentDate,notification_type_0_list.get(0).getNotification_date(),dateFormat) == 0){
+                        if (!notification_type_4_list.isEmpty()){
+                            if (DifferentTime(currentDate,notification_type_4_list.get(0).getNotification_date(),dateFormat) == 0){
                                 DocumentReference notify_update_Ref = db.collection("notification").document("YyKfIet5AQOVxLOAOyjd");
                                 notify_update_Ref
                                         .update("notification_type", "0")
@@ -154,10 +177,10 @@ public class NotifyService extends Service {
                                             }
                                         });
                             }
-                            if (DifferentTime(currentDate,notification_type_0_list.get(0).getNotification_date(),dateFormat) >= 15){
+                            if (DifferentTime(currentDate,notification_type_4_list.get(0).getNotification_date(),dateFormat) >= 15){
                                 CollectionReference notify_add_Ref = db.collection("notification");
                                 Map<String,Object> new_notify = new HashMap<>();
-                                new_notify.put("user_id",notification_type_0_list.get(0).getUser_id());
+                                new_notify.put("user_id",notification_type_4_list.get(0).getUser_id());
                                 new_notify.put("notification_date",formattedDate);
                                 new_notify.put("notification_id","test_08");
                                 new_notify.put("notification_note","You did not eat xxx");
@@ -207,6 +230,18 @@ public class NotifyService extends Service {
         }
         long min = ( currentDate.getTime() - item_date.getTime() ) / (1000 * 60);
         return (int)min;
+    }
+    private void doAddTest(){
+        CollectionReference notify_add_Ref = db.collection("notification");
+        Map<String,Object> new_notify = new HashMap<>();
+        new_notify.put("user_id",user_id);
+        new_notify.put("notification_date",formattedDate);
+        new_notify.put("notification_id","test_test");
+        new_notify.put("notification_note","Test");
+        new_notify.put("notification_type","1");
+        new_notify.put("notification_read_status","0");
+        new_notify.put("notification_delete_status","0");
+        notify_add_Ref.document("test_test").set(new_notify);
     }
 
 }

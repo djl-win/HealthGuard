@@ -2,11 +2,17 @@ package com.comp5216.healthguard.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -19,7 +25,10 @@ import com.comp5216.healthguard.fragment.portal.IndexFragment;
 import com.comp5216.healthguard.fragment.portal.NotifyFragment;
 import com.comp5216.healthguard.fragment.portal.SearchFragment;
 import com.comp5216.healthguard.fragment.portal.SettingFragment;
+import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
 import com.comp5216.healthguard.service.NotifyService;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
@@ -39,7 +48,6 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         //TEST SERVICE
 //        Intent intent_notify_service = new Intent(this, NotifyService.class);
 //        startService(intent_notify_service);
-
 //        Button button = findViewById(R.id.button_logout);
 //        button.setOnClickListener( view ->{
 //
@@ -87,6 +95,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_chatIcon.setOnClickListener(this);
         iv_settingIcon.setOnClickListener(this);
         animation = AnimationUtils.loadAnimation(this,R.anim.anim_menu);
+        // 初始化Notify
+        showNotify();
     }
 
     @Override
