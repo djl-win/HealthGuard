@@ -11,12 +11,14 @@ import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.adapter.NotifyListAdapter;
 import com.comp5216.healthguard.obj.SPConstants;
 import com.comp5216.healthguard.obj.portal.Notification;
 import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
@@ -27,7 +29,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -103,7 +107,7 @@ public class NotifyService extends Service {
                         CollectionReference notifyRef = db.collection("notification");
                         notifyRef.whereEqualTo("user_id",user_id)
                                 .whereEqualTo("notification_read_status","0")
-                                .whereEqualTo("notification_delete_status","0")
+//                                .whereEqualTo("notification_delete_status","0")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
@@ -118,19 +122,8 @@ public class NotifyService extends Service {
                                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                                 Map<String, Object> data = documentSnapshot.getData();
                                                 String str_item_date = documentSnapshot.get("notification_date").toString();
-                                                notification_list.add(new Notification(
-                                                        data.get("notification_id").toString(),
-                                                        data.get("user_id").toString(),
-                                                        data.get("notification_note").toString(),
-                                                        data.get("notification_date").toString(),
-                                                        data.get("notification_type").toString(),
-                                                        data.get("notification_read_status").toString(),
-                                                        data.get("notification_delete_status").toString()
-                                                ));
-                                                // current_date > item_date  === item is early 8:25 - 8.20 > 0
-                                                if (documentSnapshot.get("notification_type").toString().equals("4")
-                                                        && DifferentTime(currentDate, str_item_date, dateFormat) >= 0) {
-                                                    notification_type_4_list.add(new Notification(
+                                                if (data.get("notification_delete_status").toString().equals("0")){
+                                                    notification_list.add(new Notification(
                                                             data.get("notification_id").toString(),
                                                             data.get("user_id").toString(),
                                                             data.get("notification_note").toString(),
@@ -139,11 +132,25 @@ public class NotifyService extends Service {
                                                             data.get("notification_read_status").toString(),
                                                             data.get("notification_delete_status").toString()
                                                     ));
-                                                    document_id.put(data.get("notification_id").toString(), documentSnapshot.getId());
+                                                    SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,notification_list.size());
+                                                    // current_date > item_date  === item is early 8:25 - 8.20 > 0
+                                                    if (documentSnapshot.get("notification_type").toString().equals("4")
+                                                            && DifferentTime(currentDate, str_item_date, dateFormat) >= 0) {
+                                                        notification_type_4_list.add(new Notification(
+                                                                data.get("notification_id").toString(),
+                                                                data.get("user_id").toString(),
+                                                                data.get("notification_note").toString(),
+                                                                data.get("notification_date").toString(),
+                                                                data.get("notification_type").toString(),
+                                                                data.get("notification_read_status").toString(),
+                                                                data.get("notification_delete_status").toString()
+                                                        ));
+                                                        document_id.put(data.get("notification_id").toString(), documentSnapshot.getId());
+                                                    }
                                                 }
                                             }
                                             Collections.sort(notification_type_4_list);
-                                            LogUtils.e(notification_type_4_list.size());
+//                                            LogUtils.e(notification_type_4_list.size());
 //                                            if (task.getResult().size() > SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE)){
 //                                                // NotificationManager
 //                                                int new_notice = task.getResult().size() - SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);
@@ -178,9 +185,9 @@ public class NotifyService extends Service {
                                     }
                                 });
 
-                        for (int i = 0;i<notification_type_4_list.size();i++){
-                            LogUtils.e(notification_type_4_list.get(i).getNotification_date());
-                        }
+//                        for (int i = 0;i<notification_type_4_list.size();i++){
+//                            LogUtils.e(notification_type_4_list.get(i).getNotification_date());
+//                        }
                         // 判断15分钟未吃
                         // TODO Document name
                         if (!notification_type_4_list.isEmpty()){
@@ -231,6 +238,73 @@ public class NotifyService extends Service {
                     }
                 });
 
+        CollectionReference notifyRef = db.collection("notification");
+        notifyRef.whereEqualTo("user_id",user_id)
+                .whereEqualTo("notification_read_status","0")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (error == null){
+                            if (!notification_list.isEmpty()){
+                                notification_list.clear();
+                            }
+                            for (QueryDocumentSnapshot documentSnapshot : value){
+                                // ADD LIST
+                                if (!documentSnapshot.get("notification_type").toString().equals("4")
+                                        && documentSnapshot.get("notification_delete_status").toString().equals("0")){
+                                    Map<String, Object> data = documentSnapshot.getData();
+                                    notification_list.add(new Notification(
+                                            data.get("notification_id").toString(),
+                                            data.get("user_id").toString(),
+                                            data.get("notification_note").toString(),
+                                            data.get("notification_date").toString(),
+                                            data.get("notification_type").toString(),
+                                            data.get("notification_read_status").toString(),
+                                            data.get("notification_delete_status").toString()
+                                    ));
+                                }
+                            }
+//                            LogUtils.e(notification_list.size());
+//                            LogUtils.e(value.size());
+//                            LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE));
+                            if (SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE) < notification_list.size()) {
+                                // NotificationManager
+                                int new_notice = notification_list.size() - SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE);
+                                LogUtils.e(notification_list.size());
+                                LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE));
+                                LogUtils.e(new_notice);
+                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                                    NotificationChannel channel = new NotificationChannel("Notification", "Notification",
+                                            NotificationManager.IMPORTANCE_DEFAULT);
+                                    manager.createNotificationChannel(channel);
+                                }
+//                                if (new_notice >= 2) {
+//                                    android.app.Notification note_2 = new NotificationCompat.Builder(getBaseContext(), "Notification")
+//                                            .setContentTitle("New Notice")
+//                                            .setContentText("You have " + new_notice + " new notice !!!")
+//                                            .setSmallIcon(R.drawable.ic_notify)
+//                                            .build();
+//                                    manager.notify(2, note_2);
+//                                } else {
+//                                    for (int i = SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE); i < notification_list.size(); i++) {
+                                        android.app.Notification note = new NotificationCompat.Builder(getBaseContext(), "Notification")
+                                                .setContentTitle("New Notice")
+                                                .setContentText(notification_list.get(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE)).getNotification_note())
+                                                .setSmallIcon(R.drawable.ic_notify)
+                                                .build();
+                                        manager.notify(1, note);
+//                                    }
+//                                }
+                            }
+                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,value.size());
+                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_LIST_SIZE,notification_list.size());
+                            SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh", "notification_refresh");
+                            EventBus.getDefault().postSticky(notification_refresh_event);
+                        }
+                    }
+                });
+
     }
 
     @Override
@@ -264,6 +338,15 @@ public class NotifyService extends Service {
         new_notify.put("notification_read_status","0");
         new_notify.put("notification_delete_status","0");
         notify_add_Ref.document("test_test").set(new_notify);
+        Map<String,Object> new_notify2 = new HashMap<>();
+        new_notify2.put("user_id",user_id);
+        new_notify2.put("notification_date",formattedDate);
+        new_notify2.put("notification_id","new_notify2");
+        new_notify2.put("notification_note","Test");
+        new_notify2.put("notification_type","1");
+        new_notify2.put("notification_read_status","0");
+        new_notify2.put("notification_delete_status","0");
+        notify_add_Ref.document("new_notify2").set(new_notify);
     }
 
 }

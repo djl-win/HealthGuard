@@ -110,7 +110,6 @@ public class NotifyFragment extends Fragment {
         }
         notifyRef.whereEqualTo("user_id",user_id)
                 .whereEqualTo("notification_read_status","0")
-                .whereEqualTo("notification_delete_status","0")
 //                .get()
 //                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //                    @Override
@@ -147,7 +146,8 @@ public class NotifyFragment extends Fragment {
                                 }
                                 for (QueryDocumentSnapshot documentSnapshot : value){
                                     // ADD LIST
-                                    if (!documentSnapshot.get("notification_type").toString().equals("4")){
+                                    if (!documentSnapshot.get("notification_type").toString().equals("4")
+                                            && documentSnapshot.get("notification_delete_status").toString().equals("0")){
                                         Map<String, Object> data = documentSnapshot.getData();
                                         doc_id.put(data.get("notification_id").toString(),documentSnapshot.getId());
                                         notificationList.add(new Notification(
@@ -160,9 +160,7 @@ public class NotifyFragment extends Fragment {
                                                 data.get("notification_delete_status").toString()
                                         ));
                                     }
-
                                 }
-                                SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,value.size());
                                 notifyListAdapter = new NotifyListAdapter(notificationList,doc_id,getContext());
                                 listView = getView().findViewById(R.id.lv_notify);
                                 listView.setAdapter(notifyListAdapter);
@@ -181,8 +179,6 @@ public class NotifyFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-//        listView = container.findViewById(R.id.lv_notify);
-//        listView.setAdapter(notifyListAdapter);
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_notify, container, false);
     }
@@ -204,6 +200,15 @@ public class NotifyFragment extends Fragment {
         new_notify.put("notification_read_status","0");
         new_notify.put("notification_delete_status","0");
         notify_add_Ref.document("test_test").set(new_notify);
+        Map<String,Object> new_notify2 = new HashMap<>();
+        new_notify2.put("user_id",user_id);
+        new_notify2.put("notification_date","2023-08-31 15:36");
+        new_notify2.put("notification_id","new_notify2");
+        new_notify2.put("notification_note","Test222");
+        new_notify2.put("notification_type","0");
+        new_notify2.put("notification_read_status","0");
+        new_notify2.put("notification_delete_status","0");
+        notify_add_Ref.document("wwww").set(new_notify2);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

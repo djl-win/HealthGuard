@@ -13,7 +13,7 @@ public class Notification implements Comparable<Notification>{
     // 1 - Did not eat
     // 2 - File upload
     // 3 - Healthy abnormal
-    // 4 - 0 time
+    // 4 - 0 time before
     private String notification_type;
     private String notification_read_status;
     private String notification_delete_status;

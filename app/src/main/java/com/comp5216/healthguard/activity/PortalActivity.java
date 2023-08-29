@@ -35,6 +35,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -62,8 +63,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_portal);
         //TEST SERVICE
-//        Intent intent_notify_service = new Intent(this, NotifyService.class);
-//        startService(intent_notify_service);
+        Intent intent_notify_service = new Intent(this, NotifyService.class);
+        startService(intent_notify_service);
 //        Button button = findViewById(R.id.button_logout);
 //        button.setOnClickListener( view ->{
 //
@@ -121,13 +122,21 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         CollectionReference notifyRef = db.collection("notification");
         notifyRef.whereEqualTo("user_id",user_id)
                 .whereEqualTo("notification_read_status","0")
-                .whereEqualTo("notification_delete_status","0")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()){
+                            int sum = 0;
+                            for (QueryDocumentSnapshot documentSnapshot:task.getResult()){
+                                if (!documentSnapshot.getData().get("notification_type").equals("4")
+                                && documentSnapshot.getData().get("notification_delete_status").equals("0")){
+                                    sum++;
+                                }
+                            }
                             SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,task.getResult().size());
+                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_LIST_SIZE,sum);
+                            LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE));
                         }
                     }
                 });
@@ -204,7 +213,7 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
     protected void onDestroy() {
         super.onDestroy();
         // TEST SERVICE
-//        Intent intent_notify_service = new Intent(this,NotifyService.class);
-//        stopService(intent_notify_service);
+        Intent intent_notify_service = new Intent(this,NotifyService.class);
+        stopService(intent_notify_service);
     }
 }
