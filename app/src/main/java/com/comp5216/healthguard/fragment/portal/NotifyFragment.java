@@ -13,18 +13,22 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -79,6 +83,9 @@ public class NotifyFragment extends Fragment {
     private NotifyListAdapter notifyListAdapter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private Map<String, String> doc_id = new HashMap<>();
+
+    private ImageView test;
 
     @Override
     public void onResume() {
@@ -104,35 +111,71 @@ public class NotifyFragment extends Fragment {
         notifyRef.whereEqualTo("user_id",user_id)
                 .whereEqualTo("notification_read_status","0")
                 .whereEqualTo("notification_delete_status","0")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                // ADD LIST
-                                if (!documentSnapshot.get("notification_type").toString().equals("4")){
-                                    Map<String, Object> data = documentSnapshot.getData();
-                                    notificationList.add(new Notification(
-                                            data.get("notification_id").toString(),
-                                            data.get("user_id").toString(),
-                                            data.get("notification_note").toString(),
-                                            data.get("notification_date").toString(),
-                                            data.get("notification_type").toString(),
-                                            data.get("notification_read_status").toString(),
-                                            data.get("notification_delete_status").toString()
-                                    ));
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                                // ADD LIST
+//                                if (!documentSnapshot.get("notification_type").toString().equals("4")){
+//                                    Map<String, Object> data = documentSnapshot.getData();
+//                                    notificationList.add(new Notification(
+//                                            data.get("notification_id").toString(),
+//                                            data.get("user_id").toString(),
+//                                            data.get("notification_note").toString(),
+//                                            data.get("notification_date").toString(),
+//                                            data.get("notification_type").toString(),
+//                                            data.get("notification_read_status").toString(),
+//                                            data.get("notification_delete_status").toString()
+//                                    ));
+//                                }
+//
+//                            }
+//                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,task.getResult().size());
+//                            notifyListAdapter = new NotifyListAdapter(notificationList,getContext());
+//                            listView = getView().findViewById(R.id.lv_notify);
+//                            listView.setAdapter(notifyListAdapter);
+//                        }
+//                    }
+                    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (error == null){
+                                if (!notificationList.isEmpty()){
+                                    notificationList.clear();
                                 }
+                                for (QueryDocumentSnapshot documentSnapshot : value){
+                                    // ADD LIST
+                                    if (!documentSnapshot.get("notification_type").toString().equals("4")){
+                                        Map<String, Object> data = documentSnapshot.getData();
+                                        doc_id.put(data.get("notification_id").toString(),documentSnapshot.getId());
+                                        notificationList.add(new Notification(
+                                                data.get("notification_id").toString(),
+                                                data.get("user_id").toString(),
+                                                data.get("notification_note").toString(),
+                                                data.get("notification_date").toString(),
+                                                data.get("notification_type").toString(),
+                                                data.get("notification_read_status").toString(),
+                                                data.get("notification_delete_status").toString()
+                                        ));
+                                    }
 
+                                }
+                                SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,value.size());
+                                notifyListAdapter = new NotifyListAdapter(notificationList,doc_id,getContext());
+                                listView = getView().findViewById(R.id.lv_notify);
+                                listView.setAdapter(notifyListAdapter);
                             }
-                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,task.getResult().size());
-                            notifyListAdapter = new NotifyListAdapter(notificationList,getContext());
-                            listView = getView().findViewById(R.id.lv_notify);
-                            listView.setAdapter(notifyListAdapter);
                         }
-                    }
                 });
-
+        test = getView().findViewById(R.id.test);
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                doAddTest();
+            }
+        });
     }
 
     @Override
@@ -148,6 +191,19 @@ public class NotifyFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+    }
+
+    private void doAddTest(){
+        CollectionReference notify_add_Ref = db.collection("notification");
+        Map<String,Object> new_notify = new HashMap<>();
+        new_notify.put("user_id",user_id);
+        new_notify.put("notification_date","2023-08-31 15:36");
+        new_notify.put("notification_id","test_test");
+        new_notify.put("notification_note","Test");
+        new_notify.put("notification_type","0");
+        new_notify.put("notification_read_status","0");
+        new_notify.put("notification_delete_status","0");
+        notify_add_Ref.document("test_test").set(new_notify);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

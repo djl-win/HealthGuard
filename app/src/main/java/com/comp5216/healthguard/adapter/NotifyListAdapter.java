@@ -25,15 +25,18 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+import java.util.Map;
 
-public class NotifyListAdapter extends BaseAdapter implements CompoundButton.OnCheckedChangeListener {
+public class NotifyListAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Notification> notificationList;
+    private Map<String,String> docId;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public NotifyListAdapter(List<Notification> notificationList, Context mContext){
+    public NotifyListAdapter(List<Notification> notificationList, Map<String,String> docId,Context mContext){
         this.notificationList = notificationList;
+        this.docId = docId;
         this.mContext = mContext;
     }
     @Override
@@ -62,7 +65,28 @@ public class NotifyListAdapter extends BaseAdapter implements CompoundButton.OnC
         Notification notification = notificationList.get(pos);
         if (notification.getNotification_type().equals("0")){
             sw_notify_item_swtich.setVisibility(View.VISIBLE);
-            sw_notify_item_swtich.setOnCheckedChangeListener(this);
+            sw_notify_item_swtich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    if(compoundButton.isChecked()){
+                        DocumentReference notify_delete_Ref = db.collection("notification").document(docId.get(notification.getNotification_id()));
+                        notify_delete_Ref
+                                .update("notification_delete_status", "1")
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                    }
+                                });
+                        SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
+                        EventBus.getDefault().postSticky(notification_refresh_event);
+                    }
+                }
+            });
         }
         if (notification.getNotification_type().equals("1")){
             tv_notify_content.setTextColor(Color.argb(255,255,0,0));
@@ -80,26 +104,5 @@ public class NotifyListAdapter extends BaseAdapter implements CompoundButton.OnC
         tv_notify_content.setText(notification.getNotification_note());
         tv_notify_date.setText(notification.getNotification_date());
         return view;
-    }
-
-    @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        if(compoundButton.isChecked()){
-            DocumentReference notify_delete_Ref = db.collection("notification").document("YyKfIet5AQOVxLOAOyjd");
-            notify_delete_Ref
-                    .update("notification_delete_status", "1")
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        }
-                    });
-            SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
-            EventBus.getDefault().postSticky(notification_refresh_event);
-        }
     }
 }

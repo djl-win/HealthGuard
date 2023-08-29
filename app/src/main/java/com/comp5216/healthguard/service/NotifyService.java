@@ -108,14 +108,14 @@ public class NotifyService extends Service {
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                     @Override
                                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if (task.isSuccessful()){
-                                            if (!notification_list.isEmpty()){
+                                        if (task.isSuccessful()) {
+                                            if (!notification_list.isEmpty()) {
                                                 notification_list.clear();
                                             }
-                                            if (!notification_type_4_list.isEmpty()){
+                                            if (!notification_type_4_list.isEmpty()) {
                                                 notification_type_4_list.clear();
                                             }
-                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                                 Map<String, Object> data = documentSnapshot.getData();
                                                 String str_item_date = documentSnapshot.get("notification_date").toString();
                                                 notification_list.add(new Notification(
@@ -129,7 +129,7 @@ public class NotifyService extends Service {
                                                 ));
                                                 // current_date > item_date  === item is early 8:25 - 8.20 > 0
                                                 if (documentSnapshot.get("notification_type").toString().equals("4")
-                                                && DifferentTime(currentDate,str_item_date,dateFormat) >= 0){
+                                                        && DifferentTime(currentDate, str_item_date, dateFormat) >= 0) {
                                                     notification_type_4_list.add(new Notification(
                                                             data.get("notification_id").toString(),
                                                             data.get("user_id").toString(),
@@ -139,42 +139,41 @@ public class NotifyService extends Service {
                                                             data.get("notification_read_status").toString(),
                                                             data.get("notification_delete_status").toString()
                                                     ));
-                                                    document_id.put(data.get("notification_id").toString(),documentSnapshot.getId());
+                                                    document_id.put(data.get("notification_id").toString(), documentSnapshot.getId());
                                                 }
                                             }
                                             Collections.sort(notification_type_4_list);
                                             LogUtils.e(notification_type_4_list.size());
-                                            if (task.getResult().size() > SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE)){
-                                                // NotificationManager
-                                                int new_notice = task.getResult().size() - SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);
-                                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-                                                if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
-                                                    NotificationChannel channel=new NotificationChannel("Notification","Notification",
-                                                            NotificationManager.IMPORTANCE_HIGH);
-                                                    manager.createNotificationChannel(channel);
-                                                }
-                                                if (new_notice >= 3){
-                                                    android.app.Notification note = new NotificationCompat.Builder(getBaseContext(),"Notification")
-                                                            .setContentTitle("New Notice")
-                                                            .setContentText("You have " + new_notice + " new notice !!!")
-                                                            .setSmallIcon(R.drawable.ic_notify)
-                                                            .build();
-                                                    manager.notify(1,note);
-                                                }else {
-                                                    for (int i = SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);i<task.getResult().size();i++){
-                                                        android.app.Notification note = new NotificationCompat.Builder(getBaseContext(),"Notification")
-                                                                .setContentTitle("New Notice")
-                                                                .setContentText(notification_list.get(i).getNotification_note())
-                                                                .setSmallIcon(R.drawable.ic_notify)
-                                                                .build();
-                                                        manager.notify(1,note);
-                                                    }
-                                                }
-                                                // Refresh
-                                                SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
-                                                EventBus.getDefault().postSticky(notification_refresh_event);
-                                            }
-                                            doAddTest();
+//                                            if (task.getResult().size() > SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE)){
+//                                                // NotificationManager
+//                                                int new_notice = task.getResult().size() - SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);
+//                                                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//                                                if(Build.VERSION.SDK_INT>= Build.VERSION_CODES.O){
+//                                                    NotificationChannel channel=new NotificationChannel("Notification","Notification",
+//                                                            NotificationManager.IMPORTANCE_HIGH);
+//                                                    manager.createNotificationChannel(channel);
+//                                                }
+//                                                if (new_notice >= 3){
+//                                                    android.app.Notification note = new NotificationCompat.Builder(getBaseContext(),"Notification")
+//                                                            .setContentTitle("New Notice")
+//                                                            .setContentText("You have " + new_notice + " new notice !!!")
+//                                                            .setSmallIcon(R.drawable.ic_notify)
+//                                                            .build();
+//                                                    manager.notify(1,note);
+//                                                }else {
+//                                                    for (int i = SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_SIZE);i<task.getResult().size();i++){
+//                                                        android.app.Notification note = new NotificationCompat.Builder(getBaseContext(),"Notification")
+//                                                                .setContentTitle("New Notice")
+//                                                                .setContentText(notification_list.get(i).getNotification_note())
+//                                                                .setSmallIcon(R.drawable.ic_notify)
+//                                                                .build();
+//                                                        manager.notify(1,note);
+//                                                    }
+//                                                }
+                                            // Refresh
+//                                                SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh", "notification_refresh");
+//                                                EventBus.getDefault().postSticky(notification_refresh_event);
+//                                            }
                                         }
                                     }
                                 });
