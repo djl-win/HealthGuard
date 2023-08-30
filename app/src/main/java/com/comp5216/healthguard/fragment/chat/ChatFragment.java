@@ -1,39 +1,29 @@
 package com.comp5216.healthguard.fragment.chat;
 
 import android.app.Activity;
-import android.app.Application;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.activity.EnterActivity;
-import com.comp5216.healthguard.fragment.enter.SignFragment;
-import com.comp5216.healthguard.util.CustomAnimationUtil;
+import com.comp5216.healthguard.adapter.FriendsListAdapter;
+import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 
 /**
@@ -63,13 +53,17 @@ public class ChatFragment extends Fragment {
     // 好友列表
     RecyclerView recyclerViewFriends;
     // 用户的view model
-    UserViewModel viewModel;
+    UserViewModel userViewModel;
+    // 好友关系的view model
+    RelationShipViewModel relationShipViewModel;
     // firebase的auth
     FirebaseAuth auth;
     // firebase user
     FirebaseUser firebaseUser;
     // 用户的uid
     String userUid;
+    // 用户列表的适配器
+    FriendsListAdapter friendsListAdapter;
 
     @Nullable
     @Override
@@ -104,15 +98,17 @@ public class ChatFragment extends Fragment {
         // 绑定好友列表的recycle view
         recyclerViewFriends = view.findViewById(R.id.recycler_view_friends_chat);
         // 初始化用户的view model
-        viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        // 初始化好友关系的view model
+        relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
         // 初始化firebase auth
         auth = FirebaseAuth.getInstance();
         // 初始化firebase user
         firebaseUser = auth.getCurrentUser();
         // 初始化用户的UID
-        assert firebaseUser != null;
         userUid = firebaseUser.getUid();
-
+        // 绑定用户列表的适配器
+        recyclerViewFriends.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
@@ -123,6 +119,8 @@ public class ChatFragment extends Fragment {
         loadUserInformation();
         // 添加好友按钮今天器
         ButtonAddFriendsListener();
+        // 监听好友列表的信息，实时更新recycle view
+        observeFriendListData();
     }
 
     /**
@@ -130,18 +128,20 @@ public class ChatFragment extends Fragment {
      */
     private void loadUserInformation() {
         // 观察LiveData中的数据变化，并相应地更新UI
-        viewModel.getUserByUserId(userUid).observe(getViewLifecycleOwner(), user -> {
-            // 通过用户的name给每个用户设置不同的头像
-            String avatarUrl = "https://api.dicebear.com/6.x/bottts-neutral/png?seed=" + user.getUserName();
-            // 加载用户头像到xml
-            Glide.with(this)
-                    .load(avatarUrl)
-                    .transform(new RoundedCorners(20))
-                    .error(R.drawable.load_image)
-                    .into(imageViewAvatar);
-            // 加载用户姓名到xml进行显示
-            textViewUsername.setText(user.getUserName());
-
+        userViewModel.getUserByUserId(userUid).observe(getViewLifecycleOwner(), user -> {
+            // 如果从数据库中获取的用户数据不为空
+            if(user != null) {
+                // 通过用户的name给每个用户设置不同的头像
+                String avatarUrl = "https://api.dicebear.com/6.x/bottts-neutral/png?seed=" + user.getUserName();
+                // 加载用户头像到xml
+                Glide.with(this)
+                        .load(avatarUrl)
+                        .transform(new RoundedCorners(20))
+                        .error(R.drawable.load_image)
+                        .into(imageViewAvatar);
+                // 加载用户姓名到xml进行显示
+                textViewUsername.setText(user.getUserName());
+            }
         });
     }
 
@@ -155,6 +155,27 @@ public class ChatFragment extends Fragment {
             // 加载注册的fragment
             addFriendsFragment.show(getParentFragmentManager(),"AddFriendsFragment");
 
+        });
+    }
+
+    /**
+     * 监听当前用户的所有好友信息，并加载和更新适配器
+     */
+    private void observeFriendListData() {
+        // 从ViewModel获取所有与当前用户ID关联的好友数据，并注册LiveData的观察者
+        relationShipViewModel.findAllFriendsByID(userUid).observe(getViewLifecycleOwner(), users -> {
+            // 如果从数据库中获取的用户数据不为空
+            if (users != null) {
+                // 如果列表的适配器尚未初始化
+                if (friendsListAdapter == null) {
+                    // 初始化适配器，并设置它为recyclerView的适配器
+                    friendsListAdapter = new FriendsListAdapter(getContext(), users);
+                    recyclerViewFriends.setAdapter(friendsListAdapter);
+                } else {
+                    // 如果适配器已经初始化，只需更新数据并刷新列表
+                    friendsListAdapter.updateData(users);
+                }
+            }
         });
     }
 }

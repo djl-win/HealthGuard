@@ -1,10 +1,15 @@
 package com.comp5216.healthguard.viewmodel;
 
 import androidx.core.util.Consumer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.Relationship;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.repository.RelationshipRepository;
+
+import java.util.List;
 
 /**
  * 用户间的好友关系的视图模型，返回到view层
@@ -36,6 +41,15 @@ public class RelationShipViewModel extends ViewModel {
         repository.storeRelationShip(relationship,callback);
     }
 
+
+    /**
+     * 通过Id查询该用户所有的好友
+     * @param userId 当前用户id
+     * @return 所有的好友信息
+     */
+    public LiveData<List<User>> findAllFriendsByID(String userId) {
+        return repository.findAllFriendsByUserId(userId);
+    }
 
 
 

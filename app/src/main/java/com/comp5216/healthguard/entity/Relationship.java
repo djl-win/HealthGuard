@@ -14,6 +14,15 @@ public class Relationship {
     private String relationshipId;  // 用String类型来存28位唯一标识符
     private String relationshipObserveId; // 观察者的用户ID
     private String relationshipObservedId; // 被观察者的用户ID
+    private String relationshipChatId; // 两个人的聊天框的ID
+
+    public String getRelationshipChatId() {
+        return relationshipChatId;
+    }
+
+    public void setRelationshipChatId(String relationshipChatId) {
+        this.relationshipChatId = relationshipChatId;
+    }
 
     public String getRelationshipId() {
         return relationshipId;

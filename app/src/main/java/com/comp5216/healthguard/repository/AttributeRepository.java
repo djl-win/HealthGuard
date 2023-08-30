@@ -1,11 +1,8 @@
 package com.comp5216.healthguard.repository;
 
-import android.util.Log;
-
 import com.comp5216.healthguard.entity.Attribute;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -27,22 +24,27 @@ public class AttributeRepository {
      * AttributeRepository的构造方法。
      */
     public AttributeRepository() {
-        this.db =  FirebaseFirestore.getInstance();
+        this.db = FirebaseFirestore.getInstance();
     }
 
     /**
      * 通过用户的信息，来生成默认的预警信息存储到数据库
+     *
      * @param user 用户的详细信息
      */
-    public void storeAttribute(User user){
+    public void storeAttribute(User user) {
+
+        // 创建一个新的属性对象
         Attribute attribute = new Attribute();
-        // 存储用户预警信息到数据库
-        if("Male".equals(user.getUserGender()) || "Other".equals(user.getUserGender())) {
-            // 生成唯一Id到数据库
+
+        // 判断用户的性别，并为其设置对应的健康属性阈值
+        if ("Male".equals(user.getUserGender()) || "Other".equals(user.getUserGender())) {
+            // 为属性对象生成一个唯一的ID
             attribute.setAttributeId(CustomIdGeneratorUtil.generateUniqueId());
+            // 设置属性对象的用户ID
             attribute.setUserId(user.getUserId()); // 假设user对象有这个字段和方法
 
-            // 假设的男性值
+            // 设置男性的血压、心率、体温和血氧的预设范围值
             attribute.setAttributeSystolicLow("90");
             attribute.setAttributeSystolicHigh("140");
             attribute.setAttributeDiastolicLow("60");
@@ -54,12 +56,12 @@ public class AttributeRepository {
             attribute.setAttributeBloodOxygenLow("95");
             attribute.setAttributeBloodOxygenHigh("100");
 
-        } else if("Female".equals(user.getUserGender())) {
-            // 生成唯一Id到数据库
+        } else if ("Female".equals(user.getUserGender())) {
+            // 为属性对象生成一个唯一的ID
             attribute.setAttributeId(CustomIdGeneratorUtil.generateUniqueId());
             attribute.setUserId(user.getUserId());
 
-            // 假定的女性值
+            // 设置女性的血压、心率、体温和血氧的预设范围值
             attribute.setAttributeSystolicLow("85");
             attribute.setAttributeSystolicHigh("135");
             attribute.setAttributeDiastolicLow("55");
@@ -71,9 +73,11 @@ public class AttributeRepository {
             attribute.setAttributeBloodOxygenLow("95");
             attribute.setAttributeBloodOxygenHigh("100");
         }
-        Log.d("dongjiale",attribute.getAttributeId());
-        DocumentReference attributeRef = db.collection("attribute").document(attribute.getAttributeId());
-        attributeRef.set(attribute);
+
+        // 将属性对象保存到数据库的"attribute"集合中
+        db.collection("attribute")
+                .document(attribute.getAttributeId())
+                .set(attribute);
     }
 
 }

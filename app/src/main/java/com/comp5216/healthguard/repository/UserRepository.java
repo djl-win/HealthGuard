@@ -39,17 +39,21 @@ public class UserRepository {
 
     // firebase数据库实例
     private final FirebaseFirestore db;
+    // 使用LiveData观察数据变化,通过用户的ID获取用户的信息,展示在聊天页面的上方
+    private final MutableLiveData<User> userLiveData;
 
     /**
      * UserRepository的构造方法。
      */
     public UserRepository() {
         this.db = FirebaseFirestore.getInstance();
+        this.userLiveData = new MutableLiveData<>();
     }
 
     /**
      * 存储用户信息到数据库
-     * @param user 用户信息
+     *
+     * @param user            用户信息
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
@@ -63,9 +67,9 @@ public class UserRepository {
             user.setUserEmail(CustomEncryptUtil.encryptByAES(user.getUserEmail()));
             user.setUserName(CustomEncryptUtil.encryptByAES(user.getUserName()));
             user.setUserGender(CustomEncryptUtil.encryptByAES(user.getUserGender()));
-            Log.d("A","解密的邮箱: "+CustomEncryptUtil.decryptByAES(user.getUserEmail()));
-            Log.d("A","解密的姓名: "+CustomEncryptUtil.decryptByAES(user.getUserName()));
-            Log.d("A","解密的性别: "+CustomEncryptUtil.decryptByAES(user.getUserGender()));
+            Log.d("A", "解密的邮箱: " + CustomEncryptUtil.decryptByAES(user.getUserEmail()));
+            Log.d("A", "解密的姓名: " + CustomEncryptUtil.decryptByAES(user.getUserName()));
+            Log.d("A", "解密的性别: " + CustomEncryptUtil.decryptByAES(user.getUserGender()));
 
         } catch (NoSuchPaddingException | IllegalBlockSizeException |
                  NoSuchAlgorithmException | BadPaddingException |
@@ -74,49 +78,43 @@ public class UserRepository {
             throw new EncryptionException(e);
         }
 
-        DocumentReference userRef = db.collection("users").document(user.getUserId());
-        userRef.set(user)
+        db.collection("users").document(user.getUserId())
+                .set(user)
                 .addOnSuccessListener(successListener)
                 .addOnFailureListener(failureListener);
     }
 
     /**
      * 通过用户的ID获取用户的信息
+     *
      * @param userId user的UID
-     * @return 解密之后的用户信息
+     * @return 解密之后的用户信息，展示在聊天页面的上方
      */
     public LiveData<User> getUserByUserId(String userId) {
-        // 使用LiveData观察数据变化
-        MutableLiveData<User> userLiveData = new MutableLiveData<>();
-        // 创建文档引用
-        DocumentReference userRef = db.collection("users").document(userId);
+
         // 获取文档
-        userRef.get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+        db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(success -> {
                         // 将文档转换为User对象
-                        User user = documentSnapshot.toObject(User.class);
+                        User user = success.toObject(User.class);
                         // 通过AES解密用户信息
                         try {
-                            assert user != null;
-                            user.setUserId(userId);
                             user.setUserEmail(CustomEncryptUtil.decryptByAES(user.getUserEmail()));
                             user.setUserName(CustomEncryptUtil.decryptByAES(user.getUserName()));
                             user.setUserGender(CustomEncryptUtil.decryptByAES(user.getUserGender()));
-                        }catch (NoSuchPaddingException | IllegalBlockSizeException |
-                                NoSuchAlgorithmException | BadPaddingException |
-                                InvalidKeyException e) {
+                        } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                                 NoSuchAlgorithmException | BadPaddingException |
+                                 InvalidKeyException e) {
                             // 抛出自定义异常
                             throw new EncryptionException(e);
                         }
 
                         // 更新LiveData的值
                         userLiveData.setValue(user);
-                    } else {
-                        userLiveData.setValue(null);  // 如果没有该文档，设置LiveData为null
-                    }
                 })
-                .addOnFailureListener(e -> {
+                .addOnFailureListener(failure -> {
                     // 发生错误时，设置LiveData为null
                     userLiveData.setValue(null);
                 });
@@ -126,13 +124,12 @@ public class UserRepository {
 
     /**
      * 通过邮箱获取用户信息，并判断用户输入的验证码（id），与这个查询出的id一不一致
-     * @param email 用户加密前的email
+     *
+     * @param email        用户加密前的email
      * @param verification 用户输入的验证码（id）
-     * @param callback 正确与否
+     * @param callback     正确与否
      */
-    public void verifyUserByEmail(String email,String verification, Consumer<Boolean> callback) {
-        CollectionReference usersRef = db.collection("users");
-        // 将用户的邮箱进行加密之后去数据库比对
+    public void verifyUserByEmail(String email, String verification, Consumer<Boolean> callback) {
         try {
             email = CustomEncryptUtil.encryptByAES(email);
         } catch (NoSuchPaddingException | IllegalBlockSizeException |
@@ -142,20 +139,24 @@ public class UserRepository {
             throw new EncryptionException(e);
         }
 
-        usersRef.whereEqualTo("userEmail", email).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String userId = document.getId();
-                    if (userId.equals(verification)) {
-                        callback.accept(true);
-                        return;
+
+        db.collection("users")
+                .whereEqualTo("userEmail", email)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String userId = document.getId();
+                            if (userId.equals(verification)) {
+                                callback.accept(true);
+                                return;
+                            }
+                        }
+                        callback.accept(false);
+                    } else {
+                        callback.accept(false);
                     }
-                }
-                callback.accept(false);
-            } else {
-                callback.accept(false);
-            }
-        });
+                });
     }
 
 
