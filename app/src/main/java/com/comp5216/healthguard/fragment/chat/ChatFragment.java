@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.adapter.FriendsListAdapter;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,6 +52,8 @@ public class ChatFragment extends Fragment {
     ImageButton buttonAddFriends;
     // 添加好友的fragment
     AddFriendsFragment addFriendsFragment;
+    // 聊天页面的fragment
+    MessageFragment messageFragment;
     // 好友列表
     RecyclerView recyclerViewFriends;
     // 用户的view model
@@ -95,12 +99,14 @@ public class ChatFragment extends Fragment {
         buttonAddFriends = view.findViewById(R.id.button_add_friends_chat);
         // 创建Add Friends Fragment实例
         addFriendsFragment = new AddFriendsFragment();
+        // 创建Message Fragment实例
+        messageFragment = new MessageFragment();
         // 绑定好友列表的recycle view
         recyclerViewFriends = view.findViewById(R.id.recycler_view_friends_chat);
         // 初始化用户的view model
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
         // 初始化好友关系的view model
-        relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
+        relationShipViewModel = new ViewModelProvider(requireActivity()).get(RelationShipViewModel.class);
         // 初始化firebase auth
         auth = FirebaseAuth.getInstance();
         // 初始化firebase user
@@ -132,7 +138,7 @@ public class ChatFragment extends Fragment {
             // 如果从数据库中获取的用户数据不为空
             if(user != null) {
                 // 通过用户的name给每个用户设置不同的头像
-                String avatarUrl = "https://api.dicebear.com/6.x/bottts-neutral/png?seed=" + user.getUserName();
+                String avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed=" + user.getUserName();
                 // 加载用户头像到xml
                 Glide.with(this)
                         .load(avatarUrl)
@@ -154,7 +160,6 @@ public class ChatFragment extends Fragment {
             buttonAddFriends.setEnabled(false);
             // 加载注册的fragment
             addFriendsFragment.show(getParentFragmentManager(),"AddFriendsFragment");
-
         });
     }
 
@@ -171,6 +176,13 @@ public class ChatFragment extends Fragment {
                     // 初始化适配器，并设置它为recyclerView的适配器
                     friendsListAdapter = new FriendsListAdapter(getContext(), users);
                     recyclerViewFriends.setAdapter(friendsListAdapter);
+                    // 为recycleView的每个item设置带点击监听器
+                    friendsListAdapter.setItemClickListener(new FriendsListAdapter.ItemClickListener(){
+                        @Override
+                        public void onItemClick(User user) {
+                            showMessageFragment(user);
+                        }
+                    });
                 } else {
                     // 如果适配器已经初始化，只需更新数据并刷新列表
                     friendsListAdapter.updateData(users);
@@ -178,4 +190,16 @@ public class ChatFragment extends Fragment {
             }
         });
     }
+
+    /**
+     * 出现用户聊天的Dialog
+     */
+    private void showMessageFragment(User user) {
+        //存储与当前用户进行对话的用户的信息，到view model
+        userViewModel.setChatFriend(user);
+        // 加载注册的fragment
+        messageFragment.show(getParentFragmentManager(),"MessageFragment");
+    }
+
+
 }

@@ -17,6 +17,16 @@ public class User {
     private String userName;
     private String userGender;
 
+    private String chatId;
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
     public String getUserId() {
         return userId;
     }

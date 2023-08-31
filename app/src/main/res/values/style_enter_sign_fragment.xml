@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- 全屏的Dialog的样式 -->
+    <!-- 全屏的Dialog的样式，从下到上 -->
     <style name="FullScreenDialogStyleAndAnimation">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowIsFloating">false</item>
@@ -8,11 +8,27 @@
         <item name="android:windowAnimationStyle">@style/DialogAnimation</item>
     </style>
 
-    <!-- Dialog的出现动画 -->
+    <!-- Dialog的出现动画,从下到上 -->
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_up</item>
         <item name="android:windowExitAnimation">@anim/slide_down</item>
     </style>
+
+    <!-- 全屏的Dialog的样式，从左到右 -->
+    <style name="FullScreenDialogStyleAndAnimation01">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:windowAnimationStyle">@style/DialogAnimation01</item>
+    </style>
+
+    <!-- Dialog的出现动画,从左到右 -->
+    <style name="DialogAnimation01">
+        <item name="android:windowEnterAnimation">@anim/slide_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_left</item>
+    </style>
+
+
 
     <!--  注册页面的fragment的回退按钮  -->
     <style name="sign_page_button_back" parent="TextAppearance.AppCompat">

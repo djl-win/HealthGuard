@@ -104,7 +104,6 @@ public class RelationshipRepository {
                         // Handle errors
                         throw new QueryException();
                     }
-
                     List<User> friends = new ArrayList<>();
                     for (QueryDocumentSnapshot document : documentSnapshots) {
                         Relationship relationship = document.toObject(Relationship.class);
@@ -121,6 +120,8 @@ public class RelationshipRepository {
                                         user.setUserName(CustomEncryptUtil.decryptByAES(user.getUserName()));
                                         user.setUserEmail(CustomEncryptUtil.decryptByAES(user.getUserEmail()));
                                         user.setUserGender(CustomEncryptUtil.decryptByAES(user.getUserGender()));
+                                        // 通过relationship表搜出来的好友，此时将搜出来的relationship中的chatID封装到user的chatId属性上并返回
+                                        user.setChatId(relationship.getRelationshipChatId());
                                     } catch (NoSuchPaddingException | NoSuchAlgorithmException |
                                              InvalidKeyException | BadPaddingException |
                                              IllegalBlockSizeException ex) {

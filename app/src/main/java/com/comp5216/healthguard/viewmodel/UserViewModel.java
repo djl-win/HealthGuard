@@ -27,12 +27,16 @@ public class UserViewModel extends ViewModel {
 
     // 用户信息仓库
     private final UserRepository repository;
+    // 用户点击好友列表，之后打开的聊天框中的，与其对话的好友
+    private final MutableLiveData<User> chatFriendLiveData;
+
 
     /**
      * UserViewModel 的构造方法
      */
     public UserViewModel() {
         this.repository = new UserRepository();
+        this.chatFriendLiveData = new MutableLiveData<>();
     }
 
     /**
@@ -63,6 +67,18 @@ public class UserViewModel extends ViewModel {
      */
     public void verifyUserByEmail(String email,String verification, Consumer<Boolean> callback) {
         repository.verifyUserByEmail(email, verification,callback);
+    }
+
+    /**
+     * 存储与当前用户进行对话的用户的信息，到view model
+     * @param user chatFriend
+     */
+    public void setChatFriend(User user) {
+        chatFriendLiveData.setValue(user);
+    }
+
+    public LiveData<User> getChatFriendLiveData() {
+        return chatFriendLiveData;
     }
 
 }

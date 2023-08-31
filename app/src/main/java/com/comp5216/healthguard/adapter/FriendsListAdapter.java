@@ -1,9 +1,12 @@
 package com.comp5216.healthguard.adapter;
 
 import android.content.Context;
+import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +18,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.Relationship;
 import com.comp5216.healthguard.entity.User;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 import java.util.Map;
@@ -31,8 +35,14 @@ import java.util.function.Consumer;
  */
 public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ChatViewHolder> {
 
+    // 回调接口，获取单机事件的回调
+    public interface ItemClickListener {
+        void onItemClick(User user);
+    }
+    private ItemClickListener itemClickListener;
     List<User> users;
     Context context;
+
 
     public FriendsListAdapter(Context context, List<User> users) {
         this.context = context;
@@ -58,7 +68,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
      * @param position 列表中item的position
      */
     private void initItemView(@NonNull ChatViewHolder holder, int position){
-        String avatarUrl = "https://api.dicebear.com/6.x/bottts-neutral/png?seed="+users.get(position).getUserName();
+        String avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed="+users.get(position).getUserName();
         // 加载用户头像到xml
         Glide.with(context)
                 .load(avatarUrl)
@@ -66,6 +76,13 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                 .error(R.drawable.load_image)
                 .into(holder.imageViewAvatar);
         holder.textViewUsername.setText(users.get(position).getUserName());
+        // 给卡片设置单机事件
+        holder.materialCardView.setOnClickListener(view -> {
+            // 调用接口的回调方法，将点击的位置的用户信息传递给 MainActivity
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(users.get(position));
+            }
+        });
     }
 
     /**
@@ -83,16 +100,27 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         return users.size();
     }
 
+    /**
+     * 为此recycle view设置单机事件
+     * @param itemClickListener 传进来当前视图
+     */
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
     static class ChatViewHolder extends RecyclerView.ViewHolder {
         // 头像组件
         ImageView imageViewAvatar;
         // 用户的姓名
         TextView textViewUsername;
+        // 整个card的组件
+        MaterialCardView materialCardView;
 
         public ChatViewHolder(@NonNull View itemView) {
             super(itemView);
             imageViewAvatar = itemView.findViewById(R.id.image_view_avatar_chat_item);
             textViewUsername = itemView.findViewById(R.id.text_view_username_chat_item);
+            materialCardView = itemView.findViewById(R.id.material_card_view_chat_item);
         }
 
     }
