@@ -13,6 +13,7 @@ import android.widget.Button;
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.fragment.chat.ChatFragment;
+import com.comp5216.healthguard.viewmodel.ChatViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth = FirebaseAuth.getInstance();
     UserViewModel userViewModel;
     RelationShipViewModel relationShipViewModel;
+    ChatViewModel chatViewModel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +37,13 @@ public class MainActivity extends AppCompatActivity {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
         // 初始化好友关系的view model
         relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
+        // 初始化用户聊天信息间关系的view model
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.button_logout);
         BottomNavigationView navView = findViewById(R.id.bottom_navigation);
+
         button.setOnClickListener( view ->{
 
             auth.signOut();

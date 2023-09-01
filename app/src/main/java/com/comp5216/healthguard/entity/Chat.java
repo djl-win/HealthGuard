@@ -7,14 +7,22 @@ package com.comp5216.healthguard.entity;
  * </p>
  *
  * @author Jiale Dong
- * @version 1.0
- * @since 2023-08-26
+ * @version 1.1
+ * @since 2023-09-01
  */
 public class Chat {
+    // 聊天的ID
     String chatId;
-    String chatSenderID;
+    // 聊天信息的ID
+    String chatMessageId;
+    // 消息发送者的ID
+    String chatMessageSenderID;
+    // 消息的内容
     String chatMassageText;
-    String chatTimestamp;
+    // 消息的发送时间
+    String chatMessageTimestamp;
+    // 消息的已读状态，0未读，1已读
+    String chatMessageReadStatus;
 
     public String getChatId() {
         return chatId;
@@ -24,12 +32,20 @@ public class Chat {
         this.chatId = chatId;
     }
 
-    public String getChatSenderID() {
-        return chatSenderID;
+    public String getChatMessageId() {
+        return chatMessageId;
     }
 
-    public void setChatSenderID(String chatSenderID) {
-        this.chatSenderID = chatSenderID;
+    public void setChatMessageId(String chatMessageId) {
+        this.chatMessageId = chatMessageId;
+    }
+
+    public String getChatMessageSenderID() {
+        return chatMessageSenderID;
+    }
+
+    public void setChatMessageSenderID(String chatMessageSenderID) {
+        this.chatMessageSenderID = chatMessageSenderID;
     }
 
     public String getChatMassageText() {
@@ -40,11 +56,19 @@ public class Chat {
         this.chatMassageText = chatMassageText;
     }
 
-    public String getChatTimestamp() {
-        return chatTimestamp;
+    public String getChatMessageTimestamp() {
+        return chatMessageTimestamp;
     }
 
-    public void setChatTimestamp(String chatTimestamp) {
-        this.chatTimestamp = chatTimestamp;
+    public void setChatMessageTimestamp(String chatMessageTimestamp) {
+        this.chatMessageTimestamp = chatMessageTimestamp;
+    }
+
+    public String getChatMessageReadStatus() {
+        return chatMessageReadStatus;
+    }
+
+    public void setChatMessageReadStatus(String chatMessageReadStatus) {
+        this.chatMessageReadStatus = chatMessageReadStatus;
     }
 }

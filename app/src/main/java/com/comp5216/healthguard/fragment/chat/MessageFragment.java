@@ -19,9 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.entity.Chat;
+import com.comp5216.healthguard.viewmodel.ChatViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * 聊天界面的fragment
@@ -40,12 +43,23 @@ public class MessageFragment extends DialogFragment {
     ImageButton buttonBack;
     // 用户的view model
     UserViewModel userViewModel;
+    // 好友聊天信息的view model
+    ChatViewModel chatViewModel;
     // 与当前用户进行对话的好友名称
     TextView textViewUsername;
     // 用户的输入框
     EditText editTextContent;
     // 发送信息按钮
     ImageButton buttonSend;
+    // 用户要发送的聊天信息
+    Chat chatMessage;
+    // firebase的auth
+    FirebaseAuth auth;
+    // firebase user
+    FirebaseUser firebaseUser;
+    // 用户的uid
+    String userUid;
+
 
     @NonNull
     @Override
@@ -90,12 +104,22 @@ public class MessageFragment extends DialogFragment {
         buttonBack = view.findViewById(R.id.button_back_message);
         // 初始化用户的view model
         userViewModel = new ViewModelProvider(requireActivity()).get(UserViewModel.class);
+        // 初始化用户聊天信息的view model
+        chatViewModel = new ViewModelProvider(requireActivity()).get(ChatViewModel.class);
         // 绑定用户姓名组件
         textViewUsername = view.findViewById(R.id.text_view_username_message);
         // 绑定用户的输入框组件
         editTextContent = view.findViewById(R.id.edit_text_content_message);
         // 绑定发送信息按钮
         buttonSend = view.findViewById(R.id.button_send_message);
+        // 初始化用户要发送的聊天信息
+        chatMessage = new Chat();
+        // 初始化firebase auth
+        auth = FirebaseAuth.getInstance();
+        // 初始化firebase user
+        firebaseUser = auth.getCurrentUser();
+        // 初始化用户的UID
+        userUid = firebaseUser.getUid();
 
     }
 
@@ -131,6 +155,10 @@ public class MessageFragment extends DialogFragment {
         //  });
         userViewModel.getChatFriendLiveData().observe(this,user ->{
             textViewUsername.setText(user.getUserName());
+            // 把当前聊天窗口的id传到message里
+            chatMessage.setChatId(user.getChatId());
+            // 把当前的发送消息的人的ID存进message
+            chatMessage.setChatMessageSenderID(userUid);
         });
     }
 
@@ -140,7 +168,16 @@ public class MessageFragment extends DialogFragment {
     private void buttonSendListener() {
 
         buttonSend.setOnClickListener(view ->{
-            Toast.makeText(getContext(),editTextContent.getText(),Toast.LENGTH_SHORT).show();
+            // 把当前聊天窗口的信息传到message里
+            chatMessage.setChatMassageText(editTextContent.getText().toString());
+            // 把当前的发送消息的时间存进message
+            long currentTimestamp = System.currentTimeMillis();
+            chatMessage.setChatMessageTimestamp(String.valueOf(currentTimestamp));
+            // 将发送的聊天信息存到数据库
+            chatViewModel.insertMessage(chatMessage);
+            // 把聊天框字清除
+            editTextContent.setText("");
+
         });
     }
 }
