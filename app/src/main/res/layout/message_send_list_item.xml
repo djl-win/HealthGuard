@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linear_layout_message_sent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="35dp"
+    android:orientation="horizontal"
+    android:gravity="end">
+
+    <TextView
+        android:id="@+id/text_view_content_message_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/loading"
+        android:background="@drawable/rounded_send_background"
+        android:textSize="18sp"
+        android:maxWidth="300dp"
+        style="@style/chat_page_string_text1" />
+
+    <ImageView
+        android:id="@+id/image_view_avatar_message_item"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="17dp"
+        android:src="@drawable/load_image"
+        android:contentDescription="@string/image" />
+
+</LinearLayout>

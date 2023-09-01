@@ -14,8 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.Chat;
-import com.comp5216.healthguard.entity.User;
-import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
@@ -38,6 +36,10 @@ public class MessagesListAdapter  extends RecyclerView.Adapter<MessagesListAdapt
     // 消息发送者的姓名
     String senderName;
     String userId = FirebaseAuth.getInstance().getUid();
+    // 用来判断消息的类型，是发送出去的，还是接收到的
+    private static final int TYPE_RECEIVED = 0;
+    private static final int TYPE_SENT = 1;
+
 
     public MessagesListAdapter(Context context, List<Chat> chats,String senderName, String receiverName) {
         this.receiverName = receiverName;
@@ -49,7 +51,13 @@ public class MessagesListAdapter  extends RecyclerView.Adapter<MessagesListAdapt
     @NonNull
     @Override
     public MessagesListAdapter.MessageViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.message_list_item,viewGroup,false);
+
+        View view;
+        if (viewType == TYPE_SENT) {
+            view = LayoutInflater.from(context).inflate(R.layout.message_send_list_item, viewGroup, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.message_reveive_list_item, viewGroup, false);
+        }
         return new MessageViewHolder(view);
     }
 
@@ -67,11 +75,10 @@ public class MessagesListAdapter  extends RecyclerView.Adapter<MessagesListAdapt
         String avatarUrl;
         if(userId.equals(chats.get(position).getChatMessageSenderID())){
             avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed=" + senderName;
-            // 加载用户头像到xml
         }else {
             avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed=" + receiverName;
-            // 加载用户头像到xml
         }
+        // 加载用户头像到xml
         Glide.with(context)
                 .load(avatarUrl)
                 .transform(new RoundedCorners(20))
@@ -86,6 +93,13 @@ public class MessagesListAdapter  extends RecyclerView.Adapter<MessagesListAdapt
         return chats.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (userId.equals(chats.get(position).getChatMessageSenderID())) {
+            return TYPE_SENT;
+        }
+        return TYPE_RECEIVED;
+    }
 
     /**
      * 更新recycle view中的数据

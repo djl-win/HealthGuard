@@ -13,6 +13,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -68,8 +69,10 @@ public class ChatRepository {
      * @return 所有的聊天信息
      */
     public LiveData<List<Chat>> getChatMessages(String chatId) {
-        DatabaseReference mDatabaseReference = db.getReference("chats");
-        mDatabaseReference.child(chatId).addValueEventListener(new ValueEventListener() {
+        DatabaseReference mDatabaseReference = db.getReference("chats").child(chatId);
+        // 查询最近的20条消息
+        Query query = mDatabaseReference.orderByChild("chatMessageTimestamp").limitToLast(20);
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 List<Chat> chatMessages = new ArrayList<>();
@@ -77,13 +80,6 @@ public class ChatRepository {
                     Chat chatMessage = messageSnapshot.getValue(Chat.class);
                     chatMessages.add(chatMessage);
                 }
-
-                // 按时间戳升序排序
-                chatMessages.sort((o1, o2) -> {
-                    long timestamp1 = Long.parseLong(o1.getChatMessageTimestamp());
-                    long timestamp2 = Long.parseLong(o2.getChatMessageTimestamp());
-                    return Long.compare(timestamp1, timestamp2);
-                });
 
                 chatMessagesLiveData.setValue(chatMessages);
             }
