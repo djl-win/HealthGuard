@@ -40,21 +40,14 @@
         android:background="@color/light_gray" />
 
 
-
-
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_chat_records_message"
+        android:paddingTop="35dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_chat_records_message"
-            android:paddingTop="35dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:overScrollMode="always"
-            android:scrollbars="vertical"/>
-    </ScrollView>
+        android:layout_weight="1"
+        android:overScrollMode="always"
+        android:scrollbars="vertical" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -80,12 +73,6 @@
             android:src="@drawable/message_sent" />
 
     </RelativeLayout>
-
-
-
-
-
-
 
 
 </LinearLayout>

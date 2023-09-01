@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.adapter.FriendsListAdapter;
+import com.comp5216.healthguard.adapter.MessagesListAdapter;
 import com.comp5216.healthguard.entity.Chat;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.viewmodel.ChatViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
@@ -59,6 +64,16 @@ public class MessageFragment extends DialogFragment {
     FirebaseUser firebaseUser;
     // 用户的uid
     String userUid;
+    // 聊天信息的recycle view
+    RecyclerView recyclerViewChatRecords;
+    // 聊天信息的适配器
+    MessagesListAdapter messagesListAdapter;
+    // 聊天室的ID
+    String chatId;
+    // 消息接收者的姓名
+    String receiverName;
+    // 消息发送者的姓名
+    String senderName;
 
 
     @NonNull
@@ -120,7 +135,10 @@ public class MessageFragment extends DialogFragment {
         firebaseUser = auth.getCurrentUser();
         // 初始化用户的UID
         userUid = firebaseUser.getUid();
-
+        // 绑定聊天信息的recycle view
+        recyclerViewChatRecords = view.findViewById(R.id.recycler_view_chat_records_message);
+        // 绑定聊天信息列表的适配器的布局
+        recyclerViewChatRecords.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
@@ -133,6 +151,8 @@ public class MessageFragment extends DialogFragment {
         bindCurrentFriend();
         // 发送按钮监听
         buttonSendListener();
+        // 监听聊天列表的信息，实时更新recycle view
+        observeMessageListData();
     }
 
     /**
@@ -169,7 +189,7 @@ public class MessageFragment extends DialogFragment {
 
         buttonSend.setOnClickListener(view ->{
             // 把当前聊天窗口的信息传到message里
-            chatMessage.setChatMassageText(editTextContent.getText().toString());
+            chatMessage.setChatMessageText(editTextContent.getText().toString());
             // 把当前的发送消息的时间存进message
             long currentTimestamp = System.currentTimeMillis();
             chatMessage.setChatMessageTimestamp(String.valueOf(currentTimestamp));
@@ -180,4 +200,55 @@ public class MessageFragment extends DialogFragment {
 
         });
     }
+
+    /**
+     * 监听当前用户的所有聊天信息，并加载和更新适配器
+     */
+    private void observeMessageListData() {
+        // 从ViewModel获取所有与当前用户ID关联的好友数据，并注册LiveData的观察者
+        chatViewModel.getChatMessages(chatId).observe(this, chats -> {
+            // 如果从数据库中获取的用户数据不为空
+            if (chats != null) {
+                // 如果列表的适配器尚未初始化
+                if (messagesListAdapter == null) {
+                    // 初始化适配器，并设置它为recyclerView的适配器
+                    messagesListAdapter = new MessagesListAdapter(getContext(), chats, receiverName, senderName);
+                    recyclerViewChatRecords.setAdapter(messagesListAdapter);
+                } else {
+                    // 如果适配器已经初始化，只需更新数据并刷新列表
+                    messagesListAdapter.updateData(chats);
+                }
+            }
+        });
+    }
+
+    /**
+     * 设置聊天室的id在chat fragment
+     * @param chatId 聊天室的id
+     */
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    /**
+     * 设置对话方的username
+     * @param userName 对话方的姓名
+     */
+    public void setSenderName(String userName) {
+        this.senderName = userName;
+    }
+
+    /**
+     * 设置己方的username
+     * @param userName 对话方的姓名
+     */
+    public void setReceiverName(String userName) {
+        this.receiverName = userName;
+    }
+    @Override
+    public void dismiss() {
+        super.dismiss();
+
+    }
+
 }

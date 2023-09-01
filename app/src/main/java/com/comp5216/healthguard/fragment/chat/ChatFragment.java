@@ -22,6 +22,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.adapter.FriendsListAdapter;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.viewmodel.ChatViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,8 +53,6 @@ public class ChatFragment extends Fragment {
     ImageButton buttonAddFriends;
     // 添加好友的fragment
     AddFriendsFragment addFriendsFragment;
-    // 聊天页面的fragment
-    MessageFragment messageFragment;
     // 好友列表
     RecyclerView recyclerViewFriends;
     // 用户的view model
@@ -99,8 +98,6 @@ public class ChatFragment extends Fragment {
         buttonAddFriends = view.findViewById(R.id.button_add_friends_chat);
         // 创建Add Friends Fragment实例
         addFriendsFragment = new AddFriendsFragment();
-        // 创建Message Fragment实例
-        messageFragment = new MessageFragment();
         // 绑定好友列表的recycle view
         recyclerViewFriends = view.findViewById(R.id.recycler_view_friends_chat);
         // 初始化用户的view model
@@ -195,8 +192,12 @@ public class ChatFragment extends Fragment {
      * 出现用户聊天的Dialog
      */
     private void showMessageFragment(User user) {
-        //存储与当前用户进行对话的用户的信息，到view model
+        // 存储与当前用户进行对话的用户的信息，到view model
+        MessageFragment messageFragment = new MessageFragment();
         userViewModel.setChatFriend(user);
+        messageFragment.setChatId(user.getChatId());
+        messageFragment.setSenderName(user.getUserName());
+        messageFragment.setReceiverName(textViewUsername.getText().toString());
         // 加载注册的fragment
         messageFragment.show(getParentFragmentManager(),"MessageFragment");
     }

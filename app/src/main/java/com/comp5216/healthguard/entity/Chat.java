@@ -18,7 +18,7 @@ public class Chat {
     // 消息发送者的ID
     String chatMessageSenderID;
     // 消息的内容
-    String chatMassageText;
+    String chatMessageText;
     // 消息的发送时间
     String chatMessageTimestamp;
     // 消息的已读状态，0未读，1已读
@@ -48,12 +48,12 @@ public class Chat {
         this.chatMessageSenderID = chatMessageSenderID;
     }
 
-    public String getChatMassageText() {
-        return chatMassageText;
+    public String getChatMessageText() {
+        return chatMessageText;
     }
 
-    public void setChatMassageText(String chatMassageText) {
-        this.chatMassageText = chatMassageText;
+    public void setChatMessageText(String chatMessageText) {
+        this.chatMessageText = chatMessageText;
     }
 
     public String getChatMessageTimestamp() {

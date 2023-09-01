@@ -77,6 +77,10 @@ public class UserViewModel extends ViewModel {
         chatFriendLiveData.setValue(user);
     }
 
+    /**
+     * 获取与当前用户聊天的好友的信息
+     * @return 与当前用户聊天的好友的信息
+     */
     public LiveData<User> getChatFriendLiveData() {
         return chatFriendLiveData;
     }
