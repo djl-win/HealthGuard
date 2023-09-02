@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.entity.Relationship;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.entity.UserWithMessage;
 import com.comp5216.healthguard.repository.RelationshipRepository;
 
 import java.util.List;
@@ -45,11 +47,12 @@ public class RelationShipViewModel extends ViewModel {
     /**
      * 通过Id查询该用户所有的好友
      * @param userId 当前用户id
-     * @return 所有的好友信息
+     * @return 所有的好友信息,以及未读条数和最新信息
      */
-    public LiveData<List<User>> findAllFriendsByID(String userId) {
-        return repository.findAllFriendsByUserId(userId);
+    public LiveData<List<UserWithMessage>> getUserWithMessagesData(String userId) {
+        return repository.getUserWithMessagesData(userId);
     }
+
 
 
 

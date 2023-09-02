@@ -16,7 +16,7 @@ public class User {
     private String userPassword;
     private String userName;
     private String userGender;
-
+    // 临时变量，用户所处的聊天室ID
     private String chatId;
 
     public String getChatId() {

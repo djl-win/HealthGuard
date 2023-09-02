@@ -56,12 +56,14 @@ public class Chat {
         this.chatMessageText = chatMessageText;
     }
 
-    public String getChatMessageTimestamp() {
-        return chatMessageTimestamp;
-    }
 
     public void setChatMessageTimestamp(String chatMessageTimestamp) {
         this.chatMessageTimestamp = chatMessageTimestamp;
+    }
+
+
+    public String getChatMessageTimestamp() {
+        return chatMessageTimestamp;
     }
 
     public String getChatMessageReadStatus() {

@@ -28,6 +28,9 @@ import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * 聊天界面的fragment
@@ -87,7 +90,6 @@ public class ChatFragment extends Fragment {
 
     /**
      * 获取xml中组件
-     *
      */
     private void initViews() {
         // 绑定头像组件
@@ -133,7 +135,8 @@ public class ChatFragment extends Fragment {
         // 观察LiveData中的数据变化，并相应地更新UI
         userViewModel.getUserByUserId(userUid).observe(getViewLifecycleOwner(), user -> {
             // 如果从数据库中获取的用户数据不为空
-            if(user != null) {
+            if (user != null) {
+
                 // 通过用户的name给每个用户设置不同的头像
                 String avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed=" + user.getUserName();
                 // 加载用户头像到xml
@@ -152,11 +155,11 @@ public class ChatFragment extends Fragment {
      * 添加好友的监听器
      */
     private void ButtonAddFriendsListener() {
-        buttonAddFriends.setOnClickListener(view ->{
+        buttonAddFriends.setOnClickListener(view -> {
             // 禁用按钮，防止用户重复点击，导致程序崩溃
             buttonAddFriends.setEnabled(false);
             // 加载注册的fragment
-            addFriendsFragment.show(getParentFragmentManager(),"AddFriendsFragment");
+            addFriendsFragment.show(getParentFragmentManager(), "AddFriendsFragment");
         });
     }
 
@@ -165,16 +168,17 @@ public class ChatFragment extends Fragment {
      */
     private void observeFriendListData() {
         // 从ViewModel获取所有与当前用户ID关联的好友数据，并注册LiveData的观察者
-        relationShipViewModel.findAllFriendsByID(userUid).observe(getViewLifecycleOwner(), users -> {
+        relationShipViewModel.getUserWithMessagesData(userUid).observe(getViewLifecycleOwner(), usersWithMessage -> {
             // 如果从数据库中获取的用户数据不为空
-            if (users != null) {
+            if (usersWithMessage != null) {
+
                 // 如果列表的适配器尚未初始化
                 if (friendsListAdapter == null) {
                     // 初始化适配器，并设置它为recyclerView的适配器
-                    friendsListAdapter = new FriendsListAdapter(getContext(), users);
+                    friendsListAdapter = new FriendsListAdapter(getContext(), usersWithMessage);
                     recyclerViewFriends.setAdapter(friendsListAdapter);
                     // 为recycleView的每个item设置带点击监听器
-                    friendsListAdapter.setItemClickListener(new FriendsListAdapter.ItemClickListener(){
+                    friendsListAdapter.setItemClickListener(new FriendsListAdapter.ItemClickListener() {
                         @Override
                         public void onItemClick(User user) {
                             showMessageFragment(user);
@@ -182,11 +186,14 @@ public class ChatFragment extends Fragment {
                     });
                 } else {
                     // 如果适配器已经初始化，只需更新数据并刷新列表
-                    friendsListAdapter.updateData(users);
+                    friendsListAdapter.updateData(usersWithMessage);
                 }
             }
         });
+
+
     }
+
 
     /**
      * 出现用户聊天的Dialog
@@ -199,7 +206,7 @@ public class ChatFragment extends Fragment {
         messageFragment.setSenderName(user.getUserName());
         messageFragment.setReceiverName(textViewUsername.getText().toString());
         // 加载注册的fragment
-        messageFragment.show(getParentFragmentManager(),"MessageFragment");
+        messageFragment.show(getParentFragmentManager(), "MessageFragment");
     }
 
 

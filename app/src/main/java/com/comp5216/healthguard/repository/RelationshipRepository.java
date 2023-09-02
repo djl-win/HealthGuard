@@ -1,22 +1,38 @@
 package com.comp5216.healthguard.repository;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Transformations;
 
+import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.entity.Relationship;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.entity.UserWithMessage;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firestore.v1.Value;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -35,15 +51,24 @@ import javax.crypto.NoSuchPaddingException;
 public class RelationshipRepository {
     // firebase数据库实例
     private final FirebaseFirestore db;
+    // firebase realtime database数据库实例
+    private final FirebaseDatabase  db1;
     // 使用LiveData观察数据变化，通过当前用户的ID获取的所有好友的信息，展示在聊天页面的好友列表
     private final MutableLiveData<List<User>> friendsLiveData;
+    // 使用LiveData观察数据变化，通过当前聊天室的ID获取最新消息和未读条数，展示在聊天页面的好友列表
+    private final MutableLiveData<List<UserWithMessage>> friendsWithMessageLiveData;
+
+    String currentUserId;
 
     /**
      * RelationShipRepository的构造方法。
      */
     public RelationshipRepository() {
         this.db = FirebaseFirestore.getInstance();
+        this.db1 =  FirebaseDatabase.getInstance();
         this.friendsLiveData = new MutableLiveData<>();
+        this.friendsWithMessageLiveData = new MutableLiveData<>();
+        this.currentUserId = FirebaseAuth.getInstance().getUid();
     }
 
     /**
@@ -128,6 +153,7 @@ public class RelationshipRepository {
                                         // 抛出加密异常
                                         throw new EncryptionException(ex);
                                     }
+
                                     friends.add(user);
                                     if (friends.size() == documentSnapshots.size()) {
                                         friendsLiveData.setValue(friends);
@@ -137,6 +163,117 @@ public class RelationshipRepository {
                 });
         return friendsLiveData;
     }
+
+    /**
+     * 通过用户获取最新的聊天信息和未读条数
+     * @param friend 好友列表的条数
+     * @param callback 用于监测数据的变化，把未读消息数量和最新消息加到回调
+     */
+    private void fetchLatestMessageAndUnreadNumber(User friend, Consumer<UserWithMessage> callback) {
+        // 获取未读消息的数量
+        DatabaseReference mDatabaseReference = db1.getReference("chats").child(friend.getChatId());
+        mDatabaseReference
+                .orderByChild("chatMessageReadStatus")
+                .equalTo("0")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        long unreadCount = 0;
+
+                        // 手动过滤出那些不是由当前用户发送的消息
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Chat chat = snapshot.getValue(Chat.class);
+                            if (!chat.getChatMessageSenderID().equals(currentUserId)) {
+                                unreadCount++;
+                            }
+                        }
+
+                        // 获取最新的消息
+                        long finalUnreadCount = unreadCount;
+                        mDatabaseReference
+                                .orderByChild("chatMessageTimestamp")
+                                .limitToLast(1)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        String latestMessageText = "";
+                                        String latestMessageTimeStamp = "";
+                                        for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                                            Chat message = messageSnapshot.getValue(Chat.class);
+                                            try {
+                                                latestMessageText = CustomEncryptUtil.decryptByAES(message.getChatMessageText());
+                                                latestMessageTimeStamp = message.getChatMessageTimestamp();
+                                            } catch (NoSuchPaddingException |
+                                                     NoSuchAlgorithmException |
+                                                     InvalidKeyException |
+                                                     BadPaddingException |
+                                                     IllegalBlockSizeException ex) {
+                                                // 抛出加密异常
+                                                throw new EncryptionException(ex);
+                                            }
+                                        }
+
+                                        UserWithMessage userWithMsg = new UserWithMessage();
+                                        userWithMsg.setUser(friend);
+                                        userWithMsg.setLastMessage(latestMessageText);
+                                        userWithMsg.setLastMessageTimeStamp(latestMessageTimeStamp);
+                                        userWithMsg.setUnreadMessageNumber(String.valueOf(finalUnreadCount));
+                                        callback.accept(userWithMsg);  // 使用回调方法返回结果
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        // Handle error
+                                        throw new QueryException();
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle error
+                        throw new QueryException();
+                    }
+                });
+
+    }
+
+    /**
+     * 通过Id查询该用户所有的好友,合并两个消息观察者
+     * @param userId 当前用户id
+     * @return 所有的好友信息,以及未读条数和最新信息
+     */
+    public LiveData<List<UserWithMessage>> getUserWithMessagesData(String userId) {
+        return Transformations.switchMap(findAllFriendsByUserId(userId), friendsList -> {
+
+            // 使用一个Map来存储数据，键为UserId，值为UserWithMessage
+            Map<String, UserWithMessage> userWithMessageMap = new HashMap<>();
+
+            if (friendsList.isEmpty()) {
+                friendsWithMessageLiveData.setValue(new ArrayList<>());
+                return friendsWithMessageLiveData;
+            }
+
+            for (User friend : friendsList) {
+                fetchLatestMessageAndUnreadNumber(friend, userWithMsg -> {
+                    // 直接更新Map中的数据
+                    userWithMessageMap.put(userWithMsg.getUser().getUserId(), userWithMsg);
+
+                    if (userWithMessageMap.size() == friendsList.size()) {
+                        // 根据消息时间排序列表
+                        List<UserWithMessage> sortedList = userWithMessageMap.values().stream()
+                                .sorted(Comparator.comparing(UserWithMessage::getLastMessageTimeStamp).reversed())
+                                .collect(Collectors.toList());
+                        friendsWithMessageLiveData.setValue(sortedList);
+                    }
+                });
+            }
+
+            return friendsWithMessageLiveData;
+        });
+    }
+
+
 
     /**
      * addSnapshotListener:
