@@ -51,4 +51,13 @@ public class ChatViewModel extends ViewModel {
     public LiveData<List<Chat>> getChatMessages(String chatId) {
         return repository.getChatMessages(chatId);
     }
+
+    /**
+     * 将消息设置为已读
+     * @param userUid 当前用户的ID
+     * @param chatId 特定聊天的ID
+     */
+    public void setMessageRead(String userUid,String chatId) {
+        repository.setMessageRead(userUid,chatId);
+    }
 }

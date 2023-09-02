@@ -117,4 +117,37 @@ public class ChatRepository {
         return chatMessagesLiveData;
     }
 
+
+
+    /**
+     * 将消息设置为已读
+     * @param userUid 当前用户的ID
+     * @param chatId 特定聊天的ID
+     */
+    public void setMessageRead(String userUid, String chatId) {
+        DatabaseReference mDatabaseReference = db.getReference("chats").child(chatId);
+        mDatabaseReference
+                .orderByChild("chatMessageReadStatus")
+                .equalTo("0")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                     @Override
+                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                             Chat chat = snapshot.getValue(Chat.class);
+
+                             // 检查消息是否不是由当前用户发送的
+                             if (!chat.getChatMessageSenderID().equals(userUid)) {
+                                 // 将消息设置为已读
+                                 snapshot.getRef().child("chatMessageReadStatus").setValue("1");
+                             }
+                         }
+                     }
+
+                     @Override
+                     public void onCancelled(@NonNull DatabaseError databaseError) {
+                         // Handle possible errors here
+                     }
+                 });
+
+    }
 }
