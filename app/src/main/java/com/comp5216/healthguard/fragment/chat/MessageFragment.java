@@ -156,8 +156,6 @@ public class MessageFragment extends DialogFragment {
         observeMessageListData();
         // 监控小键盘是否弹出，如果小键盘弹出，则使得recycle view滚动到最下面
         observeSoftKeyBoardChange();
-        // 将所有消息设置为已读
-        setMessageRead();
     }
 
     /**
@@ -285,7 +283,8 @@ public class MessageFragment extends DialogFragment {
     @Override
     public void dismiss() {
         super.dismiss();
-
+        // 将所有消息设置为已读
+        setMessageRead();
     }
 
 }

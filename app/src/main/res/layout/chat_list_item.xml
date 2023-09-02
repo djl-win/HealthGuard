@@ -59,6 +59,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/loading"
                 android:textSize="19sp"
+                android:singleLine="true"
                 style="@style/chat_page_string_text1" />
 
             <TextView
@@ -67,6 +68,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/loading"
                 android:textSize="17sp"
+                android:singleLine="true"
                 android:textColor="@color/gray" />
         </LinearLayout>
 

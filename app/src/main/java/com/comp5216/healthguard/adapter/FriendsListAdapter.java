@@ -85,9 +85,11 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         // 加载最新的一条消息
         holder.textViewLatestMessage.setText(usersWithMessage.get(position).getLastMessage());
         // 加载未读消息数量
-        if(!"0".equals(usersWithMessage.get(position).getUnreadMessageNumber())){
-            holder.textViewUsername.setVisibility(View.VISIBLE);
+        if (!"0".equals(usersWithMessage.get(position).getUnreadMessageNumber())) {
+            holder.textViewBudge.setVisibility(View.VISIBLE);
             holder.textViewBudge.setText(usersWithMessage.get(position).getUnreadMessageNumber());
+        } else {
+            holder.textViewBudge.setVisibility(View.GONE); // 或者使用 View.INVISIBLE
         }
         // 给卡片设置单机事件
         holder.materialCardView.setOnClickListener(view -> {
