@@ -3,7 +3,7 @@
     <item>
         <shape>
             <solid android:color="#28B560" /> <!-- 这里是输入框的背景色 -->
-            <corners android:radius="30dp" /> <!-- 这里设置圆角的弧度 -->
+            <corners android:radius="12dp" /> <!-- 这里设置圆角的弧度 -->
             <padding android:left="20dp" android:top="10dp" android:right="20dp" android:bottom="10dp" /> <!-- 为输入框添加一些内部边距 -->
         </shape>
     </item>

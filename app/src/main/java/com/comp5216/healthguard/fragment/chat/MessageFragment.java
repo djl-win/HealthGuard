@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -153,6 +154,9 @@ public class MessageFragment extends DialogFragment {
         buttonSendListener();
         // 监听聊天列表的信息，实时更新recycle view
         observeMessageListData();
+        // 监控小键盘是否弹出，如果小键盘弹出，则使得recycle view滚动到最下面
+        observeSoftKeyBoardChange();
+
     }
 
     /**
@@ -214,9 +218,34 @@ public class MessageFragment extends DialogFragment {
                     // 初始化适配器，并设置它为recyclerView的适配器
                     messagesListAdapter = new MessagesListAdapter(getContext(), chats, receiverName, senderName);
                     recyclerViewChatRecords.setAdapter(messagesListAdapter);
+                    recyclerViewChatRecords.scrollToPosition(messagesListAdapter.getItemCount() - 1);
                 } else {
                     // 如果适配器已经初始化，只需更新数据并刷新列表
                     messagesListAdapter.updateData(chats);
+                    recyclerViewChatRecords.scrollToPosition(messagesListAdapter.getItemCount() - 1);
+                }
+            }
+        });
+
+    }
+
+
+    /**
+     * 监控小键盘是否弹出，如果小键盘弹出，则使得recycle view滚动到最下面
+     */
+    private void observeSoftKeyBoardChange() {
+        recyclerViewChatRecords.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom < oldBottom) {
+                    recyclerViewChatRecords.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (messagesListAdapter != null) {
+                                recyclerViewChatRecords.scrollToPosition(messagesListAdapter.getItemCount() - 1);
+                            }
+                        }
+                    }, 100);
                 }
             }
         });

@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.comp5216.healthguard.entity.Chat;
+import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -16,9 +17,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 
 /**
@@ -52,6 +59,13 @@ public class ChatRepository {
         // 生成新的ID
         String messageId = CustomIdGeneratorUtil.generateUniqueId();
         chatMessage.setChatMessageId(messageId);
+        // 加密聊天信息
+        try {
+            chatMessage.setChatMessageText(CustomEncryptUtil.encryptByAES(chatMessage.getChatMessageText()));
+        } catch (InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException |
+                 BadPaddingException | IllegalBlockSizeException e) {
+            throw new EncryptionException(e);
+        }
 
         // 设置消息的读取状态为未读
         chatMessage.setChatMessageReadStatus("0");
@@ -78,7 +92,17 @@ public class ChatRepository {
                 List<Chat> chatMessages = new ArrayList<>();
                 for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                     Chat chatMessage = messageSnapshot.getValue(Chat.class);
-                    chatMessages.add(chatMessage);
+                    if (chatMessage != null) {
+                        // 解密聊天信息
+                        try {
+                            chatMessage.setChatMessageText(CustomEncryptUtil.decryptByAES(chatMessage.getChatMessageText()));
+                        } catch (InvalidKeyException | NoSuchPaddingException |
+                                 NoSuchAlgorithmException |
+                                 BadPaddingException | IllegalBlockSizeException e) {
+                            throw new EncryptionException(e);
+                        }
+                        chatMessages.add(chatMessage);
+                    }
                 }
 
                 chatMessagesLiveData.setValue(chatMessages);
