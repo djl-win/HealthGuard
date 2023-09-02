@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#FF0000"/> <!-- Red color for the badge -->
+
+    <!-- Making the badge circular by setting really large corners -->
+    <corners android:radius="10dp"/>
+
+    <!-- Optional: Add some padding inside the badge -->
+    <padding android:left="4dp" android:top="2dp" android:right="4dp" android:bottom="2dp"/>
+</shape>

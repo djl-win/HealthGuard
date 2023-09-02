@@ -80,8 +80,15 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
                 .transform(new RoundedCorners(20))
                 .error(R.drawable.load_image)
                 .into(holder.imageViewAvatar);
-        holder.textViewUsername.setText(usersWithMessage.get(position).getUser().getUserName() + " " + usersWithMessage.get(position).getUnreadMessageNumber());
+        // 加载用户名
+        holder.textViewUsername.setText(usersWithMessage.get(position).getUser().getUserName());
+        // 加载最新的一条消息
         holder.textViewLatestMessage.setText(usersWithMessage.get(position).getLastMessage());
+        // 加载未读消息数量
+        if(!"0".equals(usersWithMessage.get(position).getUnreadMessageNumber())){
+            holder.textViewUsername.setVisibility(View.VISIBLE);
+            holder.textViewBudge.setText(usersWithMessage.get(position).getUnreadMessageNumber());
+        }
         // 给卡片设置单机事件
         holder.materialCardView.setOnClickListener(view -> {
             // 调用接口的回调方法，将点击的位置的用户信息传递给 MainActivity
@@ -124,7 +131,8 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
         TextView textViewUsername;
         // 用户的最新信息
         TextView textViewLatestMessage;
-
+        // 未读消息的数量
+        TextView textViewBudge;
         // 整个card的组件
         MaterialCardView materialCardView;
 
@@ -133,6 +141,7 @@ public class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.
             imageViewAvatar = itemView.findViewById(R.id.image_view_avatar_chat_item);
             textViewUsername = itemView.findViewById(R.id.text_view_username_chat_item);
             textViewLatestMessage = itemView.findViewById(R.id.text_view_latest_message_chat_item);
+            textViewBudge = itemView.findViewById(R.id.text_view_budge_chat_item);
             materialCardView = itemView.findViewById(R.id.material_card_view_chat_item);
         }
 

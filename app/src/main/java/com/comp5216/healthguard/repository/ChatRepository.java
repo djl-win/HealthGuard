@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.exception.EncryptionException;
+import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -146,6 +147,7 @@ public class ChatRepository {
                      @Override
                      public void onCancelled(@NonNull DatabaseError databaseError) {
                          // Handle possible errors here
+                         throw new QueryException();
                      }
                  });
 
