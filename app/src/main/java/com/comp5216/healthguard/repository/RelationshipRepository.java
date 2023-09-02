@@ -197,7 +197,7 @@ public class RelationshipRepository {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         String latestMessageText = "";
-                                        String latestMessageTimeStamp = "";
+                                        long latestMessageTimeStamp = 0;
                                         for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
                                             Chat message = messageSnapshot.getValue(Chat.class);
                                             try {

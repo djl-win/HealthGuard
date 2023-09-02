@@ -16,15 +16,15 @@ public class UserWithMessage {
     // 临时变量，用户的最新消息
     private String lastMessage;
     // 临时变量，用户的最新消息的时间
-    private String lastMessageTimeStamp;
+    private long lastMessageTimeStamp;
     // 临时变量，用户的未读消息数量
     private String unreadMessageNumber;
 
-    public String getLastMessageTimeStamp() {
+    public long getLastMessageTimeStamp() {
         return lastMessageTimeStamp;
     }
 
-    public void setLastMessageTimeStamp(String lastMessageTimeStamp) {
+    public void setLastMessageTimeStamp(long lastMessageTimeStamp) {
         this.lastMessageTimeStamp = lastMessageTimeStamp;
     }
 

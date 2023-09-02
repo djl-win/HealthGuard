@@ -112,6 +112,7 @@ public class ChatRepository {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle potential errors here
+                throw new QueryException();
             }
         });
 

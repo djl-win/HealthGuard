@@ -20,7 +20,7 @@ public class Chat {
     // 消息的内容
     String chatMessageText;
     // 消息的发送时间
-    String chatMessageTimestamp;
+    long chatMessageTimestamp;
     // 消息的已读状态，0未读，1已读
     String chatMessageReadStatus;
 
@@ -56,14 +56,12 @@ public class Chat {
         this.chatMessageText = chatMessageText;
     }
 
-
-    public void setChatMessageTimestamp(String chatMessageTimestamp) {
-        this.chatMessageTimestamp = chatMessageTimestamp;
+    public Long getChatMessageTimestamp() {
+        return chatMessageTimestamp;
     }
 
-
-    public String getChatMessageTimestamp() {
-        return chatMessageTimestamp;
+    public void setChatMessageTimestamp(long chatMessageTimestamp) {
+        this.chatMessageTimestamp = chatMessageTimestamp;
     }
 
     public String getChatMessageReadStatus() {

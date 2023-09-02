@@ -195,7 +195,7 @@ public class MessageFragment extends DialogFragment {
             chatMessage.setChatMessageText(editTextContent.getText().toString());
             // 把当前的发送消息的时间存进message
             long currentTimestamp = System.currentTimeMillis();
-            chatMessage.setChatMessageTimestamp(String.valueOf(currentTimestamp));
+            chatMessage.setChatMessageTimestamp(currentTimestamp);
             // 将发送的聊天信息存到数据库
             chatViewModel.insertMessage(chatMessage);
             // 把聊天框字清除
