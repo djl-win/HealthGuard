@@ -3,6 +3,7 @@ package com.comp5216.healthguard.fragment.portal;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.RomUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.adapter.NotifyListAdapter;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -108,8 +110,8 @@ public class NotifyFragment extends Fragment {
         if (!notificationList.isEmpty()){
             notificationList.clear();
         }
-        notifyRef.whereEqualTo("user_id",user_id)
-                .whereEqualTo("notification_read_status","0")
+        notifyRef.whereEqualTo("userId",user_id)
+                .whereEqualTo("notificationReadStatus","0")
 //                .get()
 //                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
 //                    @Override
@@ -146,18 +148,18 @@ public class NotifyFragment extends Fragment {
                                 }
                                 for (QueryDocumentSnapshot documentSnapshot : value){
                                     // ADD LIST
-                                    if (!documentSnapshot.get("notification_type").toString().equals("4")
-                                            && documentSnapshot.get("notification_delete_status").toString().equals("0")){
+                                    if (!documentSnapshot.get("notificationType").toString().equals("4")
+                                            && documentSnapshot.get("notificationDeleteStatus").toString().equals("0")){
                                         Map<String, Object> data = documentSnapshot.getData();
-                                        doc_id.put(data.get("notification_id").toString(),documentSnapshot.getId());
+                                        doc_id.put(data.get("notificationId").toString(),documentSnapshot.getId());
                                         notificationList.add(new Notification(
-                                                data.get("notification_id").toString(),
-                                                data.get("user_id").toString(),
-                                                data.get("notification_note").toString(),
-                                                data.get("notification_date").toString(),
-                                                data.get("notification_type").toString(),
-                                                data.get("notification_read_status").toString(),
-                                                data.get("notification_delete_status").toString()
+                                                data.get("notificationId").toString(),
+                                                data.get("userId").toString(),
+                                                data.get("notificationNote").toString(),
+                                                data.get("notificationDate").toString(),
+                                                data.get("notificationType").toString(),
+                                                data.get("notificationReadStatus").toString(),
+                                                data.get("notificationDeleteStatus").toString()
                                         ));
                                     }
                                 }
@@ -192,23 +194,24 @@ public class NotifyFragment extends Fragment {
     private void doAddTest(){
         CollectionReference notify_add_Ref = db.collection("notification");
         Map<String,Object> new_notify = new HashMap<>();
-        new_notify.put("user_id",user_id);
-        new_notify.put("notification_date","2023-08-31 15:36");
-        new_notify.put("notification_id","test_test");
-        new_notify.put("notification_note","Test");
-        new_notify.put("notification_type","0");
-        new_notify.put("notification_read_status","0");
-        new_notify.put("notification_delete_status","0");
-        notify_add_Ref.document("test_test").set(new_notify);
-        Map<String,Object> new_notify2 = new HashMap<>();
-        new_notify2.put("user_id",user_id);
-        new_notify2.put("notification_date","2023-08-31 15:36");
-        new_notify2.put("notification_id","new_notify2");
-        new_notify2.put("notification_note","Test222");
-        new_notify2.put("notification_type","0");
-        new_notify2.put("notification_read_status","0");
-        new_notify2.put("notification_delete_status","0");
-        notify_add_Ref.document("wwww").set(new_notify2);
+        String ra = String.valueOf((Math.random() * 10000));
+        new_notify.put("userId",user_id);
+        new_notify.put("notificationDate","2023-08-31 15:36");
+        new_notify.put("notificationId",ra);
+        new_notify.put("notificationNote","You did not eat xxx");
+        new_notify.put("notificationType","1");
+        new_notify.put("notificationReadStatus","0");
+        new_notify.put("notificationDeleteStatus","0");
+        notify_add_Ref.document(ra).set(new_notify);
+//        Map<String,Object> new_notify2 = new HashMap<>();
+//        new_notify2.put("user_id",user_id);
+//        new_notify2.put("notification_date","2023-08-31 15:36");
+//        new_notify2.put("notification_id","new_notify2");
+//        new_notify2.put("notification_note","Test222");
+//        new_notify2.put("notification_type","0");
+//        new_notify2.put("notification_read_status","0");
+//        new_notify2.put("notification_delete_status","0");
+//        notify_add_Ref.document("wwww").set(new_notify2);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)

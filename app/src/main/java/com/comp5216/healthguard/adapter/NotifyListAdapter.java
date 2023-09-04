@@ -63,7 +63,9 @@ public class NotifyListAdapter extends BaseAdapter {
         Switch sw_notify_item_swtich = view.findViewById(R.id.sw_notify_item_swtich);
         ImageView iv_notify_item_icon = view.findViewById(R.id.iv_notify_item_icon);
         Notification notification = notificationList.get(pos);
+
         if (notification.getNotification_type().equals("0")){
+            tv_notify_content.setText("Time to eat "+notification.getNotification_note());
             sw_notify_item_swtich.setVisibility(View.VISIBLE);
             sw_notify_item_swtich.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
@@ -71,7 +73,7 @@ public class NotifyListAdapter extends BaseAdapter {
                     if(compoundButton.isChecked()){
                         DocumentReference notify_delete_Ref = db.collection("notification").document(docId.get(notification.getNotification_id()));
                         notify_delete_Ref
-                                .update("notification_delete_status", "1")
+                                .update("notificationDeleteStatus", "1")
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
@@ -82,20 +84,25 @@ public class NotifyListAdapter extends BaseAdapter {
                                     public void onFailure(@NonNull Exception e) {
                                     }
                                 });
+                        // TODO Add notification which type == 1
+                        // TODO update 5/6
                         SendNotificationRefreshEvent notification_refresh_event = new SendNotificationRefreshEvent("send_notification_refresh","notification_refresh");
                         EventBus.getDefault().postSticky(notification_refresh_event);
                     }
                 }
             });
         }
+
         if (notification.getNotification_type().equals("1")){
             tv_notify_content.setTextColor(Color.argb(255,255,0,0));
             tv_notify_date.setTextColor(Color.argb(255,255,0,0));
             iv_notify_item_icon.setImageResource(R.drawable.ic_medicine_red);
         }
+
         if (notification.getNotification_type().equals("2")){
             iv_notify_item_icon.setImageResource(R.drawable.ic_file);
         }
+
         if (notification.getNotification_type().equals("3")){
             tv_notify_content.setTextColor(Color.argb(255,255,0,0));
             tv_notify_date.setTextColor(Color.argb(255,255,0,0));

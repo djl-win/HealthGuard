@@ -105,8 +105,8 @@ public class NotifyService extends Service {
                     public void accept(Long aLong) throws Throwable {
                         // min 为当前时间和item时间差值 判断=15
                         CollectionReference notifyRef = db.collection("notification");
-                        notifyRef.whereEqualTo("user_id",user_id)
-                                .whereEqualTo("notification_read_status","0")
+                        notifyRef.whereEqualTo("userId",user_id)
+                                .whereEqualTo("notificationReadStatus","0")
 //                                .whereEqualTo("notification_delete_status","0")
                                 .get()
                                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -121,31 +121,31 @@ public class NotifyService extends Service {
                                             }
                                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
                                                 Map<String, Object> data = documentSnapshot.getData();
-                                                String str_item_date = documentSnapshot.get("notification_date").toString();
-                                                if (data.get("notification_delete_status").toString().equals("0")){
+                                                String str_item_date = documentSnapshot.get("notificationDate").toString();
+                                                if (data.get("notificationDeleteStatus").toString().equals("0")){
                                                     notification_list.add(new Notification(
-                                                            data.get("notification_id").toString(),
-                                                            data.get("user_id").toString(),
-                                                            data.get("notification_note").toString(),
-                                                            data.get("notification_date").toString(),
-                                                            data.get("notification_type").toString(),
-                                                            data.get("notification_read_status").toString(),
-                                                            data.get("notification_delete_status").toString()
+                                                            data.get("notificationId").toString(),
+                                                            data.get("userId").toString(),
+                                                            data.get("notificationNote").toString(),
+                                                            data.get("notificationDate").toString(),
+                                                            data.get("notificationType").toString(),
+                                                            data.get("notificationReadStatus").toString(),
+                                                            data.get("notificationDeleteStatus").toString()
                                                     ));
                                                     SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,notification_list.size());
                                                     // current_date > item_date  === item is early 8:25 - 8.20 > 0
-                                                    if (documentSnapshot.get("notification_type").toString().equals("4")
+                                                    if (documentSnapshot.get("notificationType").toString().equals("4")
                                                             && DifferentTime(currentDate, str_item_date, dateFormat) >= 0) {
                                                         notification_type_4_list.add(new Notification(
-                                                                data.get("notification_id").toString(),
-                                                                data.get("user_id").toString(),
-                                                                data.get("notification_note").toString(),
-                                                                data.get("notification_date").toString(),
-                                                                data.get("notification_type").toString(),
-                                                                data.get("notification_read_status").toString(),
-                                                                data.get("notification_delete_status").toString()
+                                                                data.get("notificationId").toString(),
+                                                                data.get("userId").toString(),
+                                                                data.get("notificationNote").toString(),
+                                                                data.get("notificationDate").toString(),
+                                                                data.get("notificationType").toString(),
+                                                                data.get("notificationReadStatus").toString(),
+                                                                data.get("notificationDeleteStatus").toString()
                                                         ));
-                                                        document_id.put(data.get("notification_id").toString(), documentSnapshot.getId());
+                                                        document_id.put(data.get("notificationId").toString(), documentSnapshot.getId());
                                                     }
                                                 }
                                             }
@@ -194,7 +194,7 @@ public class NotifyService extends Service {
                             if (DifferentTime(currentDate,notification_type_4_list.get(0).getNotification_date(),dateFormat) == 0){
                                 DocumentReference notify_update_Ref = db.collection("notification").document(document_id.get(notification_type_4_list.get(0).getNotification_id()));
                                 notify_update_Ref
-                                        .update("notification_type", "0")
+                                        .update("notificationType", "0")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -209,18 +209,18 @@ public class NotifyService extends Service {
                             if (DifferentTime(currentDate,notification_type_4_list.get(0).getNotification_date(),dateFormat) >= 15){
                                 CollectionReference notify_add_Ref = db.collection("notification");
                                 Map<String,Object> new_notify = new HashMap<>();
-                                new_notify.put("user_id",notification_type_4_list.get(0).getUser_id());
-                                new_notify.put("notification_date",formattedDate);
-                                new_notify.put("notification_id","test_08");
-                                new_notify.put("notification_note","You did not eat xxx");
-                                new_notify.put("notification_type","1");
-                                new_notify.put("notification_read_status","0");
-                                new_notify.put("notification_delete_status","0");
+                                new_notify.put("userId",notification_type_4_list.get(0).getUser_id());
+                                new_notify.put("notificationDate",formattedDate);
+                                new_notify.put("notificationId","test_08");
+                                new_notify.put("notificationNote","You did not eat xxx");
+                                new_notify.put("notificationType","1");
+                                new_notify.put("notificationReadStatus","0");
+                                new_notify.put("notificationDeleteStatus","0");
                                 notify_add_Ref.document("test08").set(new_notify);
                                 // detele type 0
                                 DocumentReference notify_delete_Ref = db.collection("notification").document("YyKfIet5AQOVxLOAOyjd");
                                 notify_delete_Ref
-                                        .update("notification_delete_status", "1")
+                                        .update("notificationDeleteStatus", "1")
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
@@ -239,8 +239,8 @@ public class NotifyService extends Service {
                 });
 
         CollectionReference notifyRef = db.collection("notification");
-        notifyRef.whereEqualTo("user_id",user_id)
-                .whereEqualTo("notification_read_status","0")
+        notifyRef.whereEqualTo("userId",user_id)
+                .whereEqualTo("notificationReadStatus","0")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -250,17 +250,17 @@ public class NotifyService extends Service {
                             }
                             for (QueryDocumentSnapshot documentSnapshot : value){
                                 // ADD LIST
-                                if (!documentSnapshot.get("notification_type").toString().equals("4")
-                                        && documentSnapshot.get("notification_delete_status").toString().equals("0")){
+                                if (!documentSnapshot.get("notificationType").toString().equals("4")
+                                        && documentSnapshot.get("notificationDeleteStatus").toString().equals("0")){
                                     Map<String, Object> data = documentSnapshot.getData();
                                     notification_list.add(new Notification(
-                                            data.get("notification_id").toString(),
-                                            data.get("user_id").toString(),
-                                            data.get("notification_note").toString(),
-                                            data.get("notification_date").toString(),
-                                            data.get("notification_type").toString(),
-                                            data.get("notification_read_status").toString(),
-                                            data.get("notification_delete_status").toString()
+                                            data.get("notificationId").toString(),
+                                            data.get("userId").toString(),
+                                            data.get("notificationNote").toString(),
+                                            data.get("notificationDate").toString(),
+                                            data.get("notificationType").toString(),
+                                            data.get("notificationReadStatus").toString(),
+                                            data.get("notificationDeleteStatus").toString()
                                     ));
                                 }
                             }
@@ -330,22 +330,22 @@ public class NotifyService extends Service {
     private void doAddTest(){
         CollectionReference notify_add_Ref = db.collection("notification");
         Map<String,Object> new_notify = new HashMap<>();
-        new_notify.put("user_id",user_id);
-        new_notify.put("notification_date",formattedDate);
-        new_notify.put("notification_id","test_test");
-        new_notify.put("notification_note","Test");
-        new_notify.put("notification_type","1");
-        new_notify.put("notification_read_status","0");
-        new_notify.put("notification_delete_status","0");
+        new_notify.put("userId",user_id);
+        new_notify.put("notificationDate",formattedDate);
+        new_notify.put("notificationId","test_test");
+        new_notify.put("notificationNote","Test");
+        new_notify.put("notificationType","1");
+        new_notify.put("notificationReadStatus","0");
+        new_notify.put("notificationDeleteStatus","0");
         notify_add_Ref.document("test_test").set(new_notify);
         Map<String,Object> new_notify2 = new HashMap<>();
-        new_notify2.put("user_id",user_id);
-        new_notify2.put("notification_date",formattedDate);
-        new_notify2.put("notification_id","new_notify2");
-        new_notify2.put("notification_note","Test");
-        new_notify2.put("notification_type","1");
-        new_notify2.put("notification_read_status","0");
-        new_notify2.put("notification_delete_status","0");
+        new_notify2.put("userId",user_id);
+        new_notify2.put("notificationDate",formattedDate);
+        new_notify2.put("notificationId","new_notify2");
+        new_notify2.put("notificationNote","Test");
+        new_notify2.put("notificationType","1");
+        new_notify2.put("notificationReadStatus","0");
+        new_notify2.put("notificationDeleteStatus","0");
         notify_add_Ref.document("new_notify2").set(new_notify);
     }
 
