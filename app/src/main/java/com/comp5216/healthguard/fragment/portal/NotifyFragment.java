@@ -3,29 +3,21 @@ package com.comp5216.healthguard.fragment.portal;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.RomUtils;
-import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.adapter.NotifyListAdapter;
-import com.comp5216.healthguard.obj.SPConstants;
-import com.comp5216.healthguard.obj.portal.Notification;
-import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.comp5216.healthguard.entity.Notification;
+import com.comp5216.healthguard.entity.SendNotificationRefreshEvent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +32,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -106,6 +97,7 @@ public class NotifyFragment extends Fragment {
     }
 
     private void initView() {
+
         CollectionReference notifyRef = db.collection("notification");
         if (!notificationList.isEmpty()){
             notificationList.clear();
@@ -163,12 +155,14 @@ public class NotifyFragment extends Fragment {
                                         ));
                                     }
                                 }
-                                notifyListAdapter = new NotifyListAdapter(notificationList,doc_id,getContext());
                                 listView = getView().findViewById(R.id.lv_notify);
                                 listView.setAdapter(notifyListAdapter);
+                                notifyListAdapter = new NotifyListAdapter(notificationList,doc_id,getContext());
                             }
                         }
                 });
+
+
         test = getView().findViewById(R.id.test);
         test.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +193,7 @@ public class NotifyFragment extends Fragment {
         new_notify.put("notificationDate","2023-08-31 15:36");
         new_notify.put("notificationId",ra);
         new_notify.put("notificationNote","You did not eat xxx");
-        new_notify.put("notificationType","1");
+        new_notify.put("notificationType","3");
         new_notify.put("notificationReadStatus","0");
         new_notify.put("notificationDeleteStatus","0");
         notify_add_Ref.document(ra).set(new_notify);

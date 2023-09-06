@@ -28,7 +28,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.obj.entity.User;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
 import com.comp5216.healthguard.viewmodel.AttributeViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;

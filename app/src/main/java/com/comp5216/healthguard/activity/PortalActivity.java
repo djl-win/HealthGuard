@@ -2,48 +2,34 @@ package com.comp5216.healthguard.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.Service;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.adapter.NotifyListAdapter;
-import com.comp5216.healthguard.fragment.portal.ChatFragment;
+import com.comp5216.healthguard.fragment.chat.ChatFragment;
 import com.comp5216.healthguard.fragment.portal.IndexFragment;
 import com.comp5216.healthguard.fragment.portal.NotifyFragment;
 import com.comp5216.healthguard.fragment.portal.SearchFragment;
 import com.comp5216.healthguard.fragment.portal.SettingFragment;
-import com.comp5216.healthguard.obj.SPConstants;
-import com.comp5216.healthguard.obj.portal.Notification;
-import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
+import com.comp5216.healthguard.entity.SPConstants;
 import com.comp5216.healthguard.service.NotifyService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.greenrobot.eventbus.EventBus;
-
-import java.util.Collections;
-import java.util.Map;
 
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
@@ -136,7 +122,7 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
                             }
                             SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,task.getResult().size());
                             SPUtils.getInstance().put(SPConstants.NOTIFICATION_LIST_SIZE,sum);
-                            LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE));
+//                            LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE));
                         }
                     }
                 });

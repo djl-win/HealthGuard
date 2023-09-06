@@ -108,9 +108,6 @@ public class ChatRepository {
                     }
                 }
 
-                for (Chat chatMessage : chatMessages) {
-                    Log.d("time",String.valueOf(chatMessage.getChatMessageTimestamp()));
-                }
                 chatMessagesLiveData.setValue(chatMessages);
             }
 

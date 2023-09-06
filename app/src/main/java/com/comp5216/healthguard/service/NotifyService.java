@@ -3,25 +3,20 @@ package com.comp5216.healthguard.service;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.media.metrics.Event;
 import android.os.Build;
 import android.os.IBinder;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
-import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.adapter.NotifyListAdapter;
-import com.comp5216.healthguard.obj.SPConstants;
-import com.comp5216.healthguard.obj.portal.Notification;
-import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
+import com.comp5216.healthguard.entity.SPConstants;
+import com.comp5216.healthguard.entity.Notification;
+import com.comp5216.healthguard.entity.SendNotificationRefreshEvent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +27,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -41,15 +35,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
-import javax.xml.parsers.SAXParser;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -288,12 +279,14 @@ public class NotifyService extends Service {
 //                                    manager.notify(2, note_2);
 //                                } else {
 //                                    for (int i = SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE); i < notification_list.size(); i++) {
-                                        android.app.Notification note = new NotificationCompat.Builder(getBaseContext(), "Notification")
-                                                .setContentTitle("New Notice")
-                                                .setContentText(notification_list.get(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE)).getNotification_note())
-                                                .setSmallIcon(R.drawable.ic_notify)
-                                                .build();
-                                        manager.notify(1, note);
+                                if (SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE) >= 0) {
+                                    android.app.Notification note = new NotificationCompat.Builder(getBaseContext(), "Notification")
+                                            .setContentTitle("New Notice")
+                                            .setContentText(notification_list.get(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE)).getNotification_note())
+                                            .setSmallIcon(R.drawable.ic_notify)
+                                            .build();
+                                    manager.notify(1, note);
+                                }
 //                                    }
 //                                }
                             }

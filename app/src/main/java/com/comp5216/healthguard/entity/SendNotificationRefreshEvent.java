@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.obj.portal;
+package com.comp5216.healthguard.entity;
 
 public class SendNotificationRefreshEvent{
     private String type;

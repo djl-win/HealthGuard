@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.obj;
+package com.comp5216.healthguard.entity;
 
 public class SPConstants {
     /**

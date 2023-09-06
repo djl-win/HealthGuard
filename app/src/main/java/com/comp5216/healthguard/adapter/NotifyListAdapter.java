@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.comp5216.healthguard.obj.portal.Notification;
+import com.comp5216.healthguard.entity.Notification;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.obj.portal.SendNotificationRefreshEvent;
+import com.comp5216.healthguard.entity.SendNotificationRefreshEvent;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
     <!-- 获取网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,10 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthcareAnytime"
         tools:targetApi="31">
+
         <service
             android:name=".service.NotifyService"
-            android:enabled="true"
-            android:exported="true"></service>
+            android:enabled="true" />
+
         <activity
             android:name=".activity.EnterActivity"
             android:exported="true">

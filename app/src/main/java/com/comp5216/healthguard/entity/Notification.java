@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.obj.portal;
+package com.comp5216.healthguard.entity;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

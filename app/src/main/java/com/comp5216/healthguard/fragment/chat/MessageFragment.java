@@ -203,7 +203,6 @@ public class MessageFragment extends DialogFragment {
             // 转换为UTC+10的时间
             ZonedDateTime utcPlus8 = now.atZone(ZoneOffset.ofHours(10));
             long currentTimestamp = utcPlus8.toInstant().toEpochMilli();
-            Toast.makeText(getContext(),String.valueOf(currentTimestamp),Toast.LENGTH_SHORT).show();
 
             chatMessage.setChatMessageTimestamp(currentTimestamp);
             // 将发送的聊天信息存到数据库
