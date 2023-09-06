@@ -2,9 +2,8 @@ package com.comp5216.healthguard.viewmodel;
 
 import androidx.lifecycle.ViewModel;
 
-import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.obj.entity.User;
 import com.comp5216.healthguard.repository.AttributeRepository;
-import com.comp5216.healthguard.repository.UserRepository;
 
 /**
  * 属性视图模型类，处理用户的预警信息，返回到view层

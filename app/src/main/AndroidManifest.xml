@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HealthcareAnytime"
         tools:targetApi="31">
+        <service
+            android:name=".service.NotifyService"
+            android:enabled="true"
+            android:exported="true"></service>
         <activity
             android:name=".activity.EnterActivity"
             android:exported="true">
@@ -22,7 +26,9 @@
             </intent-filter>
         </activity>
         <!-- 主页activity -->
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.PortalActivity"
+            android:exported="false">
         </activity>
     </application>
 

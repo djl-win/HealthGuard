@@ -8,7 +8,6 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -24,15 +23,11 @@ import androidx.core.util.Consumer;
 import androidx.fragment.app.DialogFragment;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.activity.MainActivity;
+import com.comp5216.healthguard.activity.PortalActivity;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.SignInMethodQueryResult;
 
 import java.util.Objects;
@@ -297,7 +292,7 @@ public class LoginFragment extends DialogFragment {
 
                         // 使用Intent进入MainActivity
                         if(getActivity() != null) {
-                            Intent intent = new Intent(getActivity(), MainActivity.class);
+                            Intent intent = new Intent(getActivity(), PortalActivity.class);
                             startActivity(intent);
                             // 关闭当前Activity,enter页面
                             getActivity().finish();
