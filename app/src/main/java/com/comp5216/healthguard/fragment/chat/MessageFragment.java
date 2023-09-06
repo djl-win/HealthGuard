@@ -32,6 +32,10 @@ import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.Instant;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+
 /**
  * 聊天界面的fragment
  * <p>
@@ -194,7 +198,13 @@ public class MessageFragment extends DialogFragment {
             // 把当前聊天窗口的信息传到message里
             chatMessage.setChatMessageText(editTextContent.getText().toString());
             // 把当前的发送消息的时间存进message
-            long currentTimestamp = System.currentTimeMillis();
+            // 获取当前的UTC时间
+            Instant now = Instant.now();
+            // 转换为UTC+10的时间
+            ZonedDateTime utcPlus8 = now.atZone(ZoneOffset.ofHours(10));
+            long currentTimestamp = utcPlus8.toInstant().toEpochMilli();
+            Toast.makeText(getContext(),String.valueOf(currentTimestamp),Toast.LENGTH_SHORT).show();
+
             chatMessage.setChatMessageTimestamp(currentTimestamp);
             // 将发送的聊天信息存到数据库
             chatViewModel.insertMessage(chatMessage);

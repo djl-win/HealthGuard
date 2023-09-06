@@ -1,6 +1,8 @@
 package com.comp5216.healthguard.repository;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -106,6 +108,9 @@ public class ChatRepository {
                     }
                 }
 
+                for (Chat chatMessage : chatMessages) {
+                    Log.d("time",String.valueOf(chatMessage.getChatMessageTimestamp()));
+                }
                 chatMessagesLiveData.setValue(chatMessages);
             }
 
