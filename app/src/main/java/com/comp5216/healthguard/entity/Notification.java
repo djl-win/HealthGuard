@@ -1,99 +1,80 @@
 package com.comp5216.healthguard.entity;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
-public class Notification implements Comparable<Notification>{
-    private String notification_id;
-    private String user_id;
-    private String notification_note;
-    private String notification_date;
-    // Notification Type
-    // 0 - Time to eat
-    // 1 - Did not eat
-    // 2 - File upload
-    // 3 - Healthy abnormal
-    // 4 - 0 time before
-    private String notification_type;
-    private String notification_read_status;
-    private String notification_delete_status;
+/**
+ * 用户的通知信息
+ * <p>
+ * 存储用户的通知信息
+ * </p>
+ *
+ * @author X
+ * @version 1.0
+ * @since 2023-10-07
+ */
+public class Notification {
 
-    public Notification(String notification_id, String user_id, String notification_note, String notification_date, String notification_type, String notification_read_status, String notification_delete_status){
-        String doc_id;
-        this.notification_id = notification_id;
-        this.user_id = user_id;
-        this.notification_note = notification_note;
-        this.notification_date = notification_date;
-        this.notification_type = notification_type;
-        this.notification_read_status = notification_read_status;
-        this.notification_delete_status = notification_delete_status;
-    }
-    public void setNotification_id(String notification_id) {
-        this.notification_id = notification_id;
+    private String notificationId;  // 28位唯一标识符
+    private String userId;  // 与User表的userId关联
+
+    private String notificationNote;  // 加密后的通知内容或消息
+    private long notificationDate;  // 加密后的通知日期或时间
+    private int notificationType;  // 加密后的通知类型 0 健康问题， 1 报告
+    private int notificationReadStatus;  // 0: 未读, 1: 已读
+    private int notificationDeleteStatus;  // 0: 未删除, 1: 删除
+
+    public String getNotificationId() {
+        return notificationId;
     }
 
-    public String getNotification_id() {
-        return this.notification_id;
+    public void setNotificationId(String notificationId) {
+        this.notificationId = notificationId;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getUser_id() {
-        return this.user_id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public void setNotification_note(String notification_note) {
-        this.notification_note = notification_note;
+    public String getNotificationNote() {
+        return notificationNote;
     }
 
-    public String getNotification_note() {
-        return this.notification_note;
+    public void setNotificationNote(String notificationNote) {
+        this.notificationNote = notificationNote;
     }
 
-    public void setNotification_date(String notification_date) {
-        this.notification_date = notification_date;
+    public long getNotificationDate() {
+        return notificationDate;
     }
 
-    public String getNotification_date() {
-        return this.notification_date;
+    public void setNotificationDate(long notificationDate) {
+        this.notificationDate = notificationDate;
     }
 
-
-    public void setNotification_type(String notification_type) {
-        this.notification_type = notification_type;
+    public int getNotificationType() {
+        return notificationType;
     }
 
-    public String getNotification_type() {
-        return this.notification_type;
+    public void setNotificationType(int notificationType) {
+        this.notificationType = notificationType;
     }
 
-    public void setNotification_read_status(String notification_read_status) {
-        this.notification_read_status = notification_read_status;
+    public int getNotificationReadStatus() {
+        return notificationReadStatus;
     }
 
-    public String getNotification_read_status() {
-        return this.notification_read_status;
+    public void setNotificationReadStatus(int notificationReadStatus) {
+        this.notificationReadStatus = notificationReadStatus;
     }
 
-    public void setNotification_delete_status(String notification_delete_status) {
-        this.notification_delete_status = notification_delete_status;
+    public int getNotificationDeleteStatus() {
+        return notificationDeleteStatus;
     }
 
-    public String getNotification_delete_status() {
-        return this.notification_delete_status;
-    }
-
-    @Override
-    public int compareTo(Notification notification) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        int date = 0;
-        try {
-            date = (int) (dateFormat.parse(this.notification_date).getTime() - dateFormat.parse(notification.getNotification_date()).getTime());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
+    public void setNotificationDeleteStatus(int notificationDeleteStatus) {
+        this.notificationDeleteStatus = notificationDeleteStatus;
     }
 }

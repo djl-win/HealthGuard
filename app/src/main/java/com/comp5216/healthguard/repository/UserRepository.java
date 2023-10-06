@@ -67,9 +67,6 @@ public class UserRepository {
             user.setUserEmail(CustomEncryptUtil.encryptByAES(user.getUserEmail()));
             user.setUserName(CustomEncryptUtil.encryptByAES(user.getUserName()));
             user.setUserGender(CustomEncryptUtil.encryptByAES(user.getUserGender()));
-            Log.d("A", "解密的邮箱: " + CustomEncryptUtil.decryptByAES(user.getUserEmail()));
-            Log.d("A", "解密的姓名: " + CustomEncryptUtil.decryptByAES(user.getUserName()));
-            Log.d("A", "解密的性别: " + CustomEncryptUtil.decryptByAES(user.getUserGender()));
 
         } catch (NoSuchPaddingException | IllegalBlockSizeException |
                  NoSuchAlgorithmException | BadPaddingException |

@@ -2,8 +2,19 @@ package com.comp5216.healthguard.repository;
 
 import com.comp5216.healthguard.entity.Attribute;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.exception.EncryptionException;
+import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * 用户属性，预警信息仓库类，处理数据库查询语句
@@ -80,4 +91,24 @@ public class AttributeRepository {
                 .set(attribute);
     }
 
+    /**
+     * 通过用户id获取用户属性
+     * @param userId 用户id
+     */
+    public void getAttributeByUserId(String userId, OnSuccessListener<Attribute> successListener, OnFailureListener failureListener) {
+        // 查询集合根据userId
+        db.collection("attribute")
+                .whereEqualTo("userId", userId)
+                .limit(1)  // Limit the results to 1 document, since userId should be unique
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        Attribute attribute = queryDocumentSnapshots.getDocuments().get(0).toObject(Attribute.class);
+                        successListener.onSuccess(attribute);
+                    } else {
+                        failureListener.onFailure(new Exception("No document found"));
+                    }
+                })
+                .addOnFailureListener(failureListener);
+    }
 }

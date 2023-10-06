@@ -1,4 +1,4 @@
-package com.comp5216.healthguard.fragment.portal;
+package com.comp5216.healthguard.fragment.search;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

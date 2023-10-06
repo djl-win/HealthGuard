@@ -2,12 +2,8 @@ package com.comp5216.healthguard.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -17,12 +13,10 @@ import android.widget.ImageView;
 import com.blankj.utilcode.util.SPUtils;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.fragment.chat.ChatFragment;
-import com.comp5216.healthguard.fragment.portal.IndexFragment;
-import com.comp5216.healthguard.fragment.portal.NotifyFragment;
-import com.comp5216.healthguard.fragment.portal.SearchFragment;
-import com.comp5216.healthguard.fragment.portal.SettingFragment;
-import com.comp5216.healthguard.entity.SPConstants;
-import com.comp5216.healthguard.service.NotifyService;
+import com.comp5216.healthguard.fragment.index.IndexFragment;
+import com.comp5216.healthguard.fragment.notify.NotifyFragment;
+import com.comp5216.healthguard.fragment.search.SearchFragment;
+import com.comp5216.healthguard.fragment.setting.SettingFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,58 +27,32 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
-//    FirebaseFirestore db = FirebaseFirestore.getInstance();
-//    FirebaseAuth auth = FirebaseAuth.getInstance();
+
     private ImageView iv_indexIcon;
     private ImageView iv_searchIcon;
     private ImageView iv_notifyIcon;
     private ImageView iv_chatIcon;
     private ImageView iv_settingIcon;
     private Animation animation;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+    private FirebaseFirestore db;
+    private String user_id;
+
+    private ChatFragment chatFragment;
+
+    private IndexFragment indexFragment;
+
+    private NotifyFragment notifyFragment;
+
+    private SearchFragment searchFragment;
+
+    private SettingFragment settingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_portal);
-        //TEST SERVICE
-        Intent intent_notify_service = new Intent(this, NotifyService.class);
-        startService(intent_notify_service);
-//        Button button = findViewById(R.id.button_logout);
-//        button.setOnClickListener( view ->{
-//
-//            db.collection("users").document("lSX43pBjbxWyOGRZwI648xbzIVf2")
-//                    .get()
-//                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                DocumentSnapshot document = task.getResult();
-//                                if (document.exists()) {
-//                                    Log.d("Firestore", "DocumentSnapshot data: " + document.getData());
-//                                } else {
-//                                    Log.d("Firestore", "No such document");
-//                                }
-//                            } else {
-//                                Log.d("Firestore", "get failed with ", task.getException());
-//                            }
-//                        }
-//                    });
-//            auth.signOut();
-//
-//            // 跳转回登录页面
-//            startActivity(new Intent(PortalActivity.this, EnterActivity.class));
-//            finish();
-//        });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         initView();
     }
-
 
     private void initView() {
         iv_indexIcon = findViewById(R.id.iv_indexIcon);
@@ -97,48 +65,41 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_notifyIcon.setOnClickListener(this);
         iv_chatIcon.setOnClickListener(this);
         iv_settingIcon.setOnClickListener(this);
-        animation = AnimationUtils.loadAnimation(this,R.anim.anim_menu);
-        // 预加载notice size
-        getDefaultNoticeSize();
-        // 初始化Notify
-        showIndex();
-    }
+        animation = AnimationUtils.loadAnimation(this, R.anim.anim_menu);
 
-    private void getDefaultNoticeSize() {
-        CollectionReference notifyRef = db.collection("notification");
-        notifyRef.whereEqualTo("user_id",user_id)
-                .whereEqualTo("notification_read_status","0")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-                            int sum = 0;
-                            for (QueryDocumentSnapshot documentSnapshot:task.getResult()){
-                                if (!documentSnapshot.getData().get("notification_type").equals("4")
-                                && documentSnapshot.getData().get("notification_delete_status").equals("0")){
-                                    sum++;
-                                }
-                            }
-                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_SIZE,task.getResult().size());
-                            SPUtils.getInstance().put(SPConstants.NOTIFICATION_LIST_SIZE,sum);
-//                            LogUtils.e(SPUtils.getInstance().getInt(SPConstants.NOTIFICATION_LIST_SIZE));
-                        }
-                    }
-                });
+        db = FirebaseFirestore.getInstance();
+        user_id = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        chatFragment = new ChatFragment();
+        indexFragment = new IndexFragment();
+        notifyFragment = new NotifyFragment();
+        searchFragment = new SearchFragment();
+        settingFragment = new SettingFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fl_index, chatFragment)
+                .add(R.id.fl_index, indexFragment)
+                .add(R.id.fl_index, notifyFragment)
+                .add(R.id.fl_index, settingFragment)
+                .add(R.id.fl_index, searchFragment)
+                .hide(chatFragment)
+                .hide(searchFragment)
+                .hide(notifyFragment)
+                .hide(settingFragment)
+                .show(indexFragment)
+                .commit();
     }
 
     @Override
     public void onClick(View v) {
-        if (v == iv_indexIcon){
+        if (v == iv_indexIcon) {
             showIndex();
-        }else if (v == iv_searchIcon){
+        } else if (v == iv_searchIcon) {
             showSearch();
-        }else if (v == iv_notifyIcon){
+        } else if (v == iv_notifyIcon) {
             showNotify();
-        }else if (v == iv_chatIcon){
+        } else if (v == iv_chatIcon) {
             showChat();
-        }else if (v == iv_settingIcon){
+        } else if (v == iv_settingIcon) {
             showSetting();
         }
     }
@@ -149,7 +110,13 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_chatIcon.clearAnimation();
         iv_settingIcon.clearAnimation();
         iv_indexIcon.startAnimation(animation);
-        replaceFragment(new IndexFragment());
+        getSupportFragmentManager().beginTransaction()
+                .hide(chatFragment)
+                .hide(searchFragment)
+                .hide(settingFragment)
+                .hide(notifyFragment)
+                .show(indexFragment)
+                .commit();
     }
 
     private void showSearch() {
@@ -158,7 +125,13 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_chatIcon.clearAnimation();
         iv_settingIcon.clearAnimation();
         iv_searchIcon.startAnimation(animation);
-        replaceFragment(new SearchFragment());
+        getSupportFragmentManager().beginTransaction()
+                .hide(indexFragment)
+                .hide(chatFragment)
+                .hide(settingFragment)
+                .hide(notifyFragment)
+                .show(searchFragment)
+                .commit();
     }
 
     private void showNotify() {
@@ -167,7 +140,13 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_chatIcon.clearAnimation();
         iv_settingIcon.clearAnimation();
         iv_notifyIcon.startAnimation(animation);
-        replaceFragment(new NotifyFragment());
+        getSupportFragmentManager().beginTransaction()
+                .hide(chatFragment)
+                .hide(searchFragment)
+                .hide(settingFragment)
+                .hide(indexFragment)
+                .show(notifyFragment)
+                .commit();
     }
 
     private void showChat() {
@@ -176,7 +155,13 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_notifyIcon.clearAnimation();
         iv_settingIcon.clearAnimation();
         iv_chatIcon.startAnimation(animation);
-        replaceFragment(new ChatFragment());
+        getSupportFragmentManager().beginTransaction()
+                .hide(indexFragment)
+                .hide(searchFragment)
+                .hide(settingFragment)
+                .hide(notifyFragment)
+                .show(chatFragment)
+                .commit();
     }
 
     private void showSetting() {
@@ -185,21 +170,17 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         iv_notifyIcon.clearAnimation();
         iv_chatIcon.clearAnimation();
         iv_settingIcon.startAnimation(animation);
-        replaceFragment(new SettingFragment());
-    }
-
-    private void replaceFragment(Fragment fragment){
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fl_index,fragment)
+        getSupportFragmentManager().beginTransaction()
+                .hide(chatFragment)
+                .hide(searchFragment)
+                .hide(indexFragment)
+                .hide(notifyFragment)
+                .show(settingFragment)
                 .commit();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // TEST SERVICE
-        Intent intent_notify_service = new Intent(this,NotifyService.class);
-        stopService(intent_notify_service);
     }
 }

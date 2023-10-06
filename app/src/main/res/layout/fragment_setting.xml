@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.comp5216.healthguard.fragment.portal.SettingFragment">
+    tools:context="com.comp5216.healthguard.fragment.setting.SettingFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
@@ -12,5 +12,10 @@
         android:gravity="center"
         android:text="FRAGMENT    5"
         android:textColor="@color/white" />
+    <Button
+        android:id="@+id/setting_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="logout"/>
 
 </FrameLayout>

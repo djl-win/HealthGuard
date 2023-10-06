@@ -124,4 +124,22 @@ public class Attribute {
     public void setAttributeBloodOxygenHigh(String attributeBloodOxygenHigh) {
         this.attributeBloodOxygenHigh = attributeBloodOxygenHigh;
     }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "attributeId='" + attributeId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", attributeSystolicLow='" + attributeSystolicLow + '\'' +
+                ", attributeSystolicHigh='" + attributeSystolicHigh + '\'' +
+                ", attributeDiastolicLow='" + attributeDiastolicLow + '\'' +
+                ", attributeDiastolicHigh='" + attributeDiastolicHigh + '\'' +
+                ", attributeHeartRateLow='" + attributeHeartRateLow + '\'' +
+                ", attributeHeartRateHigh='" + attributeHeartRateHigh + '\'' +
+                ", attributeBodyTemperatureLow='" + attributeBodyTemperatureLow + '\'' +
+                ", attributeBodyTemperatureHigh='" + attributeBodyTemperatureHigh + '\'' +
+                ", attributeBloodOxygenLow='" + attributeBloodOxygenLow + '\'' +
+                ", attributeBloodOxygenHigh='" + attributeBloodOxygenHigh + '\'' +
+                '}';
+    }
 }

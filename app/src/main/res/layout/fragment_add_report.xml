@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
+
+    <LinearLayout
+        android:id="@+id/report_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/report_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-10dp"
+            style="@style/sign_page_button_back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/medical_report"
+            style="@style/sign_page_string_text1" />
+
+        <!--  报告Note的输入框  -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/report_note"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/sign_page_string_text_input1"
+            android:textColorHint="@color/gray"
+            app:hintTextColor="@color/gray"
+            app:boxStrokeColor="@color/gray"
+            android:hint="@string/note"
+            android:layout_marginTop="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/report_note_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/report_upload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_upload"/>
+            <TextView
+                android:layout_marginStart="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:textColor="@color/gray"
+                android:text="@string/upload_images"/>
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/report_indicator"
+                android:visibility="gone"
+                android:layout_marginStart="15dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:indeterminate="true"/>
+            <ImageView
+                android:id="@+id/report_success"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="gone"
+                android:src="@drawable/ic_success"
+                />
+        </LinearLayout>
+        <!--使得button位于底部，和gravity配合使用-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/report_submit"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            style="@style/sign_page_button_continue"
+            android:text="@string/submit"
+            android:enabled="false" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/report_indicator_plus"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <!-- Logo图像 -->
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/logo" />
+        />
+
+        <!-- 进度指示器 -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </LinearLayout>
+
+</FrameLayout>

@@ -37,4 +37,16 @@
     <string name="error_already_added">You aleady added this user</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="healthy_information">Healthy information</string>
+    <string name="medical_report">Medical report</string>
+    <string name="medication_reminder">Medication reminder</string>
+    <string name="health_information">Health Information</string>
+    <string name="systolic_pressure">Systolic Pressure</string>
+    <string name="diastolic_pressure">Diastolic Pressure</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="body_temperature">Body Temperature</string>
+    <string name="blood_oxygen_saturation">Blood Oxygen Saturation</string>
+    <string name="submit">Submit</string>
+    <string name="note">Note</string>
+    <string name="upload_images">Upload images</string>
 </resources>
