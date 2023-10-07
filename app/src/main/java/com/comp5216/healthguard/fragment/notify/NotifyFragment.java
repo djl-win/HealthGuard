@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,7 @@ public class NotifyFragment extends Fragment {
     private void observeNotificationListData() {
         // 观察LiveData中的数据变化，并相应地更新UI
         notificationViewModel.getAllNotificationByUserId(userUid).observe(getViewLifecycleOwner(), notificationList -> {
+            Log.d("djl", "observeNotificationListData: ");
             // 如果从数据库中获取的用户数据不为空
             if (notificationList != null) {
                     // 如果列表的适配器尚未初始化

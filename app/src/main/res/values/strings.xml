@@ -50,4 +50,6 @@
     <string name="note">Note</string>
     <string name="upload_images">Upload images</string>
     <string name="notification">Notification</string>
+    <string name="name_of_drug">Name of drug</string>
+    <string name="dosage_of_drug">Dosage of drug</string>
 </resources>

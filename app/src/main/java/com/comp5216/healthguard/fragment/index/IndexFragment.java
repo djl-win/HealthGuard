@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +16,20 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.adapter.NotificationListAdapter;
+import com.comp5216.healthguard.adapter.RemindersListAdapter;
 import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicalReport;
+import com.comp5216.healthguard.entity.MedicationReminder;
 import com.comp5216.healthguard.viewmodel.HealthInformationViewModel;
 import com.comp5216.healthguard.viewmodel.MedicalReportViewModel;
+import com.comp5216.healthguard.viewmodel.MedicationReminderViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.XAxis;
@@ -120,6 +127,15 @@ public class IndexFragment extends Fragment {
     // medical report view model
     MedicalReportViewModel medicalReportViewModel;
 
+    // recycle view for reminder
+    RecyclerView recyclerViewReminder;
+
+    // medication reminder view model
+    MedicationReminderViewModel medicationReminderViewModel;
+
+    // adapter for recycle view
+    RemindersListAdapter remindersListAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -176,6 +192,12 @@ public class IndexFragment extends Fragment {
         lineChartMedicalReport = view.findViewById(R.id.index_report_chart);
         // 绑定用户医疗报告信息的view model
         medicalReportViewModel = new ViewModelProvider(this).get(MedicalReportViewModel.class);
+        // 用户用药的recycle view
+        recyclerViewReminder = view.findViewById(R.id.index_recycle_reminder);
+        // 绑定用户用药提醒的view model
+        medicationReminderViewModel = new ViewModelProvider(this).get(MedicationReminderViewModel.class);
+        // 绑定用户列表的适配器
+        recyclerViewReminder.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     /**
@@ -189,6 +211,8 @@ public class IndexFragment extends Fragment {
         healthInformationChart();
         // 观察第二个健康信息图表的数据
         medicalReportChart();
+        // 观察第三个用户recycle view的数据
+        medicationReminderRecycleView();
 
     }
 
@@ -415,5 +439,27 @@ public class IndexFragment extends Fragment {
                         // 没读到数据什么都不做
                     }
                 });
+    }
+
+    /**
+     * 观察第三个用户recycle view的数据
+     */
+    private void medicationReminderRecycleView() {
+        // 观察LiveData中的数据变化，并相应地更新UI
+        medicationReminderViewModel.getAllMedicationReminderByUserId(userUid).observe(getViewLifecycleOwner(), medicationReminderList -> {
+            // 如果从数据库中获取的用户数据不为空
+            if (medicationReminderList != null) {
+                // 如果列表的适配器尚未初始化
+                if (remindersListAdapter == null) {
+                    // 初始化适配器，并设置它为recyclerView的适配器
+                    remindersListAdapter = new RemindersListAdapter(getContext(), medicationReminderList);
+                    recyclerViewReminder.setAdapter(remindersListAdapter);
+                } else {
+                    // 如果适配器已经初始化，只需更新数据并刷新列表
+                    remindersListAdapter.updateData(medicationReminderList);
+                }
+
+            }
+        });
     }
 }
