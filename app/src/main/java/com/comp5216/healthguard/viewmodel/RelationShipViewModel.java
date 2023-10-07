@@ -2,12 +2,9 @@ package com.comp5216.healthguard.viewmodel;
 
 import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.entity.Relationship;
-import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.entity.UserWithMessage;
 import com.comp5216.healthguard.repository.RelationshipRepository;
 

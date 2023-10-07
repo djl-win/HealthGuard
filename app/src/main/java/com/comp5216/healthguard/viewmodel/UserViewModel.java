@@ -6,12 +6,9 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.User;
-import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.repository.UserRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 /**
  * 用户视图模型类，处理用户信息，返回到view层

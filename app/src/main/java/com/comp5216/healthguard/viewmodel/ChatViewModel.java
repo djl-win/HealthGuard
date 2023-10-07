@@ -1,19 +1,11 @@
 package com.comp5216.healthguard.viewmodel;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.Chat;
-import com.comp5216.healthguard.repository.AttributeRepository;
 import com.comp5216.healthguard.repository.ChatRepository;
-import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

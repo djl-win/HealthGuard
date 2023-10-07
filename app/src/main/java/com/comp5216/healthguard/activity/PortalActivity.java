@@ -1,29 +1,29 @@
 package com.comp5216.healthguard.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.blankj.utilcode.util.SPUtils;
+
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.entity.UserWithMessage;
 import com.comp5216.healthguard.fragment.chat.ChatFragment;
 import com.comp5216.healthguard.fragment.index.IndexFragment;
 import com.comp5216.healthguard.fragment.notify.NotifyFragment;
 import com.comp5216.healthguard.fragment.search.SearchFragment;
 import com.comp5216.healthguard.fragment.setting.SettingFragment;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.comp5216.healthguard.viewmodel.NotificationViewModel;
+import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,6 +47,12 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
 
     private SettingFragment settingFragment;
 
+    private RelationShipViewModel relationShipViewModel;
+
+    private TextView textViewChatBudge;
+
+    private NotificationViewModel notificationViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +61,12 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void initView() {
+        relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
+        notificationViewModel = new ViewModelProvider(this).get(NotificationViewModel.class);
+        // 观测未读消息数量
+        textViewChatBudge = findViewById(R.id.portal_chat_budge);
+        observeUnreadMessages();
+
         iv_indexIcon = findViewById(R.id.iv_indexIcon);
         iv_searchIcon = findViewById(R.id.iv_searchIcon);
         iv_notifyIcon = findViewById(R.id.iv_notifyIcon);
@@ -179,8 +191,30 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
                 .commit();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+
+    /**
+     * 观察未读消息的数量
+     */
+    private void observeUnreadMessages() {
+        // 从ViewModel获取所有与当前用户ID关联的好友数据，并注册LiveData的观察者
+        relationShipViewModel.getUserWithMessagesData(user_id).observe(this, usersWithMessage -> {
+            // 如果从数据库中获取的用户数据不为空
+            if (usersWithMessage != null) {
+                int count = 0;
+                for (UserWithMessage userWithMessage : usersWithMessage) {
+                    count += Integer.parseInt(userWithMessage.getUnreadMessageNumber());
+                }
+
+                if(count!=0){
+                    textViewChatBudge.setText(String.valueOf(count));
+                    textViewChatBudge.setVisibility(View.VISIBLE);
+                }else {
+                    textViewChatBudge.setVisibility(View.GONE);
+                }
+
+            }
+        });
+
     }
+
 }

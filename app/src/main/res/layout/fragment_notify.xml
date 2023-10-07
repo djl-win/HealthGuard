@@ -9,51 +9,34 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp">
-        
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:gravity="center"
+        >
         <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="right|center_vertical"
-            android:text="NOTIFICATION"
-            android:textColor="@color/black"
-            android:textSize="20sp"/>
+            android:layout_marginTop="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/notification"
+            android:textSize="26sp"
+            />
 
         <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingStart="-20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_notify_title"
-            android:layout_gravity="left|center_vertical"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-        
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="10dp"
+            />
     </LinearLayout>
 
-    <View
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notify_body"
+        android:paddingTop="25dp"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@color/dark_gray"/>
-
-    <ListView
-        android:id="@+id/lv_notify"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:divider="@null"
-        android:dividerHeight="10dp"/>
-
-    <ImageView
-        android:id="@+id/test"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="-100dp"/>
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:overScrollMode="always"
+        android:scrollbars="vertical" />
 
 </LinearLayout>

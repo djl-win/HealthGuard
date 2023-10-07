@@ -5,9 +5,9 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.Notification;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,9 +61,6 @@ public class MedicalReportRepository {
      */
     public void storeMedicalReport(MedicalReport medicalReport, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
 
-
-
-
         // SHA256加密用户健康信息
         try {
             medicalReport.setMedicalReportNote(CustomEncryptUtil.encryptByAES(medicalReport.getMedicalReportNote()));
@@ -84,9 +81,26 @@ public class MedicalReportRepository {
         Notification notification = new Notification();
         notification.setNotificationDate(medicalReport.getMedicalReportDate());
         notification.setUserId(medicalReport.getUserId());
-        notification.setNotificationNote("new medical report, please check");
-        notification.setNotificationType(1);
-        notificationRepository.storeNotification(notification);
+
+        // 查询用户姓名
+        db.collection("users")
+                .document(medicalReport.getUserId())
+                .get()
+
+                .addOnSuccessListener(success ->{
+                    // 将文档转换为User对象
+                    User user = success.toObject(User.class);
+                    try {
+                        notification.setNotificationNote( CustomEncryptUtil.decryptByAES(user.getUserName()) + " new medical report, please check");
+                        notification.setNotificationType(1);
+                        notificationRepository.storeNotification(notification);
+                    } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                             NoSuchAlgorithmException | BadPaddingException |
+                             InvalidKeyException e) {
+                        // 抛出自定义异常
+                        throw new EncryptionException(e);
+                    }
+                });
     }
 
     /**

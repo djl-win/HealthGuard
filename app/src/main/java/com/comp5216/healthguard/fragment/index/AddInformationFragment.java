@@ -21,15 +21,10 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.viewmodel.HealthInformationViewModel;
-import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-
 
 /**
  * 添加information的fragment

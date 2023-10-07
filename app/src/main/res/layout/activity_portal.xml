@@ -61,18 +61,34 @@
                 android:paddingStart="5dp"
                 android:paddingBottom="12dp"
                 android:paddingEnd="5dp"
-                android:src="@drawable/ic_notify"/>
+                android:src="@drawable/ic_notify" />
 
-            <ImageView
-                android:id="@+id/iv_chatIcon"
+
+            <FrameLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:paddingTop="10dp"
-                android:paddingStart="5dp"
-                android:paddingBottom="10dp"
-                android:paddingEnd="5dp"
-                android:src="@drawable/ic_chat"/>
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/iv_chatIcon"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_chat" />
+
+                <TextView
+                    android:id="@+id/portal_chat_budge"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/badge_background"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+            </FrameLayout>
 
             <ImageView
                 android:id="@+id/iv_settingIcon"
@@ -83,7 +99,7 @@
                 android:paddingStart="5dp"
                 android:paddingBottom="10dp"
                 android:paddingEnd="5dp"
-                android:src="@drawable/ic_setting"/>
+                android:src="@drawable/ic_setting" />
 
         </LinearLayout>
 

@@ -1,4 +1,4 @@
-package com.lele.healthguard;
+package com.comp5216.healthguard;
 
 import org.junit.Test;
 

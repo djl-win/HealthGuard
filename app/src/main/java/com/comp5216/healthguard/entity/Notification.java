@@ -77,4 +77,17 @@ public class Notification {
     public void setNotificationDeleteStatus(int notificationDeleteStatus) {
         this.notificationDeleteStatus = notificationDeleteStatus;
     }
+
+    @Override
+    public String toString() {
+        return "Notification{" +
+                "notificationId='" + notificationId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", notificationNote='" + notificationNote + '\'' +
+                ", notificationDate=" + notificationDate +
+                ", notificationType=" + notificationType +
+                ", notificationReadStatus=" + notificationReadStatus +
+                ", notificationDeleteStatus=" + notificationDeleteStatus +
+                '}';
+    }
 }

@@ -1,10 +1,6 @@
 package com.comp5216.healthguard.util;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.transition.Transition;
-import android.transition.TransitionInflater;
-import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;

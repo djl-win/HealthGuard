@@ -1,34 +1,21 @@
 package com.comp5216.healthguard.repository;
 
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.Notification;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.exception.EncryptionException;
-import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import org.checkerframework.checker.units.qual.C;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -103,16 +90,35 @@ public class HealthInformationRepository {
                                     Double.parseDouble(healthInformation.getHealthInformationBloodOxygen()) > Double.parseDouble(attribute.getAttributeBloodOxygenHigh()) ||
                                     Double.parseDouble(healthInformation.getHealthInformationBloodOxygen()) < Double.parseDouble(attribute.getAttributeBloodOxygenLow())
                     ) {
-                        // 身体不健康
-                        healthInformation.setHealthInformationHealthStatus(1);
-                        // 发送通知到notification
-                        Notification notification = new Notification();
-                        notification.setNotificationDate(healthInformation.getHealthInformationDate());
-                        notification.setUserId(healthInformation.getUserId());
-                        notification.setNotificationNote("abnormal healthy data, please check");
-                        notification.setNotificationType(0);
-                        notificationRepository.storeNotification(notification);
 
+
+                        // 查询用户姓名
+                        db.collection("users")
+                                .document(healthInformation.getUserId())
+                                .get()
+
+                                .addOnSuccessListener(success ->{
+                                    // 将文档转换为User对象
+                                    User user = success.toObject(User.class);
+                                    try {
+                                        // 身体不健康
+                                        healthInformation.setHealthInformationHealthStatus(1);
+                                        // 发送通知到notification
+                                        Notification notification = new Notification();
+                                        notification.setNotificationDate(healthInformation.getHealthInformationDate());
+                                        notification.setUserId(healthInformation.getUserId());
+                                        notification.setNotificationNote(CustomEncryptUtil.decryptByAES(user.getUserName()) + " abnormal healthy data, please check");
+                                        notification.setNotificationType(0);
+                                        notificationRepository.storeNotification(notification);
+
+
+                                    } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                                             NoSuchAlgorithmException | BadPaddingException |
+                                             InvalidKeyException e) {
+                                        // 抛出自定义异常
+                                        throw new EncryptionException(e);
+                                    }
+                                });
                     } else {
                         // 身体健康
                         healthInformation.setHealthInformationHealthStatus(0);

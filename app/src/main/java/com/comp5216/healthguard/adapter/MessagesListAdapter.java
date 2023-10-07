@@ -27,7 +27,7 @@ import java.util.List;
  * @version 1.0
  * @since 2023-09-01
  */
-public class MessagesListAdapter  extends RecyclerView.Adapter<MessagesListAdapter.MessageViewHolder>{
+public class MessagesListAdapter extends RecyclerView.Adapter<MessagesListAdapter.MessageViewHolder>{
 
     Context context;
     List<Chat> chats;

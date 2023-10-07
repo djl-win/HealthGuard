@@ -4,30 +4,22 @@ import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.adapter.FriendsListAdapter;
 import com.comp5216.healthguard.adapter.MessagesListAdapter;
 import com.comp5216.healthguard.entity.Chat;
-import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.viewmodel.ChatViewModel;
-import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

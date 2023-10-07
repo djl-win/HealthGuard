@@ -1,12 +1,9 @@
 package com.comp5216.healthguard.adapter;
 
 import android.content.Context;
-import android.telephony.PhoneNumberUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,15 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.entity.Chat;
-import com.comp5216.healthguard.entity.Relationship;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.entity.UserWithMessage;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * 好友列表的的adapter

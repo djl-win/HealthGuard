@@ -1,10 +1,8 @@
 package com.comp5216.healthguard.viewmodel;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.comp5216.healthguard.entity.Chat;
 import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.repository.HealthInformationRepository;
 import com.google.android.gms.tasks.OnFailureListener;

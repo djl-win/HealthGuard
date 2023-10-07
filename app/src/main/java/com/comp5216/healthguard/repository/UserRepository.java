@@ -1,19 +1,14 @@
 package com.comp5216.healthguard.repository;
 
-import android.util.Log;
-
 import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.entity.User;
-import com.comp5216.healthguard.exception.QueryException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -94,22 +89,22 @@ public class UserRepository {
                 .document(userId)
                 .get()
                 .addOnSuccessListener(success -> {
-                        // 将文档转换为User对象
-                        User user = success.toObject(User.class);
-                        // 通过AES解密用户信息
-                        try {
-                            user.setUserEmail(CustomEncryptUtil.decryptByAES(user.getUserEmail()));
-                            user.setUserName(CustomEncryptUtil.decryptByAES(user.getUserName()));
-                            user.setUserGender(CustomEncryptUtil.decryptByAES(user.getUserGender()));
-                        } catch (NoSuchPaddingException | IllegalBlockSizeException |
-                                 NoSuchAlgorithmException | BadPaddingException |
-                                 InvalidKeyException e) {
-                            // 抛出自定义异常
-                            throw new EncryptionException(e);
-                        }
+                    // 将文档转换为User对象
+                    User user = success.toObject(User.class);
+                    // 通过AES解密用户信息
+                    try {
+                        user.setUserEmail(CustomEncryptUtil.decryptByAES(user.getUserEmail()));
+                        user.setUserName(CustomEncryptUtil.decryptByAES(user.getUserName()));
+                        user.setUserGender(CustomEncryptUtil.decryptByAES(user.getUserGender()));
+                    } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                             NoSuchAlgorithmException | BadPaddingException |
+                             InvalidKeyException e) {
+                        // 抛出自定义异常
+                        throw new EncryptionException(e);
+                    }
 
-                        // 更新LiveData的值
-                        userLiveData.setValue(user);
+                    // 更新LiveData的值
+                    userLiveData.setValue(user);
                 })
                 .addOnFailureListener(failure -> {
                     // 发生错误时，设置LiveData为null

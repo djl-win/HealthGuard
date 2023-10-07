@@ -3,9 +3,7 @@ package com.comp5216.healthguard.viewmodel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicalReport;
-import com.comp5216.healthguard.repository.HealthInformationRepository;
 import com.comp5216.healthguard.repository.MedicalReportRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
