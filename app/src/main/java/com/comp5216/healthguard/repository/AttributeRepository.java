@@ -1,11 +1,31 @@
 package com.comp5216.healthguard.repository;
 
+import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
 import com.comp5216.healthguard.entity.Attribute;
+import com.comp5216.healthguard.entity.Notification;
 import com.comp5216.healthguard.entity.User;
+import com.comp5216.healthguard.exception.EncryptionException;
+import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.units.qual.A;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * 用户属性，预警信息仓库类，处理数据库查询语句
@@ -22,11 +42,15 @@ public class AttributeRepository {
     // firebase数据库实例
     private final FirebaseFirestore db;
 
+    // 用户属性livedata
+    private final MutableLiveData<Attribute> attributeMutableLiveData;
+
     /**
      * AttributeRepository的构造方法。
      */
     public AttributeRepository() {
         this.db = FirebaseFirestore.getInstance();
+        attributeMutableLiveData = new MutableLiveData<>();
     }
 
     /**
@@ -101,5 +125,26 @@ public class AttributeRepository {
                     }
                 })
                 .addOnFailureListener(failureListener);
+    }
+
+    /**
+     * 通过用户Id获取用户的属性值
+     * @param userId 用户Id
+     */
+    public LiveData<Attribute> getAttributeById(String userId){
+        db.collection("attribute")
+                .whereEqualTo("userId", userId)
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) {
+                        Log.w("djl", "listen:error");
+                        return;
+                    }
+                    Attribute attribute = new Attribute();
+                    for (DocumentSnapshot doc : snapshots) {
+                       attribute = doc.toObject(Attribute.class);
+                    }
+                    attributeMutableLiveData.setValue(attribute);
+                });
+        return attributeMutableLiveData;
     }
 }

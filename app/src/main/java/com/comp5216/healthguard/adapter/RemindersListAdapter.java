@@ -13,8 +13,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.MedicationReminder;
 import com.comp5216.healthguard.entity.Notification;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +37,22 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
 
     Context context;
     List<MedicationReminder> medicationReminders;
+
+    // 回调接口，获取单机事件的回调
+    public interface ItemClickListener {
+        void onItemClick(MedicationReminder medicationReminder);
+    }
+
+    private RemindersListAdapter.ItemClickListener itemClickListener;
+
+    /**
+     * 为此recycle view设置单机事件
+     *
+     * @param itemClickListener 传进来当前视图
+     */
+    public void setItemClickListener(RemindersListAdapter.ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public RemindersListAdapter(Context context, List<MedicationReminder> medicationReminders) {
 
@@ -69,6 +87,14 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
         holder.textViewDrugName.setText(medicationReminders.get(position).getMedicationReminderDrugName());
         holder.textViewDrugDosage.setText(medicationReminders.get(position).getMedicationReminderDrugDosage());
         holder.textViewDrugNote.setText("note: " + medicationReminders.get(position).getMedicationReminderDrugNote());
+
+        // 给卡片设置单机事件
+        holder.materialCardView.setOnClickListener(view -> {
+            // 调用接口的回调方法，将点击的位置的用户信息传递给 MainActivity
+            if (itemClickListener != null) {
+                itemClickListener.onItemClick(medicationReminders.get(position));
+            }
+        });
     }
 
     @Override
@@ -93,12 +119,15 @@ public class RemindersListAdapter extends RecyclerView.Adapter<RemindersListAdap
         TextView textViewDrugName;
         TextView textViewDrugDosage;
         TextView textViewDrugNote;
+
+        MaterialCardView materialCardView;
         public RemindersViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewDrugName = itemView.findViewById(R.id.reminders_list_drug_name);
             textViewDrugTime = itemView.findViewById(R.id.reminders_list_drug_time);
             textViewDrugDosage = itemView.findViewById(R.id.reminders_list_drug_dosage);
             textViewDrugNote = itemView.findViewById(R.id.reminders_list_drug_note);
+            materialCardView = itemView.findViewById(R.id.reminders_list_cardview);
         }
 
     }

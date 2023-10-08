@@ -20,6 +20,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;
@@ -91,7 +92,8 @@ public class HealthInformationRepository {
                                     Double.parseDouble(healthInformation.getHealthInformationBloodOxygen()) < Double.parseDouble(attribute.getAttributeBloodOxygenLow())
                     ) {
 
-
+                        // 身体不健康
+                        healthInformation.setHealthInformationHealthStatus(1);
                         // 查询用户姓名
                         db.collection("users")
                                 .document(healthInformation.getUserId())
@@ -101,8 +103,6 @@ public class HealthInformationRepository {
                                     // 将文档转换为User对象
                                     User user = success.toObject(User.class);
                                     try {
-                                        // 身体不健康
-                                        healthInformation.setHealthInformationHealthStatus(1);
                                         // 发送通知到notification
                                         Notification notification = new Notification();
                                         notification.setNotificationDate(healthInformation.getHealthInformationDate());
@@ -123,8 +123,6 @@ public class HealthInformationRepository {
                         // 身体健康
                         healthInformation.setHealthInformationHealthStatus(0);
                     }
-
-
                     // SHA256加密用户健康信息
                     try {
                         healthInformation.setHealthInformationSystolic(CustomEncryptUtil.encryptByAES(healthInformation.getHealthInformationSystolic()));
@@ -144,6 +142,7 @@ public class HealthInformationRepository {
                             .set(healthInformation)
                             .addOnSuccessListener(successListener)
                             .addOnFailureListener(failureListener);
+
                 },
                 e -> {
                     // 查询身体健康属性失败，暂时不做处理
@@ -169,11 +168,30 @@ public class HealthInformationRepository {
                     List<HealthInformation> healthInformationList = new ArrayList<>();
                     for (DocumentSnapshot doc : snapshots) {
                         HealthInformation healthInformation = doc.toObject(HealthInformation.class);
-                        healthInformationList.add(healthInformation);
+
+                        // SHA256解密用户健康信息
+                        try {
+                            healthInformation.setHealthInformationSystolic(CustomEncryptUtil.decryptByAES(healthInformation.getHealthInformationSystolic()));
+                            healthInformation.setHealthInformationDiastolic(CustomEncryptUtil.decryptByAES(healthInformation.getHealthInformationDiastolic()));
+                            healthInformation.setHealthInformationHeartRate(CustomEncryptUtil.decryptByAES(healthInformation.getHealthInformationHeartRate()));
+                            healthInformation.setHealthInformationBodyTemperature(CustomEncryptUtil.decryptByAES(healthInformation.getHealthInformationBodyTemperature()));
+                            healthInformation.setHealthInformationBloodOxygen(CustomEncryptUtil.decryptByAES(healthInformation.getHealthInformationBloodOxygen()));
+
+                        } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                                 NoSuchAlgorithmException | BadPaddingException |
+                                 InvalidKeyException ex) {
+                            // 抛出自定义异常
+                            throw new EncryptionException(ex);
+                        }
+                        if(!healthInformationList.contains(healthInformation)) {
+                            healthInformationList.add(healthInformation);
+                        }
                     }
                     healthInformationLiveData.setValue(healthInformationList);
                 });
 
         return healthInformationLiveData;
     }
+
+
 }

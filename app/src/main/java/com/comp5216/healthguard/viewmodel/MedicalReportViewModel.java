@@ -1,9 +1,11 @@
 package com.comp5216.healthguard.viewmodel;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.MedicalReport;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.repository.MedicalReportRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,8 +26,13 @@ public class MedicalReportViewModel  extends ViewModel {
     // 用户医疗报告仓库
     private final MedicalReportRepository repository;
 
+    // 用户的报告数据
+    private final MutableLiveData<MedicalReport> medicalReportMutableLiveData;
+
+
     public MedicalReportViewModel() {
         this.repository = new MedicalReportRepository();
+        this.medicalReportMutableLiveData = new MutableLiveData<>();
     }
 
     /**
@@ -45,4 +52,21 @@ public class MedicalReportViewModel  extends ViewModel {
     public LiveData<List<MedicalReport>> getReportDataByUserId(String userId) {
         return repository.getReportDataByUserId(userId);
     }
+
+    /**
+     * 存储用户的报告数据
+     * @param medicalReport 用户的报告数据
+     */
+    public void setMedicalReport(MedicalReport medicalReport) {
+        medicalReportMutableLiveData.setValue(medicalReport);
+    }
+
+    /**
+     * 获得用户的报告数据
+     * @return 用户的报告数据
+     */
+    public LiveData<MedicalReport> getMedicalReport() {
+        return medicalReportMutableLiveData;
+    }
+
 }

@@ -1,65 +1,165 @@
 package com.comp5216.healthguard.fragment.search;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.comp5216.healthguard.R;
+import com.comp5216.healthguard.viewmodel.NotificationViewModel;
+import com.google.android.material.tabs.TabLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * search界面的fragment
+ * <p>
+ * search页面的逻辑
+ * </p>
+ *
+ * @author X
+ * @version 1.0
+ * @since 2023-10-08
  */
 public class SearchFragment extends Fragment {
+    // 定义一个rootView成员变量
+    private View view;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // 定义activity
+    Activity activity;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    // firebase的auth
+    FirebaseAuth auth;
 
-    public SearchFragment() {
-        // Required empty public constructor
+    // firebase user
+    FirebaseUser firebaseUser;
+
+    // 用户的uid
+    String userUid;
+
+    // fragment manager
+    FragmentManager childFragmentManager;
+
+    // tab layout
+    TabLayout tabLayoutChangePage;
+    // health page
+    SearchHealthFragment searchHealthFragment;
+
+    // report page
+    SearchReportFragment searchReportFragment;
+
+    // medication page
+    SearchMedicationFragment searchMedicationFragment;
+
+
+
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        // 膨胀fragment的视图
+        view = inflater.inflate(R.layout.fragment_search, container, false);
+
+        // 实例化 ShopItemRepository，定义定义activity
+        activity = getActivity();
+
+        // 初始化获取xml中组件
+        initViews();
+        // 给页面组件设置监听器
+        setListener();
+
+        return view;
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
+     * 获取xml中组件
      */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    private void initViews() {
+        // 初始化firebase auth
+        auth = FirebaseAuth.getInstance();
+        // 初始化firebase user
+        firebaseUser = auth.getCurrentUser();
+        // 初始化用户的UID
+        userUid = firebaseUser.getUid();
+
+        // 上部导航栏
+        tabLayoutChangePage = view.findViewById(R.id.search_change_page);
+
+        // 获取FragmentManager
+        childFragmentManager = getChildFragmentManager();
+
+        // 创建并加载子Fragment
+        searchHealthFragment = new SearchHealthFragment();
+        searchReportFragment = new SearchReportFragment();
+        searchMedicationFragment = new SearchMedicationFragment();
+
+        childFragmentManager.beginTransaction()
+                .add(R.id.search_container, searchHealthFragment)
+                .add(R.id.search_container,searchReportFragment)
+                .add(R.id.search_container,searchMedicationFragment)
+                .hide(searchReportFragment)
+                .hide(searchMedicationFragment)
+                .show(searchHealthFragment)
+                .commit();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+    /**
+     * 为组件添加监听器
+     */
+    private void setListener() {
+        changeChildFragment();
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
+    /**
+     * 切换子fragment
+     */
+    private void changeChildFragment() {
+        tabLayoutChangePage.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition() == 0){
+                    // 显示健康页面
+                    childFragmentManager.beginTransaction()
+                            .hide(searchMedicationFragment)
+                            .hide(searchReportFragment)
+                            .show(searchHealthFragment)
+                            .commit();
+                } else if (tab.getPosition() == 1) {
+                    // 显示报告页面
+                    childFragmentManager.beginTransaction()
+                            .hide(searchMedicationFragment)
+                            .hide(searchHealthFragment)
+                            .show(searchReportFragment)
+                            .commit();
+                } else if (tab.getPosition() == 2){
+                    // 显示药物页面
+                    childFragmentManager.beginTransaction()
+                            .hide(searchHealthFragment)
+                            .hide(searchReportFragment)
+                            .show(searchMedicationFragment)
+                            .commit();
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
+
+
 }

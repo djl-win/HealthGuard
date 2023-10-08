@@ -2,9 +2,13 @@ package com.comp5216.healthguard.viewmodel;
 
 
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.MedicationReminder;
 import com.comp5216.healthguard.repository.MedicationReminderRepository;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -28,8 +32,12 @@ public class MedicationReminderViewModel extends ViewModel {
     // 用户医疗报告仓库
     private final MedicationReminderRepository repository;
 
+    // 用户的用药提醒数据
+    private final MutableLiveData<MedicationReminder> medicationReminderMutableLiveData;
+
     public MedicationReminderViewModel() {
         this.repository = new MedicationReminderRepository();
+        this.medicationReminderMutableLiveData = new MutableLiveData<>();
     }
 
     /**
@@ -39,7 +47,7 @@ public class MedicationReminderViewModel extends ViewModel {
      * @param failureListener 失败监听器
      */
     public void storeMedicationReminder(MedicationReminder medicationReminder, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-         repository.storeMedicationReminder(medicationReminder,successListener,failureListener);
+        repository.storeMedicationReminder(medicationReminder,successListener,failureListener);
     }
 
     /**
@@ -49,5 +57,22 @@ public class MedicationReminderViewModel extends ViewModel {
      */
     public LiveData<List<MedicationReminder>> getAllMedicationReminderByUserId(String userId){
         return repository.getAllMedicationReminderByUserId(userId);
+    }
+
+
+    /**
+     * 设置用户的用要提醒数据
+     */
+    public void setMedicationReminder(MedicationReminder medicationReminder) {
+        medicationReminderMutableLiveData.setValue(medicationReminder);
+    }
+
+
+    /**
+     * 获得用户的用要提醒数据
+     * @return 用户的用药提醒数据
+     */
+    public LiveData<MedicationReminder> getMedicationReminder() {
+        return medicationReminderMutableLiveData;
     }
 }

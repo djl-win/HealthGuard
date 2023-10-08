@@ -1,5 +1,6 @@
 package com.comp5216.healthguard.repository;
 
+import android.service.autofill.CustomDescription;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -122,6 +123,14 @@ public class MedicalReportRepository {
                     List<MedicalReport> medicalReportList = new ArrayList<>();
                     for (DocumentSnapshot doc : snapshots) {
                         MedicalReport medicalReport = doc.toObject(MedicalReport.class);
+                        try {
+                            medicalReport.setMedicalReportNote(CustomEncryptUtil.decryptByAES(medicalReport.getMedicalReportNote()));
+                        } catch (NoSuchPaddingException | IllegalBlockSizeException |
+                                 NoSuchAlgorithmException | BadPaddingException |
+                                 InvalidKeyException ex) {
+                            // 抛出自定义异常
+                            throw new EncryptionException(ex);
+                        }
                         medicalReportList.add(medicalReport);
                     }
                     medicalReportLiveData.setValue(medicalReportList);

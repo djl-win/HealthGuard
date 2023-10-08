@@ -52,4 +52,24 @@
     <string name="notification">Notification</string>
     <string name="name_of_drug">Name of drug</string>
     <string name="dosage_of_drug">Dosage of drug</string>
+    <string name="health">HEALTH</string>
+    <string name="report">REPORT</string>
+    <string name="medication">MEDICATION</string>
+    <string name="healthy_info">Healthy Info</string>
+    <string name="_2023_02_05_10_10">2023-02-05 10:10</string>
+    <string name="normal">Normal</string>
+    <string name="systolic_pressure_">Systolic Pressure:</string>
+    <string name="diastolic_pressure_">Diastolic Pressure:</string>
+    <string name="heart_rate_">Heart Rate:</string>
+    <string name="body_temperature_">Body Temperature:</string>
+    <string name="blood_oxygen_saturation_">Blood Oxygen:</string>
+    <string name="mmhg"> mmHg</string>
+    <string name="bpm"> bpm</string>
+    <string name="c"> °C</string>
+    <string name="aaa"> %</string>
+    <string name="reference">Reference</string>
+    <string name="name_of_drug_">Name of drug:</string>
+    <string name="dosage_of_drug_">Dosage of drug:</string>
+    <string name="time_to_eat">Time to eat:</string>
+    <string name="note_">note:</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.comp5216.healthguard.viewmodel;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.comp5216.healthguard.entity.Attribute;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.repository.AttributeRepository;
 
@@ -33,6 +35,14 @@ public class AttributeViewModel  extends ViewModel {
      */
     public void storeAttribute(User user){
         repository.storeAttribute(user);
+    }
+
+    /**
+     * 通过用户Id获取用户的属性值
+     * @param userId 用户Id
+     */
+    public LiveData<Attribute> getAttributeById(String userId){
+        return repository.getAttributeById(userId);
     }
 
 }

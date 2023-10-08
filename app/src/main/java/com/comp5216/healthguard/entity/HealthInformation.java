@@ -21,7 +21,7 @@ public class HealthInformation {
     String healthInformationBloodOxygen;
     long healthInformationDate;
     int healthInformationHealthStatus;
-    int healthInformationDeleteStatus = 0;
+    int healthInformationDeleteStatus;
 
     public String getHealthInformationId() {
         return healthInformationId;
@@ -102,4 +102,21 @@ public class HealthInformation {
     public void setHealthInformationDeleteStatus(int healthInformationDeleteStatus) {
         this.healthInformationDeleteStatus = healthInformationDeleteStatus;
     }
+
+    @Override
+    public String toString() {
+        return "HealthInformation{" +
+                "healthInformationId='" + healthInformationId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", healthInformationSystolic='" + healthInformationSystolic + '\'' +
+                ", healthInformationDiastolic='" + healthInformationDiastolic + '\'' +
+                ", healthInformationHeartRate='" + healthInformationHeartRate + '\'' +
+                ", healthInformationBodyTemperature='" + healthInformationBodyTemperature + '\'' +
+                ", healthInformationBloodOxygen='" + healthInformationBloodOxygen + '\'' +
+                ", healthInformationDate=" + healthInformationDate +
+                ", healthInformationHealthStatus=" + healthInformationHealthStatus +
+                ", healthInformationDeleteStatus=" + healthInformationDeleteStatus +
+                '}';
+    }
 }
+
