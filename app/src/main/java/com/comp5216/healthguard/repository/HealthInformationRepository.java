@@ -10,6 +10,7 @@ import com.comp5216.healthguard.entity.Notification;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
+import com.comp5216.healthguard.util.CustomFCMSender;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,10 +62,11 @@ public class HealthInformationRepository {
      * 存储用户健康信息到数据库
      *
      * @param healthInformation 用户信息
+     * @param friends 用户的所有好友，用于发送通知
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
-    public void storeHealthInformation(HealthInformation healthInformation, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+    public void storeHealthInformation(HealthInformation healthInformation,List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
         // id
         healthInformation.setHealthInformationId(CustomIdGeneratorUtil.generateUniqueId());
         // userid
@@ -110,6 +112,12 @@ public class HealthInformationRepository {
                                         notification.setNotificationNote(CustomEncryptUtil.decryptByAES(user.getUserName()) + " abnormal healthy data, please check");
                                         notification.setNotificationType(0);
                                         notificationRepository.storeNotification(notification);
+                                        // 发送提醒给相关用户
+                                        if(friends.size() != 0) {
+                                            for (int i = 0; i < friends.size(); i++) {
+                                                CustomFCMSender.sendFCMMessage(friends.get(i).getUserFCM(),"HealthGuard",notification.getNotificationNote());
+                                            }
+                                        }
 
 
                                     } catch (NoSuchPaddingException | IllegalBlockSizeException |

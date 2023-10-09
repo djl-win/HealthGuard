@@ -297,7 +297,7 @@ public class LoginFragment extends DialogFragment {
                         // 登录成功,把当前activity向下收回，进入主页  --
 
 
-                        setFCMToken();
+
 
                         // 使用Intent进入MainActivity
                         if(getActivity() != null) {
@@ -416,29 +416,4 @@ public class LoginFragment extends DialogFragment {
         }
     }
 
-    /**
-     *  给每个user设置一个FCM token
-     */
-    private void setFCMToken() {
-
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("djl", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        // Get new FCM registration token
-                        String token = task.getResult();
-
-                        // 获取对用户文档的引用
-                        DocumentReference userRef = FirebaseFirestore.getInstance().collection("users").document(FirebaseAuth.getInstance().getUid());
-
-                        // 或更新现有用户的属性
-                        userRef.update("userFCM", token);
-                    }
-                });
-
-    }
 }

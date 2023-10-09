@@ -279,11 +279,7 @@ public class AddInformationFragment extends DialogFragment {
      */
     private void observeFriends() {
         relationShipViewModel.findAllFriendsByUserId(FirebaseAuth.getInstance().getUid()).observe(this, users ->{
-
             friends = users;
-            for (User user : users) {
-                Log.d("djl", "observeFriends: " + user.getUserFCM());
-            }
         });
     }
 

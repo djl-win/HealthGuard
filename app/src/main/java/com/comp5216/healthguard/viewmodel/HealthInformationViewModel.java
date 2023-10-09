@@ -32,11 +32,12 @@ public class HealthInformationViewModel extends ViewModel {
     /**
      * 存储用户健康信息到数据库
      * @param healthInformation 用户健康信息
+     * @param friends 用户的所有好友，用于发送通知
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
     public void storeHealthInformation(HealthInformation healthInformation, List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-        repository.storeHealthInformation(healthInformation, successListener, failureListener);
+        repository.storeHealthInformation(healthInformation, friends, successListener, failureListener);
     }
 
     /**

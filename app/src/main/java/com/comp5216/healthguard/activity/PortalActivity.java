@@ -64,6 +64,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_portal);
         initView();
+        // 给每个user设置一个FCM token
+        setFCMToken();
     }
 
     private void initView() {
@@ -223,7 +225,31 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    /**
+     *  给每个user设置一个FCM token
+     */
+    private void setFCMToken() {
 
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("djl", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // 获取对用户文档的引用
+                        DocumentReference userRef = db.collection("users").document(user_id);
+
+                        // 或更新现有用户的属性
+                        userRef.update("userFCM", token);
+                    }
+                });
+
+    }
 
 
 }
