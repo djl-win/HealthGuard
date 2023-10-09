@@ -26,13 +26,18 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.MedicalReport;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;
 import com.comp5216.healthguard.viewmodel.MedicalReportViewModel;
+import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 添加report的fragment
@@ -70,6 +75,8 @@ public class AddReportFragment extends DialogFragment {
     LinearLayout linearLayoutMain;
     // 视图模型
     MedicalReportViewModel medicalReportViewModel;
+    RelationShipViewModel relationShipViewModel;
+    List<User> friends = new ArrayList<>();
 
 
     @NonNull
@@ -131,6 +138,8 @@ public class AddReportFragment extends DialogFragment {
         linearLayoutMain = view.findViewById(R.id.report_main);
         // 绑定用户医疗报告的view model
         medicalReportViewModel = new ViewModelProvider(this).get(MedicalReportViewModel.class);
+        relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
+
     }
 
     /**
@@ -143,7 +152,8 @@ public class AddReportFragment extends DialogFragment {
         imageButtonUploadListener();
         // 提交按钮监听
         buttonSubmitListener();
-
+        // 观察当前好友的所有好友信息
+        observeFriends();
 
     }
 
@@ -238,7 +248,7 @@ public class AddReportFragment extends DialogFragment {
         medicalReport.setMedicalReportDeleteStatus(0);
 
         // 存储报告到数据库
-        medicalReportViewModel.storeMedicalReport(medicalReport ,
+        medicalReportViewModel.storeMedicalReport(getContext(),medicalReport , friends,
                 aVoid -> {
                     // 存储成功,当前dialog关闭
                     dismiss();
@@ -265,6 +275,15 @@ public class AddReportFragment extends DialogFragment {
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
+    }
+
+    /**
+     * 观察当前好友的所有好友信息
+     */
+    private void observeFriends() {
+        relationShipViewModel.findAllFriendsByUserId(FirebaseAuth.getInstance().getUid()).observe(this, users ->{
+            friends = users;
+        });
     }
 
 }

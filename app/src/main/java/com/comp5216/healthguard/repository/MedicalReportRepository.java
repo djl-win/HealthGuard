@@ -1,5 +1,6 @@
 package com.comp5216.healthguard.repository;
 
+import android.content.Context;
 import android.service.autofill.CustomDescription;
 import android.util.Log;
 
@@ -11,6 +12,7 @@ import com.comp5216.healthguard.entity.Notification;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
+import com.comp5216.healthguard.util.CustomFCMSender;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +62,7 @@ public class MedicalReportRepository {
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
-    public void storeMedicalReport(MedicalReport medicalReport, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+    public void storeMedicalReport(Context context, MedicalReport medicalReport, List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
 
         // SHA256加密用户健康信息
         try {
@@ -94,6 +96,15 @@ public class MedicalReportRepository {
                     try {
                         notification.setNotificationNote( CustomEncryptUtil.decryptByAES(user.getUserName()) + " new medical report, please check");
                         notification.setNotificationType(1);
+
+                        // 发送提醒给相关用户
+                        if(friends.size() != 0) {
+                            for (int i = 0; i < friends.size(); i++) {
+                                CustomFCMSender.sendFCMMessage(context, friends.get(i).getUserFCM(),"HealthGuard",notification.getNotificationNote());
+                            }
+                        }
+
+
                         notificationRepository.storeNotification(notification);
                     } catch (NoSuchPaddingException | IllegalBlockSizeException |
                              NoSuchAlgorithmException | BadPaddingException |

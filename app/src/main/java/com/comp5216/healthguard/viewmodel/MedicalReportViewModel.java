@@ -1,5 +1,7 @@
 package com.comp5216.healthguard.viewmodel;
 
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -41,8 +43,8 @@ public class MedicalReportViewModel  extends ViewModel {
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
-    public void storeMedicalReport(MedicalReport medicalReport, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
-        repository.storeMedicalReport(medicalReport, successListener, failureListener);
+    public void storeMedicalReport(Context context, MedicalReport medicalReport, List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+        repository.storeMedicalReport(context,medicalReport,friends, successListener, failureListener);
     }
 
     /**
