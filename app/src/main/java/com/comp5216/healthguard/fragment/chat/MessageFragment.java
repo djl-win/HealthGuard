@@ -196,10 +196,6 @@ public class MessageFragment extends DialogFragment {
         buttonSend.setOnClickListener(view ->{
             // 把当前聊天窗口的信息传到message里
             chatMessage.setChatMessageText(editTextContent.getText().toString());
-
-            // 发送提醒给相关用户
-            CustomFCMSender.sendFCMMessage(getContext(), friend.getUserFCM(),friend.getUserName(),chatMessage.getChatMessageText());
-
             // 把当前的发送消息的时间存进message
             // 获取当前的UTC时间
             Instant now = Instant.now();
@@ -212,6 +208,9 @@ public class MessageFragment extends DialogFragment {
             chatViewModel.insertMessage(chatMessage);
             // 把聊天框字清除
             editTextContent.setText("");
+
+            // 发送提醒给相关用户
+            CustomFCMSender.sendFCMMessage(getContext(), friend.getUserFCM(),friend.getUserName(),editTextContent.getText().toString());
 
 
         });

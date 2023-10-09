@@ -13,6 +13,8 @@ import com.comp5216.healthguard.application.MyApplication;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.util.Objects;
+
 /**
  * 通知service，用于通过FCM发送实时通知到客户端
  * <p>
@@ -28,10 +30,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final int NOTIFICATION_ID = 1;
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
 
-        String title = remoteMessage.getNotification().getTitle();
+        String title = Objects.requireNonNull(remoteMessage.getNotification()).getTitle();
         String messageBody = remoteMessage.getNotification().getBody();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, MyApplication.CHANNEL_ID)
