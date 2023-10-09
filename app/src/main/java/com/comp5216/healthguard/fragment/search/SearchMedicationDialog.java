@@ -145,7 +145,6 @@ public class SearchMedicationDialog extends DialogFragment {
     private void observeUserMedication() {
         medicationReminderViewModel.getMedicationReminder().observe(this, medicationReminder ->
         {
-
             m1.setText(medicationReminder.getMedicationReminderDrugName());
             m2.setText(medicationReminder.getMedicationReminderDrugDosage());
             m3.setText(medicationReminder.getMedicationReminderDrugTime());

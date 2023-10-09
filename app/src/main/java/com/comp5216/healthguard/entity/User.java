@@ -19,6 +19,17 @@ public class User {
     // 临时变量，用户所处的聊天室ID
     private String chatId;
 
+    // 临时变量，用户的FCM令牌用于存储用户的通知
+    private String userFCM = "not set";
+
+    public String getUserFCM() {
+        return userFCM;
+    }
+
+    public void setUserFCM(String userFCM) {
+        this.userFCM = userFCM;
+    }
+
     public String getChatId() {
         return chatId;
     }

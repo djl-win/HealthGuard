@@ -1,11 +1,13 @@
 package com.comp5216.healthguard.activity;
 
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -22,8 +24,12 @@ import com.comp5216.healthguard.fragment.search.SearchFragment;
 import com.comp5216.healthguard.fragment.setting.SettingFragment;
 import com.comp5216.healthguard.viewmodel.NotificationViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class PortalActivity extends AppCompatActivity implements View.OnClickListener {
@@ -216,5 +222,8 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
         });
 
     }
+
+
+
 
 }

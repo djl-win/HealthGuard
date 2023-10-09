@@ -1,5 +1,8 @@
 package com.comp5216.healthguard.repository;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
 import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -7,10 +10,13 @@ import androidx.lifecycle.MutableLiveData;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -62,6 +68,8 @@ public class UserRepository {
             user.setUserEmail(CustomEncryptUtil.encryptByAES(user.getUserEmail()));
             user.setUserName(CustomEncryptUtil.encryptByAES(user.getUserName()));
             user.setUserGender(CustomEncryptUtil.encryptByAES(user.getUserGender()));
+
+
 
         } catch (NoSuchPaddingException | IllegalBlockSizeException |
                  NoSuchAlgorithmException | BadPaddingException |

@@ -45,6 +45,7 @@ public class NotificationRepository {
     }
 
     public void storeNotification(Notification notification) {
+
         notification.setNotificationId(CustomIdGeneratorUtil.generateUniqueId());
         notification.setNotificationReadStatus(0);
         notification.setNotificationDeleteStatus(0);

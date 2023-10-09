@@ -53,6 +53,8 @@ dependencies {
 
     implementation("com.google.firebase:firebase-storage-ktx")
 
+    implementation 'com.google.firebase:firebase-messaging'
+
 
     // Utils
     implementation 'com.blankj:utilcodex:1.30.6'

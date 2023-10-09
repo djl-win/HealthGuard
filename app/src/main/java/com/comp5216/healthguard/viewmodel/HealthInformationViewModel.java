@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.comp5216.healthguard.entity.HealthInformation;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.repository.HealthInformationRepository;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -34,7 +35,7 @@ public class HealthInformationViewModel extends ViewModel {
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
-    public void storeHealthInformation(HealthInformation healthInformation, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+    public void storeHealthInformation(HealthInformation healthInformation, List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
         repository.storeHealthInformation(healthInformation, successListener, failureListener);
     }
 

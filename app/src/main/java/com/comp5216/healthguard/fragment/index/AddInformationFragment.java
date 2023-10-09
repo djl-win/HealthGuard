@@ -7,6 +7,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -23,8 +24,15 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.HealthInformation;
+import com.comp5216.healthguard.entity.Relationship;
+import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.viewmodel.HealthInformationViewModel;
+import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 添加information的fragment
@@ -62,6 +70,9 @@ public class AddInformationFragment extends DialogFragment {
     // 主页面
     LinearLayout linearLayoutMain;
 
+    RelationShipViewModel relationShipViewModel;
+
+    List<User> friends = new ArrayList<>();
 
     @NonNull
     @Override
@@ -112,6 +123,7 @@ public class AddInformationFragment extends DialogFragment {
         buttonSubmit = view.findViewById(R.id.information_submit);
         // 绑定用户健康信息的view model
         healthInformationViewModel = new ViewModelProvider(this).get(HealthInformationViewModel.class);
+        relationShipViewModel = new ViewModelProvider(this).get(RelationShipViewModel.class);
         linearLayoutIndicator = view.findViewById(R.id.information_indicator);
         linearLayoutMain = view.findViewById(R.id.information_main);
     }
@@ -132,7 +144,10 @@ public class AddInformationFragment extends DialogFragment {
         textInputEditTextBlood.addTextChangedListener(generalTextWatcher);
         // 提交按钮监听器
         buttonSubmitListener();
+        // 观察当前好友的所有好友信息
+        observeFriends();
     }
+
 
 
     /**
@@ -242,7 +257,7 @@ public class AddInformationFragment extends DialogFragment {
         healthInformation.setHealthInformationBodyTemperature(textInputEditTextBody.getText().toString().trim());
         healthInformation.setHealthInformationBloodOxygen(textInputEditTextBlood.getText().toString().trim());
 
-        healthInformationViewModel.storeHealthInformation(healthInformation ,
+        healthInformationViewModel.storeHealthInformation(healthInformation , friends,
                 aVoid -> {
                     // 存储成功,当前dialog关闭
                     dismiss();
@@ -257,6 +272,19 @@ public class AddInformationFragment extends DialogFragment {
                     Toast.makeText(getActivity(), "Something Wrong！", Toast.LENGTH_SHORT).show();
                 }
         );
+    }
+
+    /**
+     * 观察当前好友的所有好友信息
+     */
+    private void observeFriends() {
+        relationShipViewModel.findAllFriendsByUserId(FirebaseAuth.getInstance().getUid()).observe(this, users ->{
+
+            friends = users;
+            for (User user : users) {
+                Log.d("djl", "observeFriends: " + user.getUserFCM());
+            }
+        });
     }
 
 
