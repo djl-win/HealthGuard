@@ -206,11 +206,12 @@ public class MessageFragment extends DialogFragment {
             chatMessage.setChatMessageTimestamp(currentTimestamp);
             // 将发送的聊天信息存到数据库
             chatViewModel.insertMessage(chatMessage);
-            // 把聊天框字清除
-            editTextContent.setText("");
 
             // 发送提醒给相关用户
             CustomFCMSender.sendFCMMessage(getContext(), friend.getUserFCM(),friend.getUserName(),editTextContent.getText().toString());
+
+            // 把聊天框字清除
+            editTextContent.setText("");
 
 
         });
