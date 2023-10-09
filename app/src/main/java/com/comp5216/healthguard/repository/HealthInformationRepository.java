@@ -1,5 +1,6 @@
 package com.comp5216.healthguard.repository;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
@@ -66,7 +67,7 @@ public class HealthInformationRepository {
      * @param successListener 成功监听器
      * @param failureListener 失败监听器
      */
-    public void storeHealthInformation(HealthInformation healthInformation,List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
+    public void storeHealthInformation(Context context,HealthInformation healthInformation, List<User> friends, OnSuccessListener<Void> successListener, OnFailureListener failureListener) {
         // id
         healthInformation.setHealthInformationId(CustomIdGeneratorUtil.generateUniqueId());
         // userid
@@ -110,14 +111,17 @@ public class HealthInformationRepository {
                                         notification.setNotificationDate(healthInformation.getHealthInformationDate());
                                         notification.setUserId(healthInformation.getUserId());
                                         notification.setNotificationNote(CustomEncryptUtil.decryptByAES(user.getUserName()) + " abnormal healthy data, please check");
-                                        notification.setNotificationType(0);
-                                        notificationRepository.storeNotification(notification);
+
                                         // 发送提醒给相关用户
                                         if(friends.size() != 0) {
                                             for (int i = 0; i < friends.size(); i++) {
-                                                CustomFCMSender.sendFCMMessage(friends.get(i).getUserFCM(),"HealthGuard",notification.getNotificationNote());
+                                                CustomFCMSender.sendFCMMessage(context, friends.get(i).getUserFCM(),"HealthGuard",notification.getNotificationNote());
                                             }
                                         }
+
+
+                                        notification.setNotificationType(0);
+                                        notificationRepository.storeNotification(notification);
 
 
                                     } catch (NoSuchPaddingException | IllegalBlockSizeException |

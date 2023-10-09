@@ -257,7 +257,7 @@ public class AddInformationFragment extends DialogFragment {
         healthInformation.setHealthInformationBodyTemperature(textInputEditTextBody.getText().toString().trim());
         healthInformation.setHealthInformationBloodOxygen(textInputEditTextBlood.getText().toString().trim());
 
-        healthInformationViewModel.storeHealthInformation(healthInformation , friends,
+        healthInformationViewModel.storeHealthInformation(getContext(),healthInformation , friends,
                 aVoid -> {
                     // 存储成功,当前dialog关闭
                     dismiss();

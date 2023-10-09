@@ -71,6 +71,8 @@ dependencies {
     // chart library
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
+    // volley sent http
+    implementation 'com.android.volley:volley:1.2.1'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
