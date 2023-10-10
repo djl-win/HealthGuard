@@ -29,7 +29,7 @@ import java.util.Locale;
  * 渲染用药列表，并处理逻辑
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-08
  */

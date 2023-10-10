@@ -43,7 +43,7 @@ import com.google.firebase.auth.FirebaseUser;
  * search界面的medication fragment的各个dialog
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-08
  */

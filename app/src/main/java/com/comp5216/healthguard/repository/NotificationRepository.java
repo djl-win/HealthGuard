@@ -28,7 +28,7 @@ import javax.crypto.NoSuchPaddingException;
  * 提供了对通知信息的增删改查的操作
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-07
  */

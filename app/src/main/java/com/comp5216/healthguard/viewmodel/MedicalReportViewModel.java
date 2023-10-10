@@ -20,7 +20,7 @@ import java.util.List;
  * 处理医疗报告视图模型类
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-07
  */

@@ -19,7 +19,7 @@ import java.util.List;
  * 处理用户的健康信息
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-07
  */

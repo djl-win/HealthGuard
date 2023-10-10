@@ -6,7 +6,7 @@ package com.comp5216.healthguard.entity;
  * 存储用户的报告信息
  * </p>
  *
- * @author X
+ * @author Jiale Dong
  * @version 1.0
  * @since 2023-10-07
  */

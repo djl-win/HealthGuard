@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/change_attribute_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageButton
+            android:id="@+id/change_attribute_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="-10dp"
+            style="@style/sign_page_button_back" />
+
+        <TextView
+            android:id="@+id/text_view_title_add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/healthy_information_alarm"
+            style="@style/sign_page_string_text1" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            >
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gray"
+            android:textSize="18sp"
+            android:text="@string/systolic_pressure"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/change_attribute_sys_low"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:maxLength="4"
+                android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_to"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_sys_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/mmhg"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/diastolic_pressure"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_dia_low"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_to"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_dia_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/mmhg"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/heart_rate"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_heart_low"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_to"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_heart_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/bpm"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/body_temperature"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_body_low"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_to"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_body_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/c"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:backgroundTint="@color/blue"
+            >
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/blood_oxygen"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_blood_low"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_to"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                app:strokeColor="@color/gray"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="12dp">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/change_attribute_blood_high"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:maxLength="4"
+                    android:textSize="16sp"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray"
+                android:textSize="18sp"
+                android:text="@string/aaa"/>
+
+
+        </LinearLayout>
+
+
+        <!--使得button位于底部，和gravity配合使用-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/change_attribute_update"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            style="@style/sign_page_button_continue"
+            android:text="@string/update"
+            android:enabled="false" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/change_attribute_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <!-- Logo图像 -->
+        <ImageView
+            android:id="@+id/logo_image_view_add_friends"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/logo" />
+        />
+
+        <!-- 进度指示器 -->
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"/>
+    </LinearLayout>
+</FrameLayout>
