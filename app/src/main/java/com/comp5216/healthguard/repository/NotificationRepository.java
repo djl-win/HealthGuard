@@ -21,6 +21,13 @@ import java.util.List;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import android.util.Log;
+import androidx.annotation.Nullable;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * 通知信息仓库类，处理数据库查询语句
@@ -78,22 +85,26 @@ public class NotificationRepository {
         // 查询出所有相关的用户
         db.collection("relationship")
                 .whereEqualTo("relationshipObserveId", userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
+                .addSnapshotListener((snapshots, e) -> {
+                    if (e != null) {
+                        Log.w("djl", "Listen failed.", e);
+                        return;
+                    }
+
                     // 当前用户相关好友
                     ArrayList<String> userIds = new ArrayList<>();
-                    for (DocumentSnapshot doc : documentSnapshot) {
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
                         Relationship relationship = doc.toObject(Relationship.class);
-                        if(!userIds.contains(relationship.getRelationshipObserveId())) {
+                        // 检查relationship是否非空，防止出现NullPointerException
+                        if (relationship != null && !userIds.contains(relationship.getRelationshipObserveId())) {
                             userIds.add(relationship.getRelationshipObservedId());
                         }
                     }
-                    // 在这里查询通知，以确保userIds已被填充
-                    queryNotifications(userIds);
 
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("djl", "listen:error");
+                    // 在这里查询通知，以确保userIds已被填充
+                    // 注意：如果您的 queryNotifications 方法内部也使用了 Firestore，您可能需要确保它不会创建一个新的监听器每次此方法被调用时。
+                    // 如果是这种情况，您可能需要进一步重构您的代码以处理持续监听。
+                    queryNotifications(userIds);
                 });
 
 
