@@ -9,6 +9,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.activity.EnterActivity;
+import com.comp5216.healthguard.scheduler.AlarmScheduler;
+import com.comp5216.healthguard.util.CustomCache;
 import com.comp5216.healthguard.viewmodel.UserViewModel;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,13 +21,17 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.util.List;
 
 
 /**
@@ -117,6 +123,17 @@ public class SettingFragment extends Fragment {
         ImageButton button = view.findViewById(R.id.setting_logout);
         button.setOnClickListener( view ->{
             auth.signOut();
+
+            CustomCache customCache = new CustomCache(getContext()); // 'this' 是 Context
+            // 清除消息提醒
+            List<String> strings = customCache.retrieveAllReminderIds();
+            for (String string : strings) {
+                AlarmScheduler.cancelReminder(getContext(),string);
+                Log.d("djl", "取消的提醒ID为: " + string);
+            }
+            // 清除缓存
+            customCache.removeUserFCM();
+            customCache.clearAllReminderIds();
 
             // 跳转回登录页面
             startActivity(new Intent(activity, EnterActivity.class));

@@ -208,7 +208,7 @@ public class MessageFragment extends DialogFragment {
             chatViewModel.insertMessage(chatMessage);
 
             // 发送提醒给相关用户
-            CustomFCMSender.sendFCMMessage(getContext(), friend.getUserFCM(),senderName ,editTextContent.getText().toString());
+            CustomFCMSender.sendFCMMessage(getContext(), friend.getUserFCM(),receiverName ,editTextContent.getText().toString());
 
             // 把聊天框字清除
             editTextContent.setText("");

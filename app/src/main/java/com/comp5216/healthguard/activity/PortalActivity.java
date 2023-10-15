@@ -1,12 +1,14 @@
 package com.comp5216.healthguard.activity;
 
-
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -22,6 +24,8 @@ import com.comp5216.healthguard.fragment.index.IndexFragment;
 import com.comp5216.healthguard.fragment.notify.NotifyFragment;
 import com.comp5216.healthguard.fragment.search.SearchFragment;
 import com.comp5216.healthguard.fragment.setting.SettingFragment;
+import com.comp5216.healthguard.util.CustomNotificationUtil;
+import com.comp5216.healthguard.util.CustomCache;
 import com.comp5216.healthguard.viewmodel.NotificationViewModel;
 import com.comp5216.healthguard.viewmodel.RelationShipViewModel;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -107,7 +111,88 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
                 .hide(settingFragment)
                 .show(indexFragment)
                 .commit();
+
+        askNotificationPermission();
+        askAlarmPermission();
     }
+
+
+    /**
+     * 检测用户是否开启了通知
+     */
+    private void askNotificationPermission() {
+        if (!CustomNotificationUtil.areNotificationsEnabled(this)) {
+            showEnableNotificationDialog();
+        }
+    }
+
+    /**
+     * 展示页面，提醒用户开启通知
+     */
+    private void showEnableNotificationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("The notification permission is disabled")
+                .setMessage("We need to send a health notice. Please enable notification.")
+                .setPositiveButton("Open", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        CustomNotificationUtil.openNotificationSettings(PortalActivity.this);
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * 请求用户alarm权限
+     */
+    private void askAlarmPermission() {
+        // 检查是否已经具有闹钟权限
+        if (!isAlarmPermissionGranted()) {
+            // 如果没有权限，显示对话框提示用户授予权限
+            showAlarmPermissionDialog();
+        }
+    }
+
+    /**
+     * 检查是否已经具有闹钟权限
+     */
+    private boolean isAlarmPermissionGranted() {
+        // 在Android 9及更高版本上，检查SCHEDULE_EXACT_ALARM权限
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+            return checkSelfPermission(android.Manifest.permission.SCHEDULE_EXACT_ALARM)
+                    == android.content.pm.PackageManager.PERMISSION_GRANTED;
+        } else {
+            return true; // 假设已经有后台运行权限
+        }
+    }
+
+    /**
+     * 显示闹钟权限对话框
+     */
+    private void showAlarmPermissionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("The Alarm permission is disabled");
+        builder.setMessage("Please grant alarm permissions to enable the reminder feature.");
+        builder.setPositiveButton("Open", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                openAlarmSettings();
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    /**
+     * 打开闹钟权限设置页面
+     */
+    private void openAlarmSettings() {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+        startActivity(intent);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -240,6 +325,9 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
                         }
                         // Get new FCM registration token
                         String token = task.getResult();
+
+                        CustomCache customCache = new CustomCache(PortalActivity.this); // 'this' 是 Context
+                        customCache.saveUserFCM(token);
 
                         // 获取对用户文档的引用
                         DocumentReference userRef = db.collection("users").document(user_id);

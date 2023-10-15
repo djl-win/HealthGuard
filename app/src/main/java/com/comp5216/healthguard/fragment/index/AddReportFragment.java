@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +25,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -36,6 +41,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -183,6 +192,21 @@ public class AddReportFragment extends DialogFragment {
     private void uploadImageToFirestore(Uri uri) {
         // 加载加载动画
         circularProgressIndicatorIndicator.setVisibility(View.VISIBLE);
+
+        // 对图像进行压缩
+        // 对图像进行压缩
+        File compressedImage = compressImage(uri);
+
+        if (compressedImage != null) {
+            uri = Uri.fromFile(compressedImage);
+        } else {
+            // 压缩失败处理，例如返回或显示错误消息
+            circularProgressIndicatorIndicator.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), "Image compression failed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+
         // 设置report的id，不需要在仓库和repository设置了
         medicalReport.setMedicalReportId(CustomIdGeneratorUtil.generateUniqueId());
         StorageReference imgRef = mStorageRef.child( medicalReport.getMedicalReportId() + ".jpg");
@@ -204,6 +228,53 @@ public class AddReportFragment extends DialogFragment {
                     circularProgressIndicatorIndicator.setVisibility(View.GONE);
                     Toast.makeText(getActivity(), "Something Wrong！", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * 压缩图像
+     * @param imageUri 图像uri
+     * @return 压缩好的文件
+     */
+    public File compressImage(Uri imageUri) {
+        try {
+            InputStream inputStream = getContext().getContentResolver().openInputStream(imageUri);
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+            inputStream.close();  // Close the original input stream
+
+            // Re-open the input stream to get EXIF data
+            inputStream = getContext().getContentResolver().openInputStream(imageUri);
+            ExifInterface exifInterface = new ExifInterface(inputStream);
+            inputStream.close();  // Close the input stream again
+
+            int orientation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.postRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.postRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.postRotate(270);
+                    break;
+                default:
+                    // Do nothing
+            }
+
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+
+            File output = new File(getContext().getCacheDir(), "compressed.jpg");
+            FileOutputStream outputStream = new FileOutputStream(output);
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
+            outputStream.flush();
+            outputStream.close();
+
+            return output;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**

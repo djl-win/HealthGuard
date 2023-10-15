@@ -1,10 +1,12 @@
 package com.comp5216.healthguard.fragment.index;
 
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
+import android.os.BatteryManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -22,11 +25,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.adapter.NotificationListAdapter;
 import com.comp5216.healthguard.adapter.RemindersListAdapter;
 import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.MedicationReminder;
+import com.comp5216.healthguard.scheduler.AlarmScheduler;
+import com.comp5216.healthguard.util.CustomCache;
 import com.comp5216.healthguard.viewmodel.HealthInformationViewModel;
 import com.comp5216.healthguard.viewmodel.MedicalReportViewModel;
 import com.comp5216.healthguard.viewmodel.MedicationReminderViewModel;
@@ -40,11 +44,13 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -136,6 +142,9 @@ public class IndexFragment extends Fragment {
     // adapter for recycle view
     RemindersListAdapter remindersListAdapter;
 
+    // 缓存，存储用户的fcm缓存
+    CustomCache customCache;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -198,6 +207,9 @@ public class IndexFragment extends Fragment {
         medicationReminderViewModel = new ViewModelProvider(this).get(MedicationReminderViewModel.class);
         // 绑定用户列表的适配器
         recyclerViewReminder.setLayoutManager(new LinearLayoutManager(getContext()));
+        // 绑定用户FCM缓存
+        customCache = new CustomCache(getContext());
+
     }
 
     /**
@@ -216,6 +228,7 @@ public class IndexFragment extends Fragment {
 
     }
 
+
     /**
      * 获取当天日期
      */
@@ -233,7 +246,7 @@ public class IndexFragment extends Fragment {
         calendar.setTime(today);
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         String[] days = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
-        textViewWeekend.setText(days[dayOfWeek-1]);
+        textViewWeekend.setText(days[dayOfWeek - 1]);
 
         // 格式化日期为 dd/MM/yyyy
         @SuppressLint("SimpleDateFormat") SimpleDateFormat dateFormat01 = new SimpleDateFormat("dd/MM/yyyy");
@@ -252,7 +265,6 @@ public class IndexFragment extends Fragment {
         userViewModel.getUserByUserId(userUid).observe(getViewLifecycleOwner(), user -> {
             // 如果从数据库中获取的用户数据不为空
             if (user != null) {
-
                 // 通过用户的name给每个用户设置不同的头像
                 String avatarUrl = "https://api.dicebear.com/6.x/fun-emoji/png?seed=" + user.getUserName();
                 // 加载用户头像到xml
@@ -284,8 +296,23 @@ public class IndexFragment extends Fragment {
      */
     private void addNewReport() {
         imageButtonAddReport.setOnClickListener(view -> {
-            // 加载注册的fragment
-            addReportFragment.show(getParentFragmentManager(), "AddReportFragment");
+            BatteryManager batteryManager = (BatteryManager) getContext().getSystemService(Context.BATTERY_SERVICE);
+            int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+            if (battery > 50) {
+                // 加载注册的fragment
+                addReportFragment.show(getParentFragmentManager(), "AddReportFragment");
+            } else {
+                new AlertDialog.Builder(getContext())
+                        .setTitle("Low Battery Warning")
+                        .setMessage("Battery is too low to add a new report. Please charge your device.")
+                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                            // You can add logic here for when the user clicks the positive button, if needed
+                            dialog.dismiss();
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert) // This adds the standard alert icon; you can change this to a custom one if you prefer
+                        .show();
+            }
         });
     }
 
@@ -459,7 +486,72 @@ public class IndexFragment extends Fragment {
                     remindersListAdapter.updateData(medicationReminderList);
                 }
 
+                // 为新的提醒设置闹钟
+                setRemindersAlarm(medicationReminderList);
+
             }
         });
     }
+
+    /**
+     * 辅助方法，用于将时间字符串（格式："HH:mm"）解析为对应的毫秒数。
+     *
+     * @param timeString 格式为 "HH:mm" 的时间字符串
+     * @return 对应的时间毫秒数，如果解析错误则返回 -1
+     */
+    private long parseTimeToMillis(String timeString) {
+        // 创建一个日期格式器，指定时间格式为 "HH:mm"
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        try {
+            // 尝试将时间字符串解析为 Date 对象
+            Date date = sdf.parse(timeString);
+            // 获取当前时间的日历实例
+            Calendar calendar = Calendar.getInstance();
+            // 设置日历时间为解析得到的时间
+            calendar.setTime(date);
+
+            // 以下代码设置年月日为今天，防止将时间设置为1970年
+            Calendar current = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, current.get(Calendar.YEAR));
+            calendar.set(Calendar.MONTH, current.get(Calendar.MONTH));
+            calendar.set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH));
+
+            // 返回此日历的时间值，以毫秒为单位
+            return calendar.getTimeInMillis();
+        } catch (ParseException e) {
+            // 打印异常堆栈跟踪
+            e.printStackTrace();
+            // 解析出错时返回 -1
+            return -1;
+        }
+    }
+
+    /**
+     * 遍历所有提醒，为每个即将到来的提醒设置一个闹钟。
+     *
+     * @param reminders 吃药提醒列表
+     */
+    private void setRemindersAlarm(List<MedicationReminder> reminders) {
+        // 遍历提醒列表
+        for (MedicationReminder reminder : reminders) {
+            // 获取此提醒时间的毫秒数
+            long reminderTimeInMillis = parseTimeToMillis(reminder.getMedicationReminderDrugTime());
+            // 要发送的同时信息
+            String note = "It's time to eat " + reminder.getMedicationReminderDrugName() + ", Dosage: " + reminder.getMedicationReminderDrugDosage() + ", note: " + reminder.getMedicationReminderDrugNote();
+
+            // 如果解析出错（返回-1），则跳过此次循环
+            if (reminderTimeInMillis == -1) {
+                continue;
+            }
+
+            // 只为将来的时间设置提醒
+            if (reminderTimeInMillis > System.currentTimeMillis()) {
+                // 调用已封装的方法设置提醒
+                AlarmScheduler.scheduleReminder(getContext(), reminderTimeInMillis, reminder.getMedicationReminderId(), customCache.getUserFCM(),note);
+                // 提醒信息缓存到cache里面，最后用于取消。
+                customCache.storeReminderId(reminder.getMedicationReminderId());
+            }
+        }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.comp5216.healthguard.util;
 
 import android.content.Context;
+import android.os.BatteryManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -36,48 +37,55 @@ public class CustomFCMSender {
     private static final String serverKey = "key=" + "\tAAAAMkqgtN8:APA91bHUfLbpfJ1xNG1Kqf65PW_TQatGSo61AH2bzrlPLwX5rZIGiiPsuoN9kY_fKTvN8r6r2m4klG1aSS6KndkTSO7AjDn8z24Kv0CYBX7OAPYAYv75uRdsIk9oD__ta2ogVrSlGDgE";
     private static final String contentType = "application/json";
 
+
     public static void sendFCMMessage(Context context, String toToken, String title, String body) {
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        JSONObject notification = new JSONObject();
-        JSONObject notificationBody = new JSONObject();
+        BatteryManager batteryManager = (BatteryManager) context.getSystemService(Context.BATTERY_SERVICE);
+        int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
-        try {
-            notificationBody.put("title", title);
-            notificationBody.put("body", body);
-            notification.put("to", toToken);
-            notification.put("notification", notificationBody);
-        } catch (JSONException e) {
-            Log.e("djl", "sendFCMMessage: " + e.getMessage());
-        }
+        if (battery > 50) {
+            RequestQueue requestQueue = Volley.newRequestQueue(context);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST, FCM_API, notification,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.i("djl", "onResponse: " + response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(context, "Request error", Toast.LENGTH_LONG).show();
-                        Log.i("djl", "onErrorResponse: Didn't work");
-                        error.printStackTrace();
-                        Log.e("djl", "Error: " + error.getMessage());
-                    }
-                }
-        ) {
-            @Override
-            public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("Authorization", serverKey);
-                params.put("Content-Type", contentType);
-                return params;
+            JSONObject notification = new JSONObject();
+            JSONObject notificationBody = new JSONObject();
+
+            try {
+                notificationBody.put("title", title);
+                notificationBody.put("body", body);
+                notification.put("to", toToken);
+                notification.put("notification", notificationBody);
+            } catch (JSONException e) {
+                Log.e("djl", "sendFCMMessage: " + e.getMessage());
             }
-        };
 
-        requestQueue.add(jsonObjectRequest);
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
+                    Request.Method.POST, FCM_API, notification,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            Log.i("djl", "onResponse: " + response);
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            Toast.makeText(context, "Request error", Toast.LENGTH_LONG).show();
+                            Log.i("djl", "onErrorResponse: Didn't work");
+                            error.printStackTrace();
+                            Log.e("djl", "Error: " + error.getMessage());
+                        }
+                    }
+            ) {
+                @Override
+                public Map<String, String> getHeaders() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Authorization", serverKey);
+                    params.put("Content-Type", contentType);
+                    return params;
+                }
+            };
+
+            requestQueue.add(jsonObjectRequest);
+        }
     }
 }

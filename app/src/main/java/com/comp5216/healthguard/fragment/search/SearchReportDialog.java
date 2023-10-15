@@ -47,6 +47,7 @@ import com.google.firebase.storage.StorageReference;
 
 import org.checkerframework.checker.units.qual.C;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -168,7 +169,7 @@ public class SearchReportDialog extends DialogFragment {
      * 监听用户报告数据
      */
     private void observeUserReport() {
-        medicalReportViewModel.getMedicalReport().observe(this,medicalReport ->{
+        medicalReportViewModel.getMedicalReport().observe(this, medicalReport -> {
 
             // 将时间戳转换为Date对象
             Date date = new Date(medicalReport.getMedicalReportDate());
@@ -182,53 +183,62 @@ public class SearchReportDialog extends DialogFragment {
 
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            String fileName = medicalReport.getMedicalReportId() + ".jpg";  // 替换为你的文件名
+            String fileName = medicalReport.getMedicalReportId() + ".jpg"; // 替换为你的文件名
             StorageReference fileRef = storageRef.child(fileName);
 
-            fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                @Override
-                public void onSuccess(Uri uri) {
+            // 创建本地文件的引用
+            File localFile = new File(getContext().getFilesDir(), fileName);
 
-                    Glide.with(getContext())
-                            .load(uri)
-                            .error(R.drawable.load_image)
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    // 处理加载失败的情况
-                                    Log.e("Glide", "Load failed", e);
-                                    return false;  // 返回false表示该事件没有被处理，Glide应该继续处理
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    // 图片加载成功但尚未设置到ImageView
-                                    Log.d("Glide", "Resource ready");
-                                    return false;  // 返回false表示该事件没有被处理，Glide应该继续处理
-                                }
-                            })
-                            .into(new SimpleTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    // 图片已经加载并设置到ImageView
-                                    imageViewImage.setImageDrawable(resource);
-                                    // 获取图片的URL
-                                    linearLayoutIndicator.setVisibility(View.GONE);
-                                    imageViewImage.setVisibility(View.VISIBLE);
-                                }
-                            });
-
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // 获取图片的URL失败，处理错误
-                    linearLayoutIndicator.setVisibility(View.GONE);
-                    imageViewImage.setVisibility(View.VISIBLE);
-                }
-            });
-
+            if (!localFile.exists()) {
+                // 如果文件不存在，从 Firebase 下载
+                fileRef.getFile(localFile)
+                        .addOnSuccessListener(taskSnapshot -> {
+                            // 文件下载成功，从本地文件加载图片
+                            loadWithGlide(localFile);
+                        })
+                        .addOnFailureListener(exception -> {
+                            // 处理失败事件，例如显示错误消息或备用图片
+                            imageViewImage.setImageResource(R.drawable.load_image); // 加载失败时的备用图片
+                        });
+            } else {
+                // 文件已存在，直接从本地加载
+                loadWithGlide(localFile);
+            }
         });
+    }
+
+    /**
+     *  使用 Glide 从文件加载图片的辅助方法
+     */
+    private void loadWithGlide(File file) {
+        Glide.with(getContext())
+                .load(file)
+                .error(R.drawable.load_image) // 加载失败时的备用图片
+                .listener(new RequestListener<Drawable>() {
+                    @Override
+                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                        // 处理加载失败的情况
+                        Log.e("Glide", "Load failed", e);
+                        return false; // 返回false表示该事件没有被处理，Glide应该继续处理
+                    }
+
+                    @Override
+                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                        // 图片加载成功但尚未设置到ImageView
+                        Log.d("Glide", "Resource ready");
+                        return false; // 返回false表示该事件没有被处理，Glide应该继续处理
+                    }
+                })
+                .into(new SimpleTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        // 图片已经加载并设置到ImageView
+                        imageViewImage.setImageDrawable(resource);
+                        // 获取图片的URL
+                        linearLayoutIndicator.setVisibility(View.GONE);
+                        imageViewImage.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
     /**

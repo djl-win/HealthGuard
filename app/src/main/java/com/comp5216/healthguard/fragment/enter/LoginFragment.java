@@ -17,6 +17,14 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -26,6 +34,7 @@ import androidx.fragment.app.DialogFragment;
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.activity.PortalActivity;
 import com.comp5216.healthguard.util.CustomAnimationUtil;
+import com.comp5216.healthguard.util.CustomNotificationUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -294,10 +303,7 @@ public class LoginFragment extends DialogFragment {
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // 登录成功,把当前activity向下收回，进入主页  --
-
-
-
+                        // 登录成功,检测用户是否开启了通知
 
                         // 使用Intent进入MainActivity
                         if(getActivity() != null) {
@@ -317,6 +323,9 @@ public class LoginFragment extends DialogFragment {
                     }
                 });
     }
+
+
+
 
     /**
      * 验证邮箱是否已经存在，存在则显示错误信息，不存在则进行下一步操作

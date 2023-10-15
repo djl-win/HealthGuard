@@ -1,6 +1,8 @@
 package com.comp5216.healthguard.fragment.search;
 
 import android.app.Activity;
+import android.content.Context;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -112,7 +115,7 @@ public class SearchReportFragment extends Fragment {
         // 观察LiveData中的数据变化，并相应地更新UI
         medicalReportViewModel.getReportDataByUserId(userUid)
                 .observe(getViewLifecycleOwner(), reports -> {
-                    if(reports != null){
+                    if (reports != null) {
                         // 如果列表的适配器尚未初始化
                         if (searchReportAdapter == null) {
                             // 初始化适配器，并设置它为recyclerView的适配器
@@ -133,7 +136,7 @@ public class SearchReportFragment extends Fragment {
                             // 如果适配器已经初始化，只需更新数据并刷新列表
                             searchReportAdapter.updateData(reports);
                         }
-                    }else {
+                    } else {
                         // do noting if no data
                     }
                 });
@@ -141,15 +144,34 @@ public class SearchReportFragment extends Fragment {
 
     /**
      * 打开新的dialog，展示报告的详细内容
+     *
      * @param medicalReport 报告
      */
     private void showEachMedicalReportDetails(MedicalReport medicalReport) {
-        // 存储与当前用户进行对话的用户的信息，到view model
-        SearchReportDialog reportDialog = new SearchReportDialog();
-        medicalReportViewModel.setMedicalReport(medicalReport);
 
-        // 加载注册的fragment
-        reportDialog.show(getParentFragmentManager(), "ReportDialog");
+        BatteryManager batteryManager = (BatteryManager) getContext().getSystemService(Context.BATTERY_SERVICE);
+        int battery = batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        if (battery > 50) {
+            // 存储与当前用户进行对话的用户的信息，到view model
+            SearchReportDialog reportDialog = new SearchReportDialog();
+            medicalReportViewModel.setMedicalReport(medicalReport);
+
+            // 加载注册的fragment
+            reportDialog.show(getParentFragmentManager(), "ReportDialog");
+        }else {
+            new AlertDialog.Builder(getContext())
+                    .setTitle("Low Battery Warning")
+                    .setMessage("Battery is too low to view report details. Please charge your device.")
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        // You can add logic here for when the user clicks the positive button, if needed
+                        dialog.dismiss();
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert) // This adds the standard alert icon; you can change this to a custom one if you prefer
+                    .show();
+        }
+
+
     }
 
 }

@@ -1,6 +1,7 @@
 package com.comp5216.healthguard.util;
 
 import java.util.UUID;
+
 /**
  * ID生成工具类
  * <p>
