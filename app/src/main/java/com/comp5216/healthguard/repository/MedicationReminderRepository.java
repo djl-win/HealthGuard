@@ -5,11 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.MedicationReminder;
-import com.comp5216.healthguard.entity.Notification;
-import com.comp5216.healthguard.entity.Relationship;
-import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.exception.EncryptionException;
 import com.comp5216.healthguard.util.CustomEncryptUtil;
 import com.comp5216.healthguard.util.CustomIdGeneratorUtil;

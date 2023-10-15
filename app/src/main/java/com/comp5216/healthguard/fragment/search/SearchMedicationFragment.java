@@ -2,7 +2,6 @@ package com.comp5216.healthguard.fragment.search;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.adapter.RemindersListAdapter;
-import com.comp5216.healthguard.adapter.SearchReportAdapter;
-import com.comp5216.healthguard.entity.MedicalReport;
 import com.comp5216.healthguard.entity.MedicationReminder;
 import com.comp5216.healthguard.viewmodel.MedicationReminderViewModel;
 import com.google.firebase.auth.FirebaseAuth;

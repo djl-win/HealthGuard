@@ -1,12 +1,17 @@
 package com.comp5216.healthguard.activity;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -15,7 +20,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.comp5216.healthguard.R;
 import com.comp5216.healthguard.entity.UserWithMessage;
@@ -147,49 +151,43 @@ public class PortalActivity extends AppCompatActivity implements View.OnClickLis
      * 请求用户alarm权限
      */
     private void askAlarmPermission() {
-        // 检查是否已经具有闹钟权限
-        if (!isAlarmPermissionGranted()) {
-            // 如果没有权限，显示对话框提示用户授予权限
-            showAlarmPermissionDialog();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if (!isAlarmPermissionGranted()) {
+                showAlarmPermissionDialog();
+            }
         }
+        // 如果操作系统版本低于Android 12，您的应用可能不需要请求此权限。
     }
 
     /**
      * 检查是否已经具有闹钟权限
      */
+    @RequiresApi(api = Build.VERSION_CODES.S)
     private boolean isAlarmPermissionGranted() {
-        // 在Android 9及更高版本上，检查SCHEDULE_EXACT_ALARM权限
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
-            return checkSelfPermission(android.Manifest.permission.SCHEDULE_EXACT_ALARM)
-                    == android.content.pm.PackageManager.PERMISSION_GRANTED;
-        } else {
-            return true; // 假设已经有后台运行权限
-        }
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        return alarmManager.canScheduleExactAlarms();
     }
 
     /**
      * 显示闹钟权限对话框
      */
     private void showAlarmPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("The Alarm permission is disabled");
-        builder.setMessage("Please grant alarm permissions to enable the reminder feature.");
-        builder.setPositiveButton("Open", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                openAlarmSettings();
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Your app needs precise alarm permissions to schedule reminders accurately. Please open it.")
+                    .setPositiveButton("Open", (dialog, which) -> openAlarmSettings())
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        }
     }
 
     /**
      * 打开闹钟权限设置页面
      */
+    @RequiresApi(api = Build.VERSION_CODES.S)
     private void openAlarmSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        intent.setData(android.net.Uri.parse("package:" + getPackageName()));
+        Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+        intent.setData(Uri.fromParts("package", getPackageName(), null));
         startActivity(intent);
     }
 

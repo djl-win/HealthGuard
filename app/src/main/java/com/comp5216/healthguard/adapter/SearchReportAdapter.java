@@ -8,11 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicalReport;
 import com.google.android.material.card.MaterialCardView;
 

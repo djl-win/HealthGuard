@@ -1,7 +1,6 @@
 package com.comp5216.healthguard.repository;
 
 import android.content.Context;
-import android.service.autofill.CustomDescription;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;

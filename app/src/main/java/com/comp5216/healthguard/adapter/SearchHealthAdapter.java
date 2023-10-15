@@ -13,9 +13,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.entity.Attribute;
 import com.comp5216.healthguard.entity.HealthInformation;
-import com.comp5216.healthguard.entity.User;
 import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;

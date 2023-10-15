@@ -5,12 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
-import android.Manifest;
-import android.util.Log;
-
-import androidx.core.app.ActivityCompat;
 
 /**
  * 用于给用户发送吃药提醒的alarm
@@ -34,14 +29,6 @@ public class AlarmScheduler {
     @SuppressLint("ScheduleExactAlarm")
     public static void scheduleReminder(Context context, long timeInMillis, String medicationReminderId, String userFCM, String reminderNote) {
 
-        // 检查是否具有SCHEDULE_EXACT_ALARM权限
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
-            // 如果没有权限，需要提醒用户授予权限
-            // 这里可以添加一些逻辑来提示用户授予权限
-            return; // 返回并不执行后续操作
-        }
-
-
         // 将提醒ID从字符串转换为整数
         int requestCode = medicationReminderId.hashCode();
 
@@ -55,6 +42,13 @@ public class AlarmScheduler {
 
         // 获取AlarmManager实例
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // 没权限就不通知
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if(!alarmManager.canScheduleExactAlarms()){
+                return;
+            }
+        }
 
         // 创建一个PendingIntent，当提醒触发时，系统将发送这个Intent
         // 使用由ID哈希生成的请求代码确保每个提醒都有一个唯一的PendingIntent
@@ -80,19 +74,19 @@ public class AlarmScheduler {
      * @param medicationReminderId   药物提醒的唯一ID（字符串）
      */
     public static void cancelReminder(Context context, String medicationReminderId) {
-        // 检查是否具有SCHEDULE_EXACT_ALARM权限
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.SCHEDULE_EXACT_ALARM) != PackageManager.PERMISSION_GRANTED) {
-            // 如果没有权限，需要提醒用户授予权限
-            // 这里可以添加一些逻辑来提示用户授予权限
-            return; // 返回并不执行后续操作
-        }
-
 
         // 将提醒ID从字符串转换为整数
         int requestCode = medicationReminderId.hashCode();
 
         Intent intent = new Intent(context, AlarmReceiver.class);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+
+        // 没权限就不通知
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if(!alarmManager.canScheduleExactAlarms()){
+                return;
+            }
+        }
 
         // 在这里添加FLAG_IMMUTABLE标志
         PendingIntent pendingIntent = PendingIntent.getBroadcast(

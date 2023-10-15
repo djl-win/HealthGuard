@@ -3,11 +3,6 @@ package com.comp5216.healthguard.application;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.os.Build;
-
-import androidx.lifecycle.ViewModelProvider;
-
-import com.comp5216.healthguard.viewmodel.NotificationViewModel;
 
 
 /**

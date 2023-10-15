@@ -24,12 +24,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.adapter.FriendsListAdapter;
-import com.comp5216.healthguard.adapter.RemindersListAdapter;
 import com.comp5216.healthguard.adapter.SearchHealthAdapter;
 import com.comp5216.healthguard.entity.Attribute;
 import com.comp5216.healthguard.entity.HealthInformation;
-import com.comp5216.healthguard.entity.User;
 import com.comp5216.healthguard.viewmodel.AttributeViewModel;
 import com.comp5216.healthguard.viewmodel.HealthInformationViewModel;
 import com.github.mikephil.charting.charts.LineChart;
@@ -41,7 +38,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.checkerframework.checker.units.qual.A;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

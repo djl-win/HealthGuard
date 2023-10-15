@@ -3,7 +3,6 @@ package com.comp5216.healthguard.service;
 import android.annotation.SuppressLint;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;

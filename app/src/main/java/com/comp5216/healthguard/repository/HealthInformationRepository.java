@@ -22,7 +22,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.crypto.BadPaddingException;

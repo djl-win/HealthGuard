@@ -24,9 +24,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.comp5216.healthguard.R;
-import com.comp5216.healthguard.entity.HealthInformation;
 import com.comp5216.healthguard.entity.MedicationReminder;
-import com.comp5216.healthguard.viewmodel.MedicalReportViewModel;
 import com.comp5216.healthguard.viewmodel.MedicationReminderViewModel;
 import com.google.android.material.textfield.TextInputEditText;
 
