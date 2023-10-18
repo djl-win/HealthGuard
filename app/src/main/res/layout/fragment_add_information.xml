@@ -36,7 +36,7 @@
             app:hintTextColor="@color/gray"
             app:boxStrokeColor="@color/gray"
             android:hint="@string/systolic_pressure"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/information_systolic_input"
@@ -56,7 +56,7 @@
             app:hintTextColor="@color/gray"
             app:boxStrokeColor="@color/gray"
             android:hint="@string/diastolic_pressure"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/information_diastolic_input"
@@ -76,7 +76,7 @@
             app:hintTextColor="@color/gray"
             app:boxStrokeColor="@color/gray"
             android:hint="@string/heart_rate"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/information_heart_input"
@@ -96,7 +96,7 @@
             app:hintTextColor="@color/gray"
             app:boxStrokeColor="@color/gray"
             android:hint="@string/body_temperature"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/information_body_input"
@@ -116,7 +116,7 @@
             app:hintTextColor="@color/gray"
             app:boxStrokeColor="@color/gray"
             android:hint="@string/blood_oxygen_saturation"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="5dp">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/information_blood_input"

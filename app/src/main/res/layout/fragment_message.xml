@@ -53,13 +53,15 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp">
 
         <EditText
             android:id="@+id/edit_text_content_message"
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="60dp"
             android:layout_alignParentStart="true"
             android:background="@drawable/rounded_edittext_background" />
 

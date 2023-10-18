@@ -106,11 +106,16 @@
                 android:layout_marginStart="15dp"
                 android:text="@string/_2023_02_05_10_10" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="90dp"
+                android:layout_marginEnd="40dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -125,12 +130,17 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     style="@style/sign_page_button_back" />
+
             </LinearLayout>
         </LinearLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fillViewport="true">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <LinearLayout
@@ -144,7 +154,7 @@
 
                 <TextView
                     android:id="@+id/z1"
-                    android:layout_width="160dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_marginStart="15dp"
@@ -160,10 +170,8 @@
                     android:id="@+id/zz1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textSize="16sp"
-                    android:text="@string/mmhg"
-                    android:layout_marginEnd="15dp" />
+                    android:textSize="14sp"
+                    android:text="@string/mmhg" />
 
                 <View
                     android:layout_width="0dp"
@@ -171,7 +179,7 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="65dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="7dp"
                     android:layout_marginEnd="10dp"
@@ -181,7 +189,7 @@
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reference"
+                        android:text="@string/ref"
                         android:textSize="16sp"
                         android:textColor="@color/gray" />
 
@@ -197,12 +205,6 @@
                             android:textSize="15sp"
                             android:textColor="@color/gray" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="@string/mmhg"
-                            android:textColor="@color/gray" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -220,7 +222,7 @@
 
                 <TextView
                     android:id="@+id/z2"
-                    android:layout_width="160dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="15dp"
                     android:text="@string/diastolic_pressure_"
@@ -236,9 +238,7 @@
                     android:id="@+id/zz2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
                     android:text="@string/mmhg" />
 
                 <View
@@ -247,7 +247,7 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="65dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="7dp"
                     android:orientation="vertical"
@@ -256,7 +256,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reference"
+                        android:text="@string/ref"
                         android:textSize="16sp"
                         android:textColor="@color/gray" />
 
@@ -273,12 +273,6 @@
                             android:textSize="15sp"
                             android:textColor="@color/gray" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="@string/mmhg"
-                            android:textColor="@color/gray" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -295,7 +289,7 @@
 
                 <TextView
                     android:id="@+id/z3"
-                    android:layout_width="160dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_marginStart="15dp"
@@ -311,9 +305,7 @@
                     android:id="@+id/zz3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textSize="16sp"
-                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
                     android:text="@string/bpm" />
 
                 <View
@@ -322,7 +314,7 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="65dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="7dp"
                     android:orientation="vertical"
@@ -330,7 +322,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reference"
+                        android:text="@string/ref"
                         android:textColor="@color/gray"
                         android:textSize="16sp" />
                     <LinearLayout
@@ -345,12 +337,6 @@
                         android:textColor="@color/gray"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="15sp"
-                        android:text="@string/bpm"
-                        android:textColor="@color/gray" />
                 </LinearLayout>
                 </LinearLayout>
 
@@ -367,7 +353,7 @@
 
                 <TextView
                     android:id="@+id/z4"
-                    android:layout_width="160dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_marginStart="15dp"
@@ -383,9 +369,7 @@
                     android:id="@+id/zz4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textSize="16sp"
-                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
                     android:text="@string/c" />
 
                 <View
@@ -394,7 +378,7 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="65dp"
                     android:layout_marginTop="7dp"
                     android:layout_height="50dp"
                     android:orientation="vertical"
@@ -403,7 +387,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reference"
+                        android:text="@string/ref"
                         android:textSize="16sp"
                         android:textColor="@color/gray" />
 
@@ -419,12 +403,6 @@
                             android:textSize="15sp"
                             android:textColor="@color/gray" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="@string/c"
-                            android:textColor="@color/gray" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -437,12 +415,13 @@
                 android:orientation="horizontal"
                 android:layout_marginTop="15dp"
                 android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/grey_border"
                 android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/z5"
-                    android:layout_width="160dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
                     android:layout_marginStart="15dp"
@@ -458,9 +437,7 @@
                     android:id="@+id/zz5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
+                    android:textSize="14sp"
                     android:text="@string/aaa" />
 
                 <View
@@ -469,7 +446,7 @@
                     android:layout_weight="1" />
 
                 <LinearLayout
-                    android:layout_width="80dp"
+                    android:layout_width="65dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="7dp"
                     android:orientation="vertical"
@@ -478,7 +455,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/reference"
+                        android:text="@string/ref"
                         android:textSize="16sp"
                         android:textColor="@color/gray" />
 
@@ -493,13 +470,6 @@
                             android:layout_height="wrap_content"
                             android:textSize="15sp"
                             android:textColor="@color/gray" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="15sp"
-                            android:text="@string/aaa"
-                            android:textColor="@color/gray" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -508,6 +478,7 @@
 
         </LinearLayout>
 
+        </ScrollView>
 
     </LinearLayout>
 

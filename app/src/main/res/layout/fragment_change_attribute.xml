@@ -36,14 +36,14 @@
             android:orientation="horizontal"
             >
         <TextView
-            android:layout_width="160dp"
+            android:layout_width="140dp"
             android:layout_height="wrap_content"
             android:textColor="@color/gray"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="@string/systolic_pressure"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -64,7 +64,7 @@
                 android:src="@drawable/ic_to"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -83,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/mmhg"/>
 
 
@@ -93,18 +93,18 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             >
             <TextView
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/diastolic_pressure"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -125,7 +125,7 @@
                 android:src="@drawable/ic_to"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/mmhg"/>
 
 
@@ -154,18 +154,18 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             >
             <TextView
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/heart_rate"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -186,7 +186,7 @@
                 android:src="@drawable/ic_to"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -205,7 +205,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/bpm"/>
 
 
@@ -215,18 +215,18 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             >
             <TextView
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/body_temperature"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -247,7 +247,7 @@
                 android:src="@drawable/ic_to"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -266,7 +266,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/c"/>
 
 
@@ -276,19 +276,19 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal"
             android:backgroundTint="@color/blue"
             >
             <TextView
-                android:layout_width="160dp"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/blood_oxygen"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -309,7 +309,7 @@
                 android:src="@drawable/ic_to"/>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="40dp"
                 app:strokeColor="@color/gray"
                 app:strokeWidth="1dp"
@@ -328,7 +328,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:text="@string/aaa"/>
 
 
