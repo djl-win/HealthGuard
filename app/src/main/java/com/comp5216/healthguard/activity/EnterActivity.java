@@ -24,7 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
  */
 public class EnterActivity extends AppCompatActivity {
 
-
     // 注册按钮组件
     Button buttonSign;
     // 登录按钮组件
