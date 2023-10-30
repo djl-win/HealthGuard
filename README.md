@@ -13,7 +13,7 @@ _"Health Guard" 是一款综合性的 Android 应用程序，专注于个人健�
 - [Data Communication / 数据通信](#data-communication--数据通信)
 - [Performance Optimization / 性能优化](#performance-optimization--性能优化)
 - [Privacy / 隐私](#privacy--隐私)
-- [Lisence / 证书](#Lisence--证书)
+- [License / 证书](#License--证书)
 
 ## Configuration / 配置
 
@@ -193,6 +193,8 @@ The "Health Guard" application integrates a variety of technologies to optimize 
 We are committed to taking all necessary measures to protect user personal information and privacy, ensuring that the app's functionality operates under user authorization and privacy protection. / 我们致力于采取一切必要措施来保护用户的个人信息和隐私，并确保应用的功能在用户的授权和隐私保护下正常运行。
 
 
-## Lisence / 证书
+## License / 证书
+
+This project is licensed under the GNU GPLv3 License - see the [LICENSE.md](https://github.com/djl-win/Healthguard/blob/master/LICENSE) file for details.
 
 
