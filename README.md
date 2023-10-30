@@ -13,6 +13,7 @@ _"Health Guard" 是一款综合性的 Android 应用程序，专注于个人健�
 - [Data Communication / 数据通信](#data-communication--数据通信)
 - [Performance Optimization / 性能优化](#performance-optimization--性能优化)
 - [Privacy / 隐私](#privacy--隐私)
+- [Lisence / 证书](#Lisence--证书)
 
 ## Configuration / 配置
 
@@ -190,3 +191,8 @@ The "Health Guard" application integrates a variety of technologies to optimize 
 - **Alarm Permissions / 闹钟权限**: The app also requires alarm permissions to schedule medication reminders and other health-related tasks. These reminders are crucial for user health management, and we ensure that the use of these permissions is under user control and privacy protection. / 应用还需要闹钟权限，以便能够按计划提醒用户服药和执行其他健康操作。这些提醒对于用户的健康管理至关重要，我们将确保这些权限的使用是受到用户控制和隐私保护的。
 
 We are committed to taking all necessary measures to protect user personal information and privacy, ensuring that the app's functionality operates under user authorization and privacy protection. / 我们致力于采取一切必要措施来保护用户的个人信息和隐私，并确保应用的功能在用户的授权和隐私保护下正常运行。
+
+
+## Lisence / 证书
+
+
